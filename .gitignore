@@ -1,2 +1,7 @@
 .meteor/local
 .meteor/meteorite
+*/.DS_Store
+
+.DS_Store
+.idea
+.idea/
