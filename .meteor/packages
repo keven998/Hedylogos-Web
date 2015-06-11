@@ -6,6 +6,16 @@
 
 meteor-platform
 meteorhacks:npm
+underscore
+twbs:bootstrap
+coffeescript
+iron:router
+sacha:spin
+reactive-var
+monbro:iron-router-breadcrumb
+momentjs:moment
+mizzao:bootboxjs
+urigo:angular
 
 
 npm-container
