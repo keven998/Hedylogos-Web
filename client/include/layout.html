@@ -1,0 +1,15 @@
+<template name= "layout">
+    <link href="favicon.ico" type="image/x-icon" rel=icon>
+    <link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <div class="container">
+        {{> header}}
+        {{> errors}}
+        <!-- 面包屑，暂不需要，需要直接删除注释即可 -->
+        <!-- {{> breadcrumb}} -->
+        <div id="main" class="row-fluid">
+            {{> yield}}
+        </div>
+        <!-- 回到顶部，暂不需要，需要直接删除注释即可 -->
+        <!-- {{> backToTop}} -->
+    </div>
+</template>
