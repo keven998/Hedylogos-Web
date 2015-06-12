@@ -9,8 +9,12 @@ Template.login.events({
     if (!username || !password) {
       throwError('账户和密码不能为空！');
     }
-    Meteor.call('login', username, password, function (err, res) {
-      
+    lxpUser.login(username, password, function(err, res) {
+      if (err) {
+        throwError('账户或密码错误！');
+        return;
+      }
+      Router.go('chat');
     });
   }
 });
