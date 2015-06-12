@@ -10,8 +10,10 @@ Template.login.events({
       throwError('账户和密码不能为空！');
     }
     lxpUser.login(username, password, function(err, res) {
-      console.log(res);
-      console.log(Meteor.userId());
+      if (err) {
+        throwError('账户或密码错误！');
+        return;
+      }
       Router.go('chat');
     });
   }

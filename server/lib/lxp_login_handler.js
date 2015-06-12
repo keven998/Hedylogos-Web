@@ -33,10 +33,6 @@ Accounts.registerLoginHandler(function (loginRequest) {
   Meteor.users.update(userId,
     {$push: {'services.resume.loginTokens': hashStampedToken}}
   );
-  console.log({
-    id: userId,
-    token: stampedToken.token
-  });
 
   //sending token along with the userId
   return {
