@@ -33,12 +33,12 @@ function initApiCall () {
  * get ectd server url by env
  */
 function getEtcdServerUrl () {
-  var etcdUrl = process.env['HedylogosThriftServerUrl'];
+  var etcdUrl = process.env['ETCD_URL'];
   if (!etcdUrl) {
     console.log('请检查thrift server的etcd的环境变量');
     return;
   }
-  return etcdUrl;
+  return (etcdUrl + '/v2/keys/backends/yunkai?recursive=true');
 }
 
 
