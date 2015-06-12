@@ -20,6 +20,4 @@ urigo:angular
 
 npm-container
 http
-mrt:cookies
-u2622:persistent-session
 accounts-password
