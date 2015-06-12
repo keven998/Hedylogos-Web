@@ -147,7 +147,7 @@ function connectThriftServer(ip, port, transportType, protocolType) {
     console.log('Connection Failed!');
     console.log(err);
   });
-
+  console.log('thrift server ip:' + ip + ', port:' + port);
   return connection;
 }
 
@@ -169,7 +169,9 @@ function attachApi (clientName, client) {
  */
 function getApiList (clientName) {
   var client = {
-    Userservice: ['add', 'login'],
+    Userservice: ['add', 'range', 'login', 'getUserById', 'updateUserInfo', 'isContact', 'addContact', 'addContacts',
+    'removeContact', 'removeContacts', 'getContactList', 'createUser', 'createChatGroup', 'updateChatGroup',
+    'getChatGroup', 'getUserChatGroups', 'addChatGroupMembers', 'removeChatGroupMembers', 'getChatGroupMembers'],
     // TODO add more client api
   };
   return client[clientName];
