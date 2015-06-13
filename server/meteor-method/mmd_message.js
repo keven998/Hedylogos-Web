@@ -12,7 +12,6 @@ Meteor.methods({
     check(option.data.msgType, Number);
     check(option.data.receiver, Number);
     check(option.data.sender, Number);
-    console.log(msgHandlerHost);
     var res = HTTP.post(msgHandlerHost, option);
     if (res.statusCode === 200) {
       return {code: 0, data: res.data};

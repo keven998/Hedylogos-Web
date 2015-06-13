@@ -30,14 +30,13 @@ Template.chatMain.onRendered(function () {
             'header': header,
             'data': msg
           };
-          console.log(option);
       Meteor.call('sendMsg', option, function(err, res) {
         if (err) {
           throwError('发送失败，请重试');
           return;
         }
-        console.log(res);
         if (res.code === 0) {
+          // 清空
           $('#J-im-input-text').val('');
           // 在聊天记录中显示该信息
         }
