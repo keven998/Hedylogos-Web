@@ -1,5 +1,34 @@
 {
   "dependencies": {
+    "i64": {
+      "version": "http://nexus.lvxingpai.com/content/groups/npm-entry/i64/-/i64-0.5.8.tgz",
+      "dependencies": {
+        "microtime": {
+          "version": "http://nexus.lvxingpai.com/content/groups/npm-entry/microtime/-/microtime-0.3.3.tgz",
+          "dependencies": {
+            "bindings": {
+              "version": "http://nexus.lvxingpai.com/content/groups/npm-entry/bindings/-/bindings-1.0.0.tgz"
+            }
+          }
+        },
+        "validator": {
+          "version": "http://nexus.lvxingpai.com/content/groups/npm-entry/validator/-/validator-1.5.1.tgz"
+        },
+        "int-encoder": {
+          "version": "http://nexus.lvxingpai.com/content/groups/npm-entry/int-encoder/-/int-encoder-0.1.4.tgz",
+          "dependencies": {
+            "bignum": {
+              "version": "http://nexus.lvxingpai.com/content/groups/npm-entry/bignum/-/bignum-0.10.0.tgz",
+              "dependencies": {
+                "nan": {
+                  "version": "1.8.4"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "lxpthrift": {
       "version": "http://nexus.lvxingpai.com/content/groups/npm-entry/lxpthrift/-/lxpthrift-0.0.2.tgz"
     },
@@ -66,9 +95,6 @@
                         },
                         "node-uuid": {
                           "version": "1.4.3"
-                        },
-                        "tough-cookie": {
-                          "version": "1.2.0"
                         },
                         "form-data": {
                           "version": "0.1.4",

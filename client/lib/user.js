@@ -28,7 +28,12 @@ _.extend(LxpUser.prototype, {
 
   getFriendsList: function () {
     var self = this;
-    // TODO
+    Meteor.call('getFriendsList', function (err, res) {
+      if (err) return;
+      if (res && res.code === 0) {
+        // TODO
+      }
+    });
   },
 
   getChatGroupList: function() {

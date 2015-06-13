@@ -1,4 +1,40 @@
 <template name="chatMain">
-	<!-- 将其它模板包含进来 -->
-	<h1>聊天主界面</h1>
+    <!-- 将其它模板包含进来 -->
+    <div class="im-container">
+        <div class="im-frame">
+            <div class="im-top-pannel">
+                <!-- <p>顶部</p> -->
+            </div>
+            <div class="im-center-pannel">
+                <div class="im-frame-left-container">
+                    <div class="im-main-control">
+                        <div class="im-user-icon-container">
+                            <div class="im-user-icon">
+                                <img id="J-im-user-icon" src="{{currentUser.userInfo.avatar}}" alt="" width="60" height="60">
+                            </div>
+                        </div>
+                        <div class="im-btn-contact-list-container">
+                            <div class="im-btn-contact-list">
+                                <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-contact-list" width="40" height="40">
+                            </div>
+                        </div>
+                        <div class="im-btn-group-list-container">
+                            <div class="im-btn-group-list">
+                                <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-group-list" width="40" height="40">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="im-contact-list">
+                        列表
+                    </div>
+                </div>
+                <div class="im-frame-right-container">
+                    <p>右</p>
+                </div>
+            </div>
+            <div class="im-frame-bottom-panel">
+                <p>底部</p>
+            </div>
+        </div>
+    </div>
 </template>

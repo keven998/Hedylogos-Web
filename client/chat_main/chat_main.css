@@ -1,0 +1,99 @@
+.im-container {
+    width: 70%;
+    margin: 33px auto;
+}
+
+.im-frame {
+    margin: 7px;
+    width: 100%;
+    position: relative;
+    height: 533px;
+    border: 1px solid #ccc;   border-radius: 3px;
+}
+
+.im-top-pannel {
+    padding: 3px 7px;
+    width: 100%;
+    height: 10%;
+    border-bottom: 1px solid #ccc;
+    background-color: #E7E7E7;
+}
+
+.im-center-pannel {
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    height: 80%;
+    position: relative;
+}
+
+.im-frame-left-container {
+    height: 100%;
+    width: 40%;
+    border-right: 1px solid #ccc;
+    float: left;
+    position: relative;
+}
+
+.im-frame-right-container {
+    height: 100%;
+    width: 59%;
+    border-left: 1px solid #ccc;
+    float: right;
+    position: relative;
+}
+
+.im-frame-bottom-panel {
+    height: 10%;
+    width: 100%;
+}
+
+.im-main-control {
+    width: 30%;
+    height: 100%;
+    float: left;
+    border-right: 1px solid #ccc;
+    background-color: #3D3D3D;
+}
+
+.im-contact-list {
+    width: 70%;   height: 100%;
+    float: right;
+    overflow-y: scroll;
+}
+
+.im-user-icon-container {
+    width: 100%;
+    height: 70px;
+    position: relative;
+    padding-top: 10px;
+    margin-bottom: 53px;
+}
+
+.im-user-icon {
+    width: 60px;
+    height: 60px;
+    margin: 7px auto;
+}
+
+img#J-im-user-icon {
+    border-radius: 37px;
+}
+
+.im-btn-contact-list-container, .im-btn-group-list-container {
+    width: 100%;
+    height: 50px;
+    position: relative;
+}
+
+.im-btn-contact-list, .im-btn-group-list {
+    width: 40px;
+    height: 40px;
+    margin: 7px auto;
+}
+
+img#J-im-btn-group-list, img#J-im-btn-contact-list {
+    width: 40px;
+    height: 40px;
+    margin: 7px auto;
+}
+
