@@ -1,5 +1,7 @@
 LxpUser = function () {
   var self = this;
+  self.friends = new ReactiveVar([], function (o, n){ return o === n;});
+  self.chatWith = new ReactiveVar({}, function (o, n){ return o === n;});
 };
 
 _.extend(LxpUser.prototype, {
@@ -19,26 +21,45 @@ _.extend(LxpUser.prototype, {
   },
 
   getUserId: function () {
-    return Meteor.userId();
+    return parseInt(Meteor.user().userInfo.userId);
   },
 
   getUserInfo: function () {
     return Meteor.user().userInfo;
   },
 
+  setChatTarget: function (target) {
+    var self = this;
+    self.chatWith.set(target);
+  },
+
   getFriendsList: function () {
     var self = this;
     Meteor.call('getFriendsList', function (err, res) {
-      if (err) return;
+      if (err) {
+        console.log(err);
+        return;
+      }
       if (res && res.code === 0) {
-        // TODO
+        var data = res.data;
+        self.friends.set(data);
+        console.log(data);
       }
     });
   },
 
   getChatGroupList: function() {
     var self = this;
-    // TODO
+    Meteor.call('getGroupList', function (err, res) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      if (res && res.code === 0) {
+        var data = res.data;
+        console.log(data);
+      }
+    });
   }
 });
 

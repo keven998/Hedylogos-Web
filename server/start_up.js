@@ -2,9 +2,9 @@ Meteor.startup(function () {
   initApiCall();
   var address = getThriftServerAddress(),
       thriftConnectionInstance = connectThriftServer(address.ip, address.port);
+  createThriftClient(thriftConnectionInstance, 'lxpthrift', 'Userservice');
 
   console.log('=== Connection And Service Test ===');
-  createThriftClient(thriftConnectionInstance, 'lxpthrift', 'Userservice');
   var res = Meteor.lxp.Userservice.add(3, 7);
   if (res === 10) {
     console.log('|             3 + 7 = ' + res + '          |');
