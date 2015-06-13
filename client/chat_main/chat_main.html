@@ -3,7 +3,14 @@
     <div class="im-container">
         <div class="im-frame">
             <div class="im-top-pannel">
-                <!-- <p>顶部</p> -->
+                <div class="im-cur-chat-with-container">
+                    {{#if curChatWith.id}}
+                        <div class="im-cur-chat" id="{{curChatWith.id}}">
+                            <span>{{curChatWith.name}}</span>
+                            <span id="im-cur-chat-chevron" class="glyphicon glyphicon-chevron-down" style="margin-left:7px"></span>
+                        </div>
+                    {{/if}}
+                </div>
             </div>
             <div class="im-center-pannel">
                 <div class="im-frame-left-container">
@@ -25,11 +32,25 @@
                         </div>
                     </div>
                     <div class="im-contact-list">
-                        列表
+                        {{#each friends}}
+                            {{> friend friendInfo=this}}
+                        {{/each}}
                     </div>
                 </div>
                 <div class="im-frame-right-container">
-                    <p>右</p>
+                    <div class="im-chat-info-container">
+                        <p>聊天窗口</p>
+                    </div>
+                    <div class="im-chat-input-container">
+                        <div class="im-chat-toolbar-container">
+                            <p>表情神马的</p>
+                        </div>
+                        <div class="im-chat-input-zone">
+                            <div class="im-chat-input">
+                                <textarea type="text" id="J-im-input-text" placeholder="type..."></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="im-frame-bottom-panel">
