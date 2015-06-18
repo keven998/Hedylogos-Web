@@ -1,14 +1,42 @@
+// 如果不存在消息DIV容器，新建一个
+checkChatExist = function (id) {
+  if ($('#conversation-' + id).length === 0) {
+    Blaze.renderWithData(Template.conversation, {'id': id}, $('.im-chat-info-container')[0]);
+  }
+  return;
+}
+
+
 showSendMsg = function (receiverId, content) {
   // 还不存在会话窗口，新建dom容器
-  if ($('#conversation-' + receiverId).length === 0) {
-    Blaze.renderWithData(Template.conversation, {'id': receiverId}, $('.im-chat-info-container')[0]);
-  }
+  checkChatExist(receiverId);
   var senderInfo = Meteor.user();
-  senderInfo = _.extend(senderInfo, {'content': content});
+  senderInfo = _.extend(senderInfo, {'contents': content});
   Blaze.renderWithData(Template.sendedMsg, senderInfo, $('#conversation-' + receiverId)[0]);
 }
 
 
+/*
+chatType: "single"
+className: "models.Message"
+contents: "你好"
+conversation: LocalCollection._ObjectID
+msgId: 21
+msgType: 0
+receiverId: 100009
+senderId: 100074
+timestamp: 1434512239556
+*/
+
+showRecievedMsg = function(msg) {
+  var senderId = msg.senderId;
+  if (msg.chatType === 'single') {
+    var chatWith = Session.get('chatWith');
+    msg = _.extend(msg, {'avatar': chatWith.avatar});
+    checkChatExist(senderId);
+    Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + senderId)[0]);
+  }
+}
 
 
 bindSendMsg = function() {

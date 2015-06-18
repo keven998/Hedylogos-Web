@@ -290,4 +290,33 @@ img.im-sender-avatar {
     padding-left: 100px;
     padding-right: 57px;
 }
+
+.im-received-msg-container {
+    width: 100%;
+    position: relative;
+    margin-top: 7px;
+    margin-bottom: 13px;
+}
+.im-received-avatar-container {
+    width: 40px;
+    height: 40px;
+    margin-right: 7px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+}
+img.im-received-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+}
+.im-received-msg-content-container {
+    padding-right: 100px;
+    padding-left: 57px;
+}
+.im-received-content {
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 3px;
+}
 /*发送会话的信息展示 end*/

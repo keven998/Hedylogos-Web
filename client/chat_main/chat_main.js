@@ -1,10 +1,20 @@
 Message1 = new Mongo.Collection('Message1');
+
+
 Template.chatMain.onRendered(function () {
+  // Meteor.subscribe('chatMessage', Meteor.user().loginTime);
   bindSendMsg();
   Tracker.autorun(function () {
-    var msgs = Message1.findOne({});
-    console.log(msgs.fetch());
+    var newMsgs = Message1.findOne({}).msgs;
+    if (!newMsgs || !newMsgs.length) {
+      return;
+    }
+    console.log(newMsgs);
     // TODO 分送信息到不同的聊天容器
+    newMsgs.forEach(function(msg) {
+      console.log(msg);
+      showRecievedMsg(msg);
+    });
   });
 });
 
@@ -70,4 +80,6 @@ showList = function (type) {
   });
   $('.im-' + type + '-list').removeClass("hidden");
 }
+
+
 

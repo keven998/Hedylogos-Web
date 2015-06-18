@@ -7,23 +7,21 @@ Meteor.publish('chatMessage', function (msgTs) {
     var newMsg = [];
     var handle = Message.find({'receiverId': user.userInfo.userId, 'timestamp': {'$gte': msgTs}}).observeChanges({
       added: function (id, msg) {
-        console.log('new msg');
         newMsg.push(msg);
-        console.log(newMsg.length);
+        console.log(newMsg.length + ' new msg');
       },
     });
     var id = new Mongo.ObjectID();
     self.added("Message1", id, {});
     Meteor.setInterval(function() {
-      // self.removed("Message1", id);
       if (newMsg.length === 0) {
-        return;
+        return self.ready();
       }
       self.removed("Message1", id);
-      self.added("Message1", id, newMsg);
+      self.added("Message1", id, {msgs: newMsg});
       newMsg = [];
       self.ready();
-    }, 3000);
+    }, 1500);
   } else {
     this.ready();
   }
