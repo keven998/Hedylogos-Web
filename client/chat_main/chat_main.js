@@ -1,47 +1,10 @@
+Message1 = new Mongo.Collection('Message1');
 Template.chatMain.onRendered(function () {
-  $('#J-im-input-text').on('keyup', function(e) {
-    if (e.which == 13 || e.keyCode == 13) {
-      e.preventDefault();
-      e.stopPropagation();
-      var contents = $.trim($(e.target).val());
-      if (!contents) {
-        return;
-      }
-      var receiver = lxpUser.chatWith.get().id,
-          sender = lxpUser.getUserId();
-
-      if (!receiver || ! sender) {
-        return;
-      }
-
-      var msgType = 0,
-          chatType = 'single',
-          msg = {
-            'receiver': receiver,
-            'sender': sender,
-            'msgType': msgType,
-            'contents': contents,
-            'chatType': chatType
-          },
-          header = {
-            'Content-Type': 'application/json',
-          },
-          option = {
-            'header': header,
-            'data': msg
-          };
-      Meteor.call('sendMsg', option, function(err, res) {
-        if (err) {
-          throwError('发送失败，请重试');
-          return;
-        }
-        if (res.code === 0) {
-          // 清空
-          $('#J-im-input-text').val('');
-          // 在聊天记录中显示该信息
-        }
-      });
-    }
+  bindSendMsg();
+  Tracker.autorun(function () {
+    var msgs = Message1.findOne({});
+    console.log(msgs.fetch());
+    // TODO 分送信息到不同的聊天容器
   });
 });
 
@@ -51,7 +14,10 @@ Template.chatMain.helpers({
     return lxpUser.friends.get();
   },
   'curChatWith': function () {
-    return lxpUser.chatWith.get();
+    return Session.get('chatWith');
+  },
+  'chats': function () {
+    return Session.get('chatList');
   }
 
 });
@@ -62,14 +28,21 @@ Template.chatMain.events({
 
   },
 
+  'click #J-im-btn-chat-list': function (e) {
+    e.preventDefault();
+    showList('chat');
+  },
+
   'click #J-im-btn-contact-list': function (e) {
     e.preventDefault();
     lxpUser.getFriendsList();
+    showList('friend');
   },
 
   'click #J-im-btn-group-list': function (e) {
     e.preventDefault();
-    lxpUser.getChatGroupList();
+    showList('group');
+    // lxpUser.getChatGroupList();
   },
 
   'click .im-cur-chat': function (e) {
@@ -82,4 +55,19 @@ Template.chatMain.events({
     }
   }
 });
+
+
+/* @summary 显示不同的列表信息[chat|friend|group]
+ * @params {string}
+ */
+showList = function (type) {
+  var cls = ['chat', 'friend', 'group'];
+  if (cls.indexOf(type) === -1) {
+    return;
+  }
+  cls.forEach(function(ele) {
+    $('.im-' + ele + '-list').addClass("hidden");
+  });
+  $('.im-' + type + '-list').removeClass("hidden");
+}
 

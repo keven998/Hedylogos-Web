@@ -20,11 +20,12 @@ Accounts.registerLoginHandler(function (loginRequest) {
       uid = null;
   loginResponce.userId = userId;
   var user = Meteor.users.findOne({'userInfo.userId': userId});
+  var ts = Date.now();
   if (!user) {
-    uid = Meteor.users.insert({'userInfo': loginResponce});
+    uid = Meteor.users.insert({'userInfo': loginResponce, 'loginTime': ts});
   } else {
     uid = user._id;
-    Meteor.users.update({'_id': uid}, {'$set': {'userInfo': loginResponce}});
+    Meteor.users.update({'_id': uid}, {'$set': {'userInfo': loginResponce, 'loginTime': ts}});
   }
 
   var stampedToken = Accounts._generateStampedLoginToken();

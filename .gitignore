@@ -5,3 +5,5 @@
 .DS_Store
 .idea
 .idea/
+
+server/lib/db_connection.js
