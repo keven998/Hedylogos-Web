@@ -1,7 +1,10 @@
 LxpUser = function () {
   var self = this;
-  self.friends = new ReactiveVar([], function (o, n){ return o === n;});
-  self.chatWith = new ReactiveVar({}, function (o, n){ return o === n;});
+  Session.setDefault('chatList', []);
+  Session.setDefault('chatWith', {});
+  Session.setDefault('chatIds', {});
+  self.friends = new ReactiveVar([], function (o, n){ return o == n;});
+  self.chatWith = new ReactiveVar({}, function (o, n){ return o == n;});
 };
 
 _.extend(LxpUser.prototype, {
@@ -30,7 +33,7 @@ _.extend(LxpUser.prototype, {
 
   setChatTarget: function (target) {
     var self = this;
-    self.chatWith.set(target);
+    Session.set('chatWith', target);
   },
 
   getFriendsList: function () {
@@ -43,7 +46,6 @@ _.extend(LxpUser.prototype, {
       if (res && res.code === 0) {
         var data = res.data;
         self.friends.set(data);
-        console.log(data);
       }
     });
   },
@@ -60,7 +62,26 @@ _.extend(LxpUser.prototype, {
         console.log(data);
       }
     });
-  }
+  },
+
+  addOneChat: function (chatTargetInfo) {
+    var self = this;
+    var chatId = chatTargetInfo.userId || chatTargetInfo.groupId,
+    chatIds = Session.get('chatIds');
+    if (chatIds.hasOwnProperty(chatId)) {
+      return self.setChatTarget(chatTargetInfo);
+    }
+    chatIds[chatId] = true;
+    Session.set('chatIds', chatIds);
+    var chatList = Session.get('chatList') || [];
+    chatList.push(chatTargetInfo);
+    Session.set('chatList', chatList);
+  },
+
+  // getChatList: function () {
+  //   var self = this;
+  //   return self.chatList;
+  // }
 });
 
 // create a instance in client

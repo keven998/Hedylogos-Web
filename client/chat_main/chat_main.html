@@ -4,9 +4,9 @@
         <div class="im-frame">
             <div class="im-top-pannel">
                 <div class="im-cur-chat-with-container">
-                    {{#if curChatWith.id}}
-                        <div class="im-cur-chat" id="{{curChatWith.id}}">
-                            <span>{{curChatWith.name}}</span>
+                    {{#if curChatWith}}
+                        <div class="im-cur-chat" id="{{curChatWith.userId}}">
+                            <span>{{curChatWith.nickName}}</span>
                             <span id="im-cur-chat-chevron" class="glyphicon glyphicon-chevron-down" style="margin-left:7px"></span>
                         </div>
                     {{/if}}
@@ -20,26 +20,45 @@
                                 <img id="J-im-user-icon" src="{{currentUser.userInfo.avatar}}" alt="" width="60" height="60">
                             </div>
                         </div>
+
+                        <div class="im-btn-chat-list-container">
+                            <div class="im-btn-chat-list">
+                                <span style="color: white" id="J-im-btn-chat-list">会话</span>
+                                <!-- <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-contact-list" width="40" height="40"> -->
+                            </div>
+                        </div>
                         <div class="im-btn-contact-list-container">
                             <div class="im-btn-contact-list">
-                                <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-contact-list" width="40" height="40">
+                                <span style="color: white" id="J-im-btn-contact-list">好友</span>
+                                <!-- <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-contact-list" width="40" height="40"> -->
                             </div>
                         </div>
                         <div class="im-btn-group-list-container">
                             <div class="im-btn-group-list">
-                                <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-group-list" width="40" height="40">
+                                <span style="color: white" id="J-im-btn-group-list">群组</span>
+                                <!-- <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-group-list" width="40" height="40"> -->
                             </div>
                         </div>
                     </div>
-                    <div class="im-contact-list">
+                    <div class="im-chat-list">
+                        会话
+                        {{#each chats}}
+                            {{> chatItem chatItemInfo=this}}
+                        {{/each}}
+                    </div>
+                    <div class="im-friend-list hidden">
+                        好友
                         {{#each friends}}
                             {{> friend friendInfo=this}}
                         {{/each}}
                     </div>
+                    <div class="im-group-list hidden">
+                        群组
+                    </div>
                 </div>
                 <div class="im-frame-right-container">
                     <div class="im-chat-info-container">
-                        <p>聊天窗口</p>
+                        <!-- 信息展示窗口 -->
                     </div>
                     <div class="im-chat-input-container">
                         <div class="im-chat-toolbar-container">
@@ -51,6 +70,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="hidden" id="im-friend-or-group-info">
+                    <!-- 为了动态显示用户的信息 -->
                 </div>
             </div>
             <div class="im-frame-bottom-panel">

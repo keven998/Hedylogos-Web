@@ -7,7 +7,7 @@
     margin: 7px;
     width: 100%;
     position: relative;
-    height: 533px;
+    height: 633px;
     border: 1px solid #ccc;   border-radius: 3px;
 }
 
@@ -22,7 +22,7 @@
 .im-center-pannel {
     border-bottom: 1px solid #ccc;
     width: 100%;
-    height: 80%;
+    height: 85%;
     position: relative;
 }
 
@@ -42,8 +42,16 @@
     position: relative;
 }
 
+#im-friend-or-group-info {
+    height: 100%;
+    width: 59%;
+    border-left: 1px solid #ccc;
+    float: right;
+    position: relative;
+}
+
 .im-frame-bottom-panel {
-    height: 10%;
+    height: 5%;
     width: 100%;
 }
 
@@ -55,8 +63,9 @@
     background-color: #3D3D3D;
 }
 
-.im-contact-list {
-    width: 70%;   height: 100%;
+.im-chat-list, .im-friend-list, .im-group-list {
+    width: 70%;
+    height: 100%;
     float: right;
     overflow-y: scroll;
 }
@@ -75,23 +84,23 @@
     margin: 7px auto;
 }
 
-img#J-im-user-icon {
+#J-im-user-icon {
     border-radius: 37px;
 }
 
-.im-btn-contact-list-container, .im-btn-group-list-container {
+.im-btn-contact-list-container, .im-btn-group-list-container, .im-btn-chat-list-container {
     width: 100%;
     height: 50px;
     position: relative;
 }
 
-.im-btn-contact-list, .im-btn-group-list {
+.im-btn-contact-list, .im-btn-group-list, .im-btn-chat-list{
     width: 40px;
     height: 40px;
     margin: 7px auto;
 }
 
-img#J-im-btn-group-list, img#J-im-btn-contact-list {
+#J-im-btn-group-list, #J-im-btn-contact-list {
     width: 40px;
     height: 40px;
     margin: 7px auto;
@@ -196,3 +205,118 @@ img#J-im-btn-group-list, img#J-im-btn-contact-list {
     border-right: 1px solid #ccc;
     border-left: 1px solid #ccc;
 }
+
+/*用户的信息展示 begin*/
+.im-friend-desc-container {
+    width: 50%;
+    height: 100%;
+    margin: 20px auto;
+}
+
+.im-friend-desc-img-container {
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+}
+
+.im-friend-desc-img {
+    border-radius: 93px;
+    width: 150px;
+    height: 150px;
+}
+
+.im-friend-desc-name {
+    margin: 7px auto;
+    width: 80%;
+    text-align: center;
+}
+
+.im-friend-desc-contact {
+    margin: 13px auto;
+    text-align: center;
+    margin-top: 60px;
+}
+
+#J-set-contact {
+    padding: 13px 33px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: #0099FF;
+    color: #fff;
+    margin-top: 30px;
+}
+
+#J-set-contact:hover {
+    background-color: #006EFF;
+}
+/*用户的信息展示 end*/
+
+
+/*发送会话的信息展示 begin*/
+.im-sender-avatar-container {
+    width: 40px;
+    height: 40px;
+    margin-right: 7px;
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+
+.conversation-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+img.im-sender-avatar {
+    width: 40px;   height: 40px;
+    border-radius: 40px;
+}
+
+.im-sended-msg-container {
+    width: 100%;
+    position: relative;
+    margin-top: 7px;
+    margin-bottom: 13px;
+}
+
+.im-sender-content {
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 3px;
+}
+
+.im-sender-msg-content-container {
+    padding-left: 100px;
+    padding-right: 57px;
+}
+
+.im-received-msg-container {
+    width: 100%;
+    position: relative;
+    margin-top: 7px;
+    margin-bottom: 13px;
+}
+.im-received-avatar-container {
+    width: 40px;
+    height: 40px;
+    margin-right: 7px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+}
+img.im-received-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+}
+.im-received-msg-content-container {
+    padding-right: 100px;
+    padding-left: 57px;
+}
+.im-received-content {
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 3px;
+}
+/*发送会话的信息展示 end*/
