@@ -6,7 +6,9 @@ checkChatExist = function (id) {
   return;
 }
 
-
+/*
+ * 显示己方分送的信息
+ */
 showSendMsg = function (receiverId, content) {
   // 还不存在会话窗口，新建dom容器
   checkChatExist(receiverId);
@@ -16,7 +18,7 @@ showSendMsg = function (receiverId, content) {
 }
 
 
-/*
+/* 显示收到的信息
 chatType: "single"
 className: "models.Message"
 contents: "你好"
@@ -32,13 +34,33 @@ showRecievedMsg = function(msg) {
   var senderId = msg.senderId;
   if (msg.chatType === 'single') {
     var chatWith = Session.get('chatWith');
+    // 如果该信息来自当前会话，就直接显示，如果不是，在会话列表里提示有信息，往用户的会话列表update
+    // TODO
+    // Meteor.users.update({自己的 ，newMsg:true, })
     msg = _.extend(msg, {'avatar': chatWith.avatar});
     checkChatExist(senderId);
     Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + senderId)[0]);
   }
+  // TODO 群信息
 }
 
+/*
+ * Meteor.users 表
+   字段 conversations: Array
+   [
+   {
+      id: 对方的ID
+      avatar: url
+      newMsg: boolean
+      nickName: String
+   }
+   ]
+ */
 
+/*
+ * 消息输入框，绑定回车键进行信息发布
+ * TODO：绑定shift+enter进行换行
+ */
 bindSendMsg = function() {
   $('#J-im-input-text').on('keyup', function(e) {
     if (e.which == 13 || e.keyCode == 13) {

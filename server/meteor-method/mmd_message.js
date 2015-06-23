@@ -14,7 +14,7 @@ Meteor.methods({
     check(option.data.sender, Number);
     // console.log(option);
     var res = HTTP.post(msgHandlerHost, option);
-    // Meteor.lxp.Userservice.addContact(100009, 100075);
+    // Meteor.lxp.Userservice.addContact(100009, 100012);
     if (res.statusCode === 200) {
       return {code: 0, data: res.data};
     } else {
