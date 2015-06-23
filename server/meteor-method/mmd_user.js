@@ -17,6 +17,12 @@ Meteor.methods({
     ], 0, 2000);
     // transform i64 object to number
     friendList.map(function(friend){friend.userId = parseInt(friend.userId.toString())});
+
+    // 用来制造虚假的会话历史，所有好友作为历史会话
+    // friendList.forEach(function(friend) {
+    //   friend = _.extend(friend, {'uid': Number(userId.toString()), 'tid': friend.userId});
+    //   UserConversation.insert(friend);
+    // });
     return {'code': 0, 'data': friendList};
   },
 

@@ -14,6 +14,10 @@ Meteor.startup(function () {
     console.log('3 + 7 != ' + res);
     console.log('=== Connection Error OR Service Error ===');
   }
+  // 设置session过期日期为一天
+  Accounts.config({
+     loginExpirationInDays: 1
+  });
 });
 
 
