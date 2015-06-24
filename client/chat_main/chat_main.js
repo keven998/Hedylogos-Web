@@ -27,7 +27,7 @@ Template.chatMain.helpers({
     return Session.get('chatWith');
   },
   'chats': function () {
-    return Session.get('chatList');
+    return UserConversation.find({});
   }
 
 });
