@@ -38,11 +38,25 @@ showRecievedMsg = function(msg) {
       不再从session取值
     */
     var chatWith = lxpUser.chatWith;
-    msg = _.extend(msg, {'avatar': chatWith.avatar});
-    checkChatExist(senderId);
-    Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + senderId)[0]);
+    var chatWithId = chatWith.userId || chatWith.groupId;
+
+    // TODO 优化
+    // 如果该信息来自当前会话，就直接显示，如果不是，在会话列表里提示有信息，往用户的会话列表update
+    if (chatWithId === senderId) {
+      msg = _.extend(msg, {'avatar': chatWith.avatar});
+      Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + senderId)[0]);
+    } else {
+      // 如果不在会话列表中，就新建一个
+      checkChatExist(senderId);
+      // 提示新消息+render新消息
+      msg = _.extend(msg, {'avatar': chatWith.avatar});
+      Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + senderId)[0]);
+      // TODO 提示新消息
+      // TODO 新消息置顶
+    }
+  } else {
+    // TODO 群信息
   }
-  // TODO 群信息
 }
 
 /*
@@ -63,50 +77,58 @@ showRecievedMsg = function(msg) {
  * TODO：绑定shift+enter进行换行
  */
 bindSendMsg = function() {
-  $('#J-im-input-text').on('keyup', function(e) {
+  $('#J-im-input-text').on('keydown', function(e) {
     if (e.which == 13 || e.keyCode == 13) {
-      e.preventDefault();
-      e.stopPropagation();
-      var contents = $.trim($(e.target).val());
-      if (!contents) {
-        return;
-      }
-      var chatWith = Session.get('chatWith');
-      var receiver = chatWith.userId || chatWith.groupId,
-          sender = lxpUser.getUserId();
-
-      if (!receiver || ! sender) {
-        return;
-      }
-
-      var msgType = 0,
-          chatType = 'single',
-          msg = {
-            'receiver': receiver,
-            'sender': sender,
-            'msgType': msgType,
-            'contents': contents,
-            'chatType': chatType
-          },
-          header = {
-            'Content-Type': 'application/json',
-          },
-          option = {
-            'header': header,
-            'data': msg
-          };
-      Meteor.call('sendMsg', option, function(err, res) {
-        if (err) {
-          throwError('发送失败，请重试');
+      if (e.shiftKey) {
+        console.log('shift + enter');
+        console.log($(e.target).val() + '//EOM');
+        $(e.target).val($(e.target).val() + '\n');
+        console.log($(e.target).val() + '//EOM');
+      } else {
+        e.preventDefault();
+        e.stopPropagation();
+        var contents = $.trim($(e.target).val());
+        if (!contents) {
           return;
         }
-        if (res.code === 0) {
-          // 清空
-          $('#J-im-input-text').val('');
-          // 在聊天记录中显示该信息
-          showSendMsg(receiver, contents);
+        var chatWith = Session.get('chatWith');
+        var receiver = chatWith.userId || chatWith.groupId,
+            sender = lxpUser.getUserId();
+
+        if (!receiver || ! sender) {
+          return;
         }
-      });
+
+        var msgType = 0,
+            chatType = 'single',
+            msg = {
+              'receiver': receiver,
+              'sender': sender,
+              'msgType': msgType,
+              'contents': contents,
+              'chatType': chatType
+            },
+            header = {
+              'Content-Type': 'application/json',
+            },
+            option = {
+              'header': header,
+              'data': msg
+            };
+        Meteor.call('sendMsg', option, function(err, res) {
+          if (err) {
+            throwError('发送失败，请重试');
+            return;
+          }
+          if (res.code === 0) {
+            console.log(res);
+            // 清空
+            $('#J-im-input-text').val('');
+            // 在聊天记录中显示该信息
+            showSendMsg(receiver, contents);
+          }
+        });
+      }
     }
   });
 }

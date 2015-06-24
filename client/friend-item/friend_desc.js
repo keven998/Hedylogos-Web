@@ -1,7 +1,9 @@
 Template.friendDesc.events({
   'click #J-set-contact': function (e) {
-    lxpUser.setChatTarget(this);
+    // 打开对应的chat窗口
+    openChatWindow(this);
 
+    //
     var dom = $('#im-cur-chat-chevron');
     if (!dom.hasClass("glyphicon-chevron-down")) {
       dom.removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
