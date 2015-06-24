@@ -31,15 +31,15 @@ timestamp: 1434512239556
 */
 
 showRecievedMsg = function(msg) {
-  var senderId = msg.senderId;
-  lxpUser.isInChatHistory(senderId);
+  /*
+    不再从session取值
+  */
+  var chatWith = lxpUser.chatWith;
+  var chatWithId = chatWith.userId || chatWith.groupId;
+  checkChatExist(chatWithId);
   if (msg.chatType === 'single') {
-    /*
-      不再从session取值
-    */
-    var chatWith = lxpUser.chatWith;
-    var chatWithId = chatWith.userId || chatWith.groupId;
-
+    var senderId = msg.senderId;
+    lxpUser.isInChatHistory(senderId);
     // TODO 优化
     // 如果该信息来自当前会话，就直接显示，如果不是，在会话列表里提示有信息，往用户的会话列表update
     if (chatWithId === senderId) {

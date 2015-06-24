@@ -12,6 +12,7 @@ Template.chatMain.onRendered(function () {
     if (!newMsgs || !newMsgs.length) {
       return;
     }
+    console.log('有运行了');
     // TODO 分送信息到不同的聊天容器
     newMsgs.forEach(function(msg) {
       showRecievedMsg(msg);

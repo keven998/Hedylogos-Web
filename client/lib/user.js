@@ -94,6 +94,7 @@ _.extend(LxpUser.prototype, {
 
   isInChatHistory: function (senderId) {
     var self = this;
+    console.log('in isInChatHistory');
     // 存在于未读信息列表中，不做任何处理，结束
     if (self.unReadChats[senderId]) {
       return;
@@ -112,11 +113,6 @@ _.extend(LxpUser.prototype, {
       Meteor.call('readNewMsgs', tid);
     }
   },
-
-  // getChatList: function () {
-  //   var self = this;
-  //   return self.chatList;
-  // }
 });
 
 // create a instance in client

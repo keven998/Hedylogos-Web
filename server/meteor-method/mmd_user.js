@@ -17,12 +17,6 @@ Meteor.methods({
     ], 0, 2000);
     // transform i64 object to number
     friendList.map(function(friend){friend.userId = parseInt(friend.userId.toString())});
-
-    // 用来制造虚假的会话历史，所有好友作为历史会话
-    // friendList.forEach(function(friend) {
-    //   friend = _.extend(friend, {'uid': Number(userId.toString()), 'tid': friend.userId});
-    //   UserConversation.insert(friend);
-    // });
     return {'code': 0, 'data': friendList};
   },
 
@@ -54,7 +48,11 @@ Meteor.methods({
     } else {
       // 不存在则需要新建会话记录
       // 先查询用户信息，获得 nickName 和 avatar
-      var targetInfo = Meteor.lxp.Userservice.getUserById(new thrift.Int64(targetId));
+      var targetInfo = Meteor.lxp.Userservice.getUserById(new thrift.Int64(targetId), [
+        lxpThriftType.UserInfoProp.USER_ID,
+        lxpThriftType.UserInfoProp.NICK_NAME,
+        lxpThriftType.UserInfoProp.AVATAR,
+      ]);
       var data = {
         'tid': targetId,
         'uid': uid,
