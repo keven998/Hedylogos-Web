@@ -55,6 +55,7 @@ Template.chatMain.events({
     // lxpUser.getChatGroupList();
   },
 
+  // TODO 展示群内人员
   'click .im-cur-chat': function (e) {
     e.preventDefault();
     var dom = $('#im-cur-chat-chevron');
