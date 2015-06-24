@@ -1,13 +1,28 @@
 LxpUser = function () {
   var self = this;
+  self.unReadChats = {};
+  self.chatWith = {};
   Session.setDefault('chatList', []);
   Session.setDefault('chatWith', {});
-  Session.setDefault('chatIds', {});
+  Session.setDefault('chatIds', {});  //缓存会话ID，减少数据库请求
   self.friends = new ReactiveVar([], function (o, n){ return o == n;});
   self.chatWith = new ReactiveVar({}, function (o, n){ return o == n;});
 };
 
 _.extend(LxpUser.prototype, {
+  init: function () {
+    var self = this;
+    // 跟踪改变缓存的chat列表
+    var tempChatIds = {};
+    UserConversation.find({}).forEach(function (chat) {
+      tempChatIds[chat.tid.toString()] = true;
+    });
+    Session.set('chatIds', tempChatIds);
+    Tracker.autorun(function() {
+      self.chatWith =  Session.get('chatWith');
+    });
+  },
+
   hasUser: function () {
     return Meteor.userId();
   },
@@ -59,7 +74,6 @@ _.extend(LxpUser.prototype, {
       }
       if (res && res.code === 0) {
         var data = res.data;
-        console.log(data);
       }
     });
   },
@@ -76,6 +90,27 @@ _.extend(LxpUser.prototype, {
     var chatList = Session.get('chatList') || [];
     chatList.push(chatTargetInfo);
     Session.set('chatList', chatList);
+  },
+
+  isInChatHistory: function (senderId) {
+    var self = this;
+    // 存在于未读信息列表中，不做任何处理，结束
+    if (self.unReadChats[senderId]) {
+      return;
+    } else {
+      // 不在未读列表，添加进去
+      self.unReadChats[senderId] = true;
+      // 更新数据库时间，谁先到谁在前
+      Meteor.call('updateConversationTs', senderId);
+    }
+  },
+  readMsg: function (chatInfo) {
+    var self = this;
+    var tid = chatInfo.tid;
+    if (self.unReadChats[tid]) {
+      self.unReadChats[tid] = false;
+      Meteor.call('readNewMsgs', tid);
+    }
   },
 
   // getChatList: function () {

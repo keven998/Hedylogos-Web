@@ -32,11 +32,12 @@ timestamp: 1434512239556
 
 showRecievedMsg = function(msg) {
   var senderId = msg.senderId;
+  lxpUser.isInChatHistory(senderId);
   if (msg.chatType === 'single') {
-    var chatWith = Session.get('chatWith');
-    // 如果该信息来自当前会话，就直接显示，如果不是，在会话列表里提示有信息，往用户的会话列表update
-    // TODO
-    // Meteor.users.update({自己的 ，newMsg:true, })
+    /*
+      不再从session取值
+    */
+    var chatWith = lxpUser.chatWith;
     msg = _.extend(msg, {'avatar': chatWith.avatar});
     checkChatExist(senderId);
     Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + senderId)[0]);

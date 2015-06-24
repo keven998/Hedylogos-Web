@@ -2,17 +2,18 @@ Message1 = new Mongo.Collection('Message1');
 
 
 Template.chatMain.onRendered(function () {
-  // Meteor.subscribe('chatMessage', Meteor.user().loginTime);
+  // 初始化lxpUser
+  lxpUser.init();
+  // 绑定消息发送功能
   bindSendMsg();
+  // message获取
   Tracker.autorun(function () {
     var newMsgs = Message1.findOne({}).msgs;
     if (!newMsgs || !newMsgs.length) {
       return;
     }
-    console.log(newMsgs);
     // TODO 分送信息到不同的聊天容器
     newMsgs.forEach(function(msg) {
-      console.log(msg);
       showRecievedMsg(msg);
     });
   });
@@ -27,7 +28,7 @@ Template.chatMain.helpers({
     return Session.get('chatWith');
   },
   'chats': function () {
-    return UserConversation.find({});
+    return UserConversation.find({}, {'sort': {'updateTs': -1}});
   }
 
 });

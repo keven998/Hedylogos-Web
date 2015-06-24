@@ -319,4 +319,11 @@ img.im-received-avatar {
     border-radius: 7px;
     padding: 3px;
 }
+.im-friend-msg-info {
+  position: absolute;
+  right: 15px;
+  font-size: 50px;
+  top: 1px;
+  color: rgb(240, 83, 83);
+}
 /*发送会话的信息展示 end*/

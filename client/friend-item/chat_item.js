@@ -6,5 +6,6 @@ Template.chatItem.events({
     // $(e.target).siblings().removeClass("active");
     // $(e.target).addClass("active");
     Session.set('chatWith', this);
+    lxpUser.readMsg(this);
   },
 });

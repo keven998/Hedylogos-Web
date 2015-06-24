@@ -39,6 +39,41 @@ Meteor.methods({
       lxpThriftType.ChatGroupProp.NAME,
     ]);
     return {'code': 0, 'data': groupList};
+  },
+
+  /**
+   * 更新用户的会话历史信息
+   */
+  'updateConversationTs': function (targetId) {
+    check(targetId, Number);
+    var uid = Number(getUserId().toString());
+    var conversation = UserConversation.findOne({'uid': uid, 'tid': targetId});
+    if (conversation) {
+      // 存在，只需要更新时间，打上有新消息的标签
+      UserConversation.update({'_id': conversation._id}, {'$set': {'updateTs': Date.now(), 'hasMsg': true}});
+    } else {
+      // 不存在则需要新建会话记录
+      // 先查询用户信息，获得 nickName 和 avatar
+      var targetInfo = Meteor.lxp.Userservice.getUserById(new thrift.Int64(targetId));
+      var data = {
+        'tid': targetId,
+        'uid': uid,
+        'nickName': targetInfo.nickName,
+        'avatar': targetInfo.avatar,
+        'updateTs': Date.now(),
+        'hasMsg': true
+      };
+      UserConversation.insert(data);
+    }
+  },
+
+  /**
+   * 点击未读信息，更新 hasMsg 字段
+   */
+  'readNewMsgs': function (tid) {
+    check(tid, Number);
+    var uid = Number(getUserId().toString());
+    UserConversation.update({'uid': uid, 'tid': tid}, {'$set': {'hasMsg': false}});
   }
 });
 
@@ -59,47 +94,4 @@ function getUserId () {
     }
     userId = new thrift.Int64(userId);
     return userId;
-}
-
-/**
- * @summary Transform i64 object to js number
- * @param {object | i64} i64 object or object which has i64 object as its key-value
- * @param {array} [optional] when target is a object, fields refer to keys whose value is i64 object.
- *                            data format: ['key1', 'key2.key3', 'key4.key5.key6', ...]
- */
-function i64ToNumber (target, fields) {
-  // TODO implement this function
-  var argsCnt = arguments.length;
-  if (argsCnt === 0 || argsCnt > 2) {
-    throw 'argument error';
-    return;
-  }
-  if (argsCnt === 1) {
-    return target.toString();
-  }
-  var tempTarget = target;
-  for (var i = 0, len = fields.length; i < len; ++i) {
-    var field = fields[i],
-        keys = field.split('.'),
-        temp = tempTarget;
-    for (var j = 0, l = keys.length; j < l; ++j) {
-      temp = temp[keys[j]];
-    }
-    temp = temp.toString();
-    console.log(temp);
-    console.log(tempTarget);
-  }
-
-  // fields.map(function (keys) {
-  //   var temp = tempTarget;
-  //   keys.split('.').map(function(key) {
-  //     temp = temp[key];
-  //   });
-  //   // console.log(temp);
-  //   temp = temp.toString();
-  //   console.log(temp);
-  //   console.log(tempTarget);
-  // });
-  // console.log(tempTarget);
-  return tempTarget;
 }

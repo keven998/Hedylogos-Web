@@ -1,7 +1,6 @@
 Meteor.publish('chatMessage', function (msgTs) {
   check(msgTs, Number);
   var self = this;
-  console.log(msgTs);
   var user = Meteor.users.findOne({'_id': this.userId});
   if (user && user.userInfo) {
     var newMsg = [];
@@ -21,7 +20,7 @@ Meteor.publish('chatMessage', function (msgTs) {
       self.added("Message1", id, {msgs: newMsg});
       newMsg = [];
       self.ready();
-    }, 1500);
+    }, 500);
   } else {
     this.ready();
   }
