@@ -62,9 +62,14 @@ EtcdClass = function() {
     return false;
   };
 
-  this.getSettingArray = function (object) {
+  /**
+   * 获取以hash后缀区分的一组数值
+   * @param  {object} nodes [description]
+   * @return {array}        [description]
+   */
+  this.getSettingArray = function (nodes) {
     var result = [];
-    object.map(function (node) {
+    nodes.map(function (node) {
       result.push(node.value);
     });
     return result;

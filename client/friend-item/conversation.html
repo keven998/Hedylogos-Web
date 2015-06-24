@@ -1,5 +1,5 @@
 <template name="conversation">
-    <div class="conversation-container" id="conversation-{{id}}">
+    <div class="conversation-container" id="conversation-{{id}}" style="display:none">
         
     </div>
 </template>
@@ -7,11 +7,13 @@
 
 <template name="sendedMsg">
     <div class="im-sended-msg-container">
+
         <div class="im-sender-msg-content-container">
             <div class="im-sender-content">
                 <span class="im-sended-content">{{contents}}</span>
             </div>
         </div>
+
         <div class="im-sender-avatar-container">
             <img src="{{userInfo.avatar}}" alt="" class="im-sender-avatar">
         </div>
@@ -23,10 +25,12 @@
         <div class="im-received-avatar-container">
             <img src="{{avatar}}" alt="" class="im-received-avatar">
         </div>
+
         <div class="im-received-msg-content-container">
             <div class="im-received-content">
                 {{contents}}
             </div>
         </div>
+
     </div>
 </template>
