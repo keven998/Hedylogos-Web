@@ -10,6 +10,7 @@ Template.friend.events({
     // TODO 设置状态
     // $(e.target).siblings().removeClass("active");
     // $(e.target).addClass("active");
+
     $('.im-friend-desc-container').remove();
     $('.im-frame-right-container').addClass("hidden");
     $('#im-friend-or-group-info').removeClass("hidden");

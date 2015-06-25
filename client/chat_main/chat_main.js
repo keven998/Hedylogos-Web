@@ -41,12 +41,20 @@ Template.chatMain.events({
   'click #J-im-btn-chat-list': function (e) {
     e.preventDefault();
     showList('chat');
+
+    // 右侧界面的切换，可以合并
+    $('#im-friend-or-group-info').addClass('hidden');
+    $('.im-frame-right-container').removeClass('hidden');
   },
 
   'click #J-im-btn-contact-list': function (e) {
     e.preventDefault();
     lxpUser.getFriendsList();
     showList('friend');
+
+    // 右侧界面的切换
+    $('.im-frame-right-container').addClass("hidden");
+    $('#im-friend-or-group-info').removeClass("hidden");
   },
 
   'click #J-im-btn-group-list': function (e) {
