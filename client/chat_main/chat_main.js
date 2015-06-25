@@ -62,6 +62,10 @@ Template.chatMain.events({
     e.preventDefault();
     // lxpUser.getChatGroupList();
     showList('group');
+
+    // 右侧界面的切换
+    $('.im-frame-right-container').addClass("hidden");
+    $('#im-friend-or-group-info').removeClass("hidden");
   },
 
   // TODO 展示群内人员
