@@ -7,4 +7,3 @@ function scrollIntoView () {
 
 Template.sendedMsg.onRendered(scrollIntoView());
 Template.receivedMsg.onRendered(scrollIntoView());
-

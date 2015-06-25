@@ -352,4 +352,83 @@ img.im-received-avatar {
 }
 /*发送会话的信息展示 end*/
 
+/*接收富文本信息 start*/
+.im-msg-send-plan-container {
+    /*同 .im-received-msg-container*/
+    width: 100%;
+    /*position: relative;*/
+    margin-top: 7px;
+    margin-bottom: 13px;
+}
 
+.im-msg-send-avatar-container {
+    /*同 .im-received-avatar-container*/
+    width: 40px;
+    height: 40px;
+    margin-right: 7px;
+    /*position: absolute;
+    top: 3px;
+    left: 3px;*/
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 3px;
+    margin-top: 3px;
+}
+
+.im-send-avatar{
+    /*同 .im-received-avatar*/
+    width: 40px;
+    height: 40px;
+    border-radius: 40px;
+}
+
+.im-msg-send-plan-content-container{
+    display: inline-block;
+    position: absolute;
+    padding-left: 7px;
+    /*同 .im-received-msg-content-container*/
+    /*padding-left: 57px;*/
+    padding-top: 7px;
+}
+
+.im-msg-send-plan-content {
+    /*同 .im-received-content*/
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    padding: 10px 5px;
+}
+
+.im-msg-send-plan-type{
+    position: absolute;
+    top: 18px;
+    background-color: rgba(0, 0, 0, .5);
+    color: #fff;
+    font-size: 22px;
+}
+
+.im-msg-send-plan-content-image{
+    width: 100px;
+    height: 100px;
+}
+
+.im-msg-send-plan-content-text{
+    display: inline-block;
+    vertical-align: top;
+    line-height: 1.5;
+    margin: 0 10px;
+}
+
+.im-msg-send-plan-content-title{
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.im-msg-send-plan-content-time{
+    font-size: 14px;
+}
+
+.im-msg-send-plan-content-desc{
+    font-size: 16px;
+}
+
+/*接收富文本信息 end*/
