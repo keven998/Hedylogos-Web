@@ -26,14 +26,20 @@ Meteor.methods({
    * 获取当前用户的群组列表
    */
   'getGroupList': function () {
+    console.log('服务端');
     var userId = i64UserId();
+    console.log(userId);
     if (!userId) {
       return {'code': -1, 'data': '传输数据错误'};
     }
     var groupList = Meteor.lxp.Userservice.getUserChatGroups(userId, [
       lxpThriftType.ChatGroupProp.CHAT_GROUP_ID,
       lxpThriftType.ChatGroupProp.NAME,
-    ]);
+      lxpThriftType.ChatGroupProp.ADMIN,
+      lxpThriftType.ChatGroupProp.AVATAR
+    ], 0, 100);
+    // var groupList = 1;
+
     return {'code': 0, 'data': groupList};
   },
 
@@ -58,10 +64,16 @@ Meteor.methods({
   'createConversation': function (tid, hasNewMsg) {
     check(tid, Number);
     check(hasNewMsg, Boolean);
+    var uid = getUserId();
+    // 已经存在则不创建，更新下时间置顶
+    if (UserConversation.findOne({'tid': tid, 'uid': uid})) {
+      UserConversation.update({'tid': tid, 'uid': uid}, {'$set': {'updateTs': Date.now()}});
+      return;
+    }
     var targetInfo = Meteor.call('getUserById', tid);
     var data = {
       'tid': tid,
-      'uid': getUserId(),
+      'uid': uid,
       'nickName': targetInfo.nickName,
       'avatar': targetInfo.avatar,
       'updateTs': Date.now(),

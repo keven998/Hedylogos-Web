@@ -88,14 +88,16 @@ _.extend(LxpUser.prototype, {
    */
   getChatGroupList: function() {
     var self = this;
+    console.log('lxp in');
     Meteor.call('getGroupList', function (err, res) {
       if (err) {
         console.log(err);
         return;
       }
       if (res && res.code === 0) {
-        var data = res.data;
-        // TODO
+        var groups = res.data;
+        // TODO 
+        console.log(res);
       }
     });
   },
