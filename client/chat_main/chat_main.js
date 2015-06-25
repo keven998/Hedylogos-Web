@@ -1,29 +1,9 @@
 Message1 = new Mongo.Collection('Message1');
 
-// msgSound = soundManager.createSound({
-//   url: 'public/msg.mp3'
-// });
-if (Meteor.isClient) {
-  Meteor.startup(function() {
-
-    function msgRadio() {
-      var ap = Meteor.absoluteUrl('public/');
-      console.log(ap);
-      soundManager.setup({
-        url: '../../public/swf/', //swf文件夹的位置
-        onready: function() {
-          soundManager.createSound({
-            id: 'msg',
-            autoLoad: true,
-            autoPlay: true,
-            url: '../../public/msg.mp3' //mp3文件的位置
-          });
-        }
-      });
-    }
-    msgRadio();
-  });
-}
+// 消息声音提示
+msgSound = new Howl({
+  src: ['msg.mp3']
+});
 
 Template.chatMain.onRendered(function () {
   // 初始化lxpUser
@@ -35,6 +15,8 @@ Template.chatMain.onRendered(function () {
     if (!newMsgs || !newMsgs.length) {
       return;
     }
+    // 新信息提示
+    msgSound.play();
     console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
       lxpUser.receivedMsgHander(msg);

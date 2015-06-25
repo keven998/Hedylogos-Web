@@ -8,6 +8,7 @@ binary-heap@1.0.3
 blaze@2.1.2
 blaze-tools@1.0.3
 boilerplate-generator@1.0.3
+bojicas:howler2@2.0.0_5
 callback-hook@1.0.3
 check@1.0.5
 coffeescript@1.0.6
@@ -75,4 +76,3 @@ urigo:angular@0.8.14
 url@1.0.4
 webapp@1.2.0
 webapp-hashing@1.0.3
-wenape:soundmanager@0.1.0

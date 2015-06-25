@@ -32,19 +32,17 @@ Meteor.methods({
     if (!userId) {
       return {'code': -1, 'data': '传输数据错误'};
     }
-    var options = {};
-    options[lxpThriftType.ChatGroupProp.NAME] = 'ckckckck';
-    var newGroup = Meteor.lxp.Userservice.createChatGroup(new thrift.Int64(100074), [new thrift.Int64(100009)], options);
-    console.log(newGroup);
+    // var options = {};
+    // options[lxpThriftType.ChatGroupProp.NAME] = 'ckckckck';
+    // var newGroup = Meteor.lxp.Userservice.createChatGroup(new thrift.Int64(100074), [new thrift.Int64(100009)], options);
+    // console.log(newGroup);
 
     var groupList = Meteor.lxp.Userservice.getUserChatGroups(userId, [
-      lxpThriftType.ChatGroupProp.CHAT_GROUP_ID,
+      // lxpThriftType.ChatGroupProp.CHAT_GROUP_ID,
       lxpThriftType.ChatGroupProp.NAME,
-      lxpThriftType.ChatGroupProp.ADMIN,
-      lxpThriftType.ChatGroupProp.AVATAR
     ], 0, 100);
     // var groupList = 1;
-
+    console.log(groupList);
     return {'code': 0, 'data': groupList};
   },
 
