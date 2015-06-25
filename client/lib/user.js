@@ -213,7 +213,7 @@ _.extend(LxpUser.prototype, {
       msg = self.richTextMsg();
     }
     if (msg.msgType === 0) {
-      templateName = 'sendedMsg';
+      templateName = 'receivedMsg';
     }
 
     if (self.avatars[tid]) {
