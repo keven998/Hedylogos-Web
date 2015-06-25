@@ -1,4 +1,83 @@
 <template name="chatMain">
-	<!-- 将其它模板包含进来 -->
-	<h1>聊天主界面</h1>
+    <!-- 将其它模板包含进来 -->
+    <div class="im-container">
+        <div class="im-frame">
+            <div class="im-top-pannel">
+                <div class="im-cur-chat-with-container">
+                    {{#if curChatWith}}
+                        <div class="im-cur-chat" id="{{curChatWith.userId}}">
+                            <span>{{curChatWith.nickName}}</span>
+                            <span id="im-cur-chat-chevron" class="glyphicon glyphicon-chevron-down" style="margin-left:7px"></span>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="im-center-pannel">
+                <div class="im-frame-left-container">
+                    <div class="im-main-control">
+                        <div class="im-user-icon-container">
+                            <div class="im-user-icon">
+                                <img id="J-im-user-icon" src="{{currentUser.userInfo.avatar}}" alt="" width="60" height="60">
+                            </div>
+                        </div>
+
+                        <div class="im-btn-chat-list-container">
+                            <div class="im-btn-chat-list">
+                                <span style="color: white" id="J-im-btn-chat-list">会话</span>
+                                <!-- <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-contact-list" width="40" height="40"> -->
+                            </div>
+                        </div>
+                        <div class="im-btn-contact-list-container">
+                            <div class="im-btn-contact-list">
+                                <span style="color: white" id="J-im-btn-contact-list">好友</span>
+                                <!-- <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-contact-list" width="40" height="40"> -->
+                            </div>
+                        </div>
+                        <div class="im-btn-group-list-container">
+                            <div class="im-btn-group-list">
+                                <span style="color: white" id="J-im-btn-group-list">群组</span>
+                                <!-- <img src="{{currentUser.userInfo.avatar}}" alt="" id="J-im-btn-group-list" width="40" height="40"> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="im-chat-list">
+                        会话
+                        {{#each chats}}
+                            {{> chatItem chatItemInfo=this}}
+                        {{/each}}
+                    </div>
+                    <div class="im-friend-list hidden">
+                        好友
+                        {{#each friends}}
+                            {{> friend friendInfo=this}}
+                        {{/each}}
+                    </div>
+                    <div class="im-group-list hidden">
+                        群组
+                    </div>
+                </div>
+                <div class="im-frame-right-container">
+                    <div class="im-chat-info-container">
+                        <!-- 信息展示窗口 -->
+                    </div>
+                    <div class="im-chat-input-container">
+                        <div class="im-chat-toolbar-container">
+                            <p>表情神马的</p>
+                        </div>
+                        <div class="im-chat-input-zone">
+                            <div class="im-chat-input">
+                                <textarea type="text" id="J-im-input-text" placeholder="type..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden" id="im-friend-or-group-info">
+                    <!-- 为了动态显示用户的信息 -->
+                </div>
+            </div>
+            <div class="im-frame-bottom-panel">
+                <p>底部</p>
+            </div>
+        </div>
+    </div>
 </template>
