@@ -2,18 +2,18 @@ Message1 = new Mongo.Collection('Message1');
 
 
 Template.chatMain.onRendered(function () {
-  // Meteor.subscribe('chatMessage', Meteor.user().loginTime);
-  bindSendMsg();
+  // 初始化lxpUser
+  lxpUser.init();
+
+  // message获取
   Tracker.autorun(function () {
     var newMsgs = Message1.findOne({}).msgs;
     if (!newMsgs || !newMsgs.length) {
       return;
     }
-    console.log(newMsgs);
-    // TODO 分送信息到不同的聊天容器
+    console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
-      console.log(msg);
-      showRecievedMsg(msg);
+      lxpUser.receivedMsgHander(msg);
     });
   });
 });
@@ -27,7 +27,7 @@ Template.chatMain.helpers({
     return Session.get('chatWith');
   },
   'chats': function () {
-    return Session.get('chatList');
+    return UserConversation.find({}, {'sort': {'updateTs': -1}});
   }
 
 });
@@ -55,6 +55,7 @@ Template.chatMain.events({
     // lxpUser.getChatGroupList();
   },
 
+  // TODO 展示群内人员
   'click .im-cur-chat': function (e) {
     e.preventDefault();
     var dom = $('#im-cur-chat-chevron');

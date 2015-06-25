@@ -1,12 +1,15 @@
 <template name="chatItem">
     {{#with chatItemInfo}}
         <div class="im-friend-item-container">
-            <div class="im-friend-item" id="{{this.userId}}">
+            <div class="im-friend-item" id="{{this.tid}}">
                 <div class="im-friend-avatar-container">
                     <img src="{{this.avatar}}" class="im-friend-avatar" alt="" width="50" height="50">
                 </div>
                 <div class="im-friend-info">
                     <div class="im-friend-name">{{this.nickName}}</div>
+                    {{#if hasMsg}}
+                        <span class="im-friend-msg-info" id="J-msg-count-{{this.tid}}">1</span>
+                    {{/if}}
                 </div>
             </div>
         </div>

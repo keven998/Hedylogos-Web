@@ -4,18 +4,12 @@ Meteor.startup(function () {
       thriftConnectionInstance = connectThriftServer(address.ip, address.port);
   createThriftClient(thriftConnectionInstance, 'lxpthrift', 'Userservice');
 
-  console.log('=== Connection And Service Test ===');
-  var res = Meteor.lxp.Userservice.add(3, 7);
-  if (res === 10) {
-    console.log('|             3 + 7 = ' + res + '          |');
-    console.log('===        Connection OK        ===');
-    console.log('===        Service    OK        ===');
-  } else {
-    console.log('3 + 7 != ' + res);
-    console.log('=== Connection Error OR Service Error ===');
-  }
-});
+  // 设置session过期日期为一天
+  Accounts.config({
+     loginExpirationInDays: 1
+  });
 
+});
 
 
 /**
@@ -169,7 +163,7 @@ function attachApi (clientName, client) {
  */
 function getApiList (clientName) {
   var client = {
-    Userservice: ['add', 'range', 'login', 'getUserById', 'updateUserInfo', 'isContact', 'addContact', 'addContacts',
+    Userservice: ['login', 'getUserById', 'updateUserInfo', 'isContact', 'addContact', 'addContacts',
     'removeContact', 'removeContacts', 'getContactList', 'createUser', 'createChatGroup', 'updateChatGroup',
     'getChatGroup', 'getUserChatGroups', 'addChatGroupMembers', 'removeChatGroupMembers', 'getChatGroupMembers'],
     // TODO add more client api
