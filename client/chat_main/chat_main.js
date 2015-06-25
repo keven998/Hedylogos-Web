@@ -1,5 +1,29 @@
 Message1 = new Mongo.Collection('Message1');
 
+// msgSound = soundManager.createSound({
+//   url: 'public/msg.mp3'
+// });
+if (Meteor.isClient) {
+  Meteor.startup(function() {
+
+    function msgRadio() {
+      var ap = Meteor.absoluteUrl('public/');
+      console.log(ap);
+      soundManager.setup({
+        url: '../../public/swf/', //swf文件夹的位置
+        onready: function() {
+          soundManager.createSound({
+            id: 'msg',
+            autoLoad: true,
+            autoPlay: true,
+            url: '../../public/msg.mp3' //mp3文件的位置
+          });
+        }
+      });
+    }
+    msgRadio();
+  });
+}
 
 Template.chatMain.onRendered(function () {
   // 初始化lxpUser
@@ -60,7 +84,7 @@ Template.chatMain.events({
 
   'click #J-im-btn-group-list': function (e) {
     e.preventDefault();
-    // lxpUser.getChatGroupList();
+    lxpUser.getChatGroupList();
     showList('group');
 
     // 右侧界面的切换
