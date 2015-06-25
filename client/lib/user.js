@@ -96,7 +96,7 @@ _.extend(LxpUser.prototype, {
       }
       if (res && res.code === 0) {
         var groups = res.data;
-        // TODO 
+        // TODO
         console.log(res);
       }
     });
@@ -194,16 +194,32 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
+   * 处理富文本信息，返回信息
+   */
+  'richTextMsg': function (msg) {
+    // TODO
+  },
+  /**
    * 将数据在前端展示，包含补充头像的逻辑
    * 取头像策略：本地缓存读取-》http获取
    */
   'renderData': function (msg) {
     var self = this;
     var tid = msg.senderId;
+    var templateName = '';
+    // 攻略 plan
+    if (msg.msgType === 10) {
+      templateName = 'planMsg';
+      msg = self.richTextMsg();
+    }
+    if (msg.msgType === 0) {
+      templateName = 'sendedMsg';
+    }
+
     if (self.avatars[tid]) {
       // 头像已经缓存
       msg.avatar = this.avatars[tid];
-      Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + tid)[0]);
+      Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
     } else {
       // 头像未缓存，从后段读取用户信息
       Meteor.call('getUserById', tid, function(err, userInfo) {
@@ -211,7 +227,7 @@ _.extend(LxpUser.prototype, {
           var avatar = userInfo.avatar;
           msg.avatar = avatar;
           self.avatars[tid] = avatar;
-          Blaze.renderWithData(Template.receivedMsg, msg, $('#conversation-' + tid)[0]);
+          Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
         }
       });
     }
