@@ -300,7 +300,7 @@ _.extend(LxpUser.prototype, {
             return;
           }
           var chatWith = Session.get('chatWith');
-          var receiver = chatWith.tid,
+          var receiver = chatWith.userId || chatWith.tid,
               sender = lxpUser.getUserId();
 
           if (!receiver || ! sender) {
