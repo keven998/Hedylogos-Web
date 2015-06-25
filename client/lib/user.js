@@ -197,7 +197,9 @@ _.extend(LxpUser.prototype, {
    * 处理富文本信息，返回信息
    */
   'richTextMsg': function (msg) {
-    // TODO
+    // 解析contents为json对象
+    msg.contents = JSON.parse(msg.contents);
+    return msg;
   },
   /**
    * 将数据在前端展示，包含补充头像的逻辑
@@ -210,10 +212,10 @@ _.extend(LxpUser.prototype, {
     // 攻略 plan
     if (msg.msgType === 10) {
       templateName = 'planMsg';
-      msg = self.richTextMsg();
+      msg = self.richTextMsg(msg);
     }
     if (msg.msgType === 0) {
-      templateName = 'sendedMsg';
+      templateName = 'receivedMsg';
     }
 
     if (self.avatars[tid]) {
