@@ -43,8 +43,9 @@ Template.chatMain.events({
     showList('chat');
 
     // 右侧界面的切换，可以合并
-    $('#im-friend-or-group-info').addClass('hidden');
-    $('.im-frame-right-container').removeClass('hidden');
+    $('.im-friend-desc-container').remove();
+    $('.im-frame-right-container').removeClass("hidden");
+    $('#im-friend-or-group-info').addClass("hidden");
   },
 
   'click #J-im-btn-contact-list': function (e) {
@@ -59,8 +60,8 @@ Template.chatMain.events({
 
   'click #J-im-btn-group-list': function (e) {
     e.preventDefault();
-    showList('group');
     // lxpUser.getChatGroupList();
+    showList('group');
   },
 
   // TODO 展示群内人员
