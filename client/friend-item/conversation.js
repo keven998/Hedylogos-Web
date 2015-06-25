@@ -5,7 +5,10 @@ Template.receivedMsg.onRendered(function() {
   msgSound.play();
 });
 
-function scrollIntoView () {
-  var parent = $(this.firstNode).parent()[0];
-  parent.scrollTop = parent.scrollHeight;
+function scrollIntoView() {
+	return function () {
+		console.log(this);
+	  var parent = $(this.firstNode).parent()[0];
+	  parent.scrollTop = parent.scrollHeight;
+	}
 }
