@@ -8,7 +8,7 @@ Template.chatItem.events({
 
     // TODO 判断是否为当前对话，假如不是，则hide当前对话窗口，并且show该对话窗口（注意可能要修改的逻辑：之前是在获取消息时render模板，现在是在入口处render!）
     lxpUser.readMsg(this);
-    openChatWindow(this);
+    // openChatWindow(this);
   },
 });
 

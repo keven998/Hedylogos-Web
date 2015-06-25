@@ -327,10 +327,16 @@ img.im-received-avatar {
 
 .im-friend-msg-info {
   position: absolute;
-  right: 15px;
-  font-size: 50px;
-  top: 1px;
-  color: rgb(240, 83, 83);
+  left: 46px;
+  font-size: 5px;
+  top: 3px;
+  width: 17px;
+  height: 17px;
+  text-align: center;
+  line-height: 17px;
+  border-radius: 7px;
+  background-color: red;
+  color: #fff;
 }
 
 .im-received-content, .im-sender-content{

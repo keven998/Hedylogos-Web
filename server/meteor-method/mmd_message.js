@@ -13,7 +13,7 @@ Meteor.methods({
     check(option.data.receiver, Number);
     check(option.data.sender, Number);
     var res = HTTP.post(msgHandlerHost, option);
-    Meteor.lxp.Userservice.addContact(100009, 100068);
+    // Meteor.lxp.Userservice.addContact(100009, 100068);
     if (res.statusCode === 200) {
       return {code: 0, data: res.data};
     } else {

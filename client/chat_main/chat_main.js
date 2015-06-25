@@ -4,18 +4,16 @@ Message1 = new Mongo.Collection('Message1');
 Template.chatMain.onRendered(function () {
   // 初始化lxpUser
   lxpUser.init();
-  // 绑定消息发送功能
-  bindSendMsg();
+
   // message获取
   Tracker.autorun(function () {
     var newMsgs = Message1.findOne({}).msgs;
     if (!newMsgs || !newMsgs.length) {
       return;
     }
-    console.log('有运行了');
-    // TODO 分送信息到不同的聊天容器
+    console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
-      showRecievedMsg(msg);
+      lxpUser.receivedMsgHander(msg);
     });
   });
 });
