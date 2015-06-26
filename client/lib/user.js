@@ -214,6 +214,11 @@ _.extend(LxpUser.prototype, {
       templateName = 'planMsg';
       msg = self.richTextMsg(msg);
     }
+    console.log(msg);
+    if (msg.msgType === 2) {
+      templateName = 'picMsg';
+      msg = self.richTextMsg(msg);
+    }
     if (msg.msgType === 0) {
       templateName = 'receivedMsg';
     }

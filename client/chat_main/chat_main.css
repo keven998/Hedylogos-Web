@@ -157,8 +157,6 @@
 .im-chat-input-container {
     width: 100%;
     height: 35%;
-    position: relative;
-    display: block;
 }
 
 .im-chat-toolbar-container {
@@ -174,7 +172,6 @@
 }
 
 .im-chat-input {
-    position: relative;
     width: 100%;
     height: 100%;
 }
@@ -190,7 +187,6 @@
     width: 60%;
     height: 100%;
     float: right;
-    position: relative;
 }
 
 .im-cur-chat {
@@ -266,10 +262,13 @@
     width: 100%;
     height: 100%;
     overflow-y: auto;
+
+    border-bottom: 2px solid #fff;
 }
 
 img.im-sender-avatar {
-    width: 40px;   height: 40px;
+    width: 40px;
+    height: 40px;
     border-radius: 40px;
 }
 
@@ -384,7 +383,7 @@ img.im-received-avatar {
 
 .im-msg-send-plan-content-container{
     display: inline-block;
-    position: absolute;
+    /*position: absolute;*/
     padding-left: 7px;
     /*同 .im-received-msg-content-container*/
     /*padding-left: 57px;*/
@@ -392,6 +391,7 @@ img.im-received-avatar {
 }
 
 .im-msg-send-plan-content {
+    position: relative;
     /*同 .im-received-content*/
     border: 1px solid #ccc;
     border-radius: 7px;
@@ -400,7 +400,7 @@ img.im-received-avatar {
 
 .im-msg-send-plan-type{
     position: absolute;
-    top: 18px;
+    top: 10px;
     background-color: rgba(0, 0, 0, .5);
     color: #fff;
     font-size: 22px;
@@ -432,3 +432,21 @@ img.im-received-avatar {
 }
 
 /*接收富文本信息 end*/
+
+/*全屏居中图片的样式 start*/
+.center-pic-container{
+    position: fixed;
+    z-index: 102;
+}
+
+.full-screen-shadow{
+    top: 0;
+    left: 0;
+    position: fixed;
+    z-index: 101;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+/*全屏居中图片的样式 end*/
+
+
+
