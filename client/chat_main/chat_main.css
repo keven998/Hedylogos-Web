@@ -416,6 +416,9 @@ img.im-received-avatar {
     vertical-align: top;
     line-height: 1.5;
     margin: 0 10px;
+    height: 100px;
+    max-width: 200px;
+    overflow: hidden;
 }
 
 .im-msg-send-plan-content-title{
@@ -425,16 +428,18 @@ img.im-received-avatar {
 
 .im-msg-send-plan-content-time{
     font-size: 14px;
+    margin-left: 3px;
 }
 
 .im-msg-send-plan-content-desc{
-    font-size: 16px;
+    font-size: 14px;
+    margin-left: 2px;
 }
 
 /*接收富文本信息 end*/
 
 /*全屏居中图片的样式 start*/
-.center-pic-container{
+.center-image-container{
     position: fixed;
     z-index: 102;
 }

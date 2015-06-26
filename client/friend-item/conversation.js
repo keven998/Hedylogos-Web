@@ -9,7 +9,7 @@ function scrollIntoView () {
 }
 
 
-Template.picMsg.events({
+Template.imageMsg.events({
   'click .im-msg-send-plan-content>img': function(e){
     renderCenterPic(this.contents.full);
   },
@@ -21,15 +21,15 @@ Template.picMsg.events({
  * @param  {string} url 图片的地址
  * @return {[type]}        [description]
  */
-function renderCenterPic (url) {
+function renderCenterImage (url) {
   var windowW = $(window).width();
   var windowH = $(window).height();
 
   showShadow(windowW, windowH);
-  showPicContainer(url);
-  adjustPicSize(windowW, windowH);
-  setPicContainer(windowW, windowH);
-  bindCenterPicCloseEvent();
+  showImageContainer(url);
+  adjustImageSize(windowW, windowH);
+  setImageContainer(windowW, windowH);
+  bindCenterImageCloseEvent();
   return ;
 };
 
@@ -40,10 +40,10 @@ function showShadow(wW, wH){
   }
 }
 
-function showPicContainer (url) {
-  showClass('center-pic-container');
-  $('.center-pic-container').empty();
-  $('.center-pic-container').append('<img src="' + url + '">');
+function showImageContainer (url) {
+  showClass('center-image-container');
+  $('.center-image-container').empty();
+  $('.center-image-container').append('<img src="' + url + '">');
 }
 
 /**
@@ -68,9 +68,9 @@ function showClass(className) {
  * @param  {[type]} wH window's height
  * @return {[type]}    [description]
  */
-function adjustPicSize (wW, wH) {
-  var iW = $('.center-pic-container img').width();
-  var iH = $('.center-pic-container img').height();
+function adjustImageSize (wW, wH) {
+  var iW = $('.center-image-container img').width();
+  var iH = $('.center-image-container img').height();
 
   // 留白，不至于贴边
   wW = wW - 100;
@@ -80,17 +80,17 @@ function adjustPicSize (wW, wH) {
   if (r < 1) {
     iW = iW * r;
     iH = iH * r;
-    $('.center-pic-container img').css({'width': iW, 'height': iH});
+    $('.center-image-container img').css({'width': iW, 'height': iH});
   }
   return ;
 };
 
-function setPicContainer (windowW, windowH) {
-  var imageW = $('.center-pic-container img').width();
-  var imageH = $('.center-pic-container img').height();
+function setImageContainer (windowW, windowH) {
+  var imageW = $('.center-image-container img').width();
+  var imageH = $('.center-image-container img').height();
 
-  $('.center-pic-container').css('left', (windowW - imageW)/2);
-  $('.center-pic-container').css('top', (windowH - imageH)/2);
+  $('.center-image-container').css('left', (windowW - imageW)/2);
+  $('.center-image-container').css('top', (windowH - imageH)/2);
   return ;
 }
 
@@ -98,10 +98,10 @@ function setPicContainer (windowW, windowH) {
  * 绑定图片的关闭事件
  * @return {[type]} [description]
  */
-function bindCenterPicCloseEvent () {
+function bindCenterImageCloseEvent () {
   $('.full-screen-shadow').on('click', function(){
     $('.full-screen-shadow').hide();
-    $('.center-pic-container').hide();
+    $('.center-image-container').hide();
   })
   return ;
 }

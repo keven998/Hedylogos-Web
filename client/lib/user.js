@@ -209,20 +209,31 @@ _.extend(LxpUser.prototype, {
     var self = this;
     var tid = msg.senderId;
     var templateName = '';
+    console.log(msg);
     // 攻略 plan
+    if (msg.msgType === 0) {
+      templateName = 'receivedMsg';
+    }
+    if (msg.msgType === 1) {
+      templateName = 'voiceMsg';
+      msg = self.richTextMsg(msg);
+    }
+    if (msg.msgType === 2) {
+      templateName = 'imageMsg';
+      msg = self.richTextMsg(msg);
+    }
+    if (msg.msgType === 4) {
+      templateName = 'phizeMsg';
+      msg = self.richTextMsg(msg);
+    }
     if (msg.msgType === 10) {
       templateName = 'planMsg';
       msg = self.richTextMsg(msg);
     }
-    console.log(msg);
-    if (msg.msgType === 2) {
-      templateName = 'picMsg';
+    if (msg.msgType === 12) {
+      templateName = 'noteMsg';
       msg = self.richTextMsg(msg);
     }
-    if (msg.msgType === 0) {
-      templateName = 'receivedMsg';
-    }
-
     if (self.avatars[tid]) {
       // 头像已经缓存
       msg.avatar = this.avatars[tid];

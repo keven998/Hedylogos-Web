@@ -56,7 +56,26 @@
     </div>
 </template>
 
-<template name="picMsg">
+<template name="noteMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/dayDetail.php?id={{contents.id}}" target=_blank>
+            <div class="im-msg-send-plan-content">
+                <div class="im-msg-send-plan-type">游记</div>
+                <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
+                <div class="im-msg-send-plan-content-text">
+                    <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
+                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</template>
+
+<template name="imageMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
@@ -65,6 +84,38 @@
         <div class="im-msg-send-plan-content-container">
             <div class="im-msg-send-plan-content">
                 <img src="{{contents.thumb}}">
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template name="voiceMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <div class="im-msg-send-plan-content-container">
+            <div class="im-msg-send-plan-content">
+                <audio src="{{contents.url}}" controls="controls"></audio>
+                <!-- contents.duration -->
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template name="phizeMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <div class="im-msg-send-plan-content-container">
+            <div class="im-msg-send-plan-content">
+                <audio src="{{contents.url}}" controls="controls"></audio>
+                <!-- contents.duration -->
             </div>
         </div>
     </div>
