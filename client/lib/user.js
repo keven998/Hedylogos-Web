@@ -202,6 +202,23 @@ _.extend(LxpUser.prototype, {
     return msg;
   },
   /**
+   * 转义
+   */
+  'escapeRegExp': function (string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+  },
+  /**
+   * 匹配emoji表情，并替换
+   */
+  'emojiConvert': function (msg) {
+    for (i = 0;i < emojiArray.length;i++){
+      var emojiStr = this.escapeRegExp(emojiArray[i].str);
+      var regexp = new RegExp(emojiStr, 'g');
+      msg.contents = msg.contents.replace(regexp, '<img src="/emoji/' + emojiArray[i].name + '.png" alt="" class="emoji-container">');
+    }
+    return msg;
+  },
+  /**
    * 将数据在前端展示，包含补充头像的逻辑
    * 取头像策略：本地缓存读取-》http获取
    */
@@ -209,15 +226,32 @@ _.extend(LxpUser.prototype, {
     var self = this;
     var tid = msg.senderId;
     var templateName = '';
+    console.log(msg);
     // 攻略 plan
+    if (msg.msgType === 0) {
+      templateName = 'receivedMsg';
+      msg = self.emojiConvert(msg);
+    }
+    if (msg.msgType === 1) {
+      templateName = 'voiceMsg';
+      msg = self.richTextMsg(msg);
+    }
+    if (msg.msgType === 2) {
+      templateName = 'imageMsg';
+      msg = self.richTextMsg(msg);
+    }
+    // if (msg.msgType === 4) {
+    //   templateName = 'phizeMsg';
+    //   msg = self.richTextMsg(msg);
+    // }
     if (msg.msgType === 10) {
       templateName = 'planMsg';
       msg = self.richTextMsg(msg);
     }
-    if (msg.msgType === 0) {
-      templateName = 'receivedMsg';
+    if (msg.msgType === 12) {
+      templateName = 'noteMsg';
+      msg = self.richTextMsg(msg);
     }
-
     if (self.avatars[tid]) {
       // 头像已经缓存
       msg.avatar = this.avatars[tid];
