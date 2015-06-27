@@ -453,5 +453,9 @@ img.im-received-avatar {
 }
 /*全屏居中图片的样式 end*/
 
-
+.emoji-container{
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+}
 

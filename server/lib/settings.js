@@ -13,8 +13,8 @@ function getHedyMongoUrl () {
   var mongoUrl = Etcd.getSettingValue(Etcd.settingPath.mongo.url.path, result);
   var mongoUser = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.user, result);
   var mongoPassword = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.password, result);
-  var mongoDBName = 'hedy';
+  var mongoDb = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.db, result);
 
-  return 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoUrl.toString() + '/' + mongoDBName + '?' + 'authSource=admin&authMechanism=SCRAM-SHA-1';
+  return 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoUrl.toString() + '/' + mongoDb;
 }
 
