@@ -16,7 +16,7 @@ Template.chatMain.onRendered(function () {
       return;
     }
     // 新信息提示
-    // msgSound.play();
+    msgSound.play();
     console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
       lxpUser.receivedMsgHander(msg);

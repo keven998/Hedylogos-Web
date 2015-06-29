@@ -64,6 +64,15 @@ Meteor.methods({
     return targetInfo
   },
 
+  /**
+   * 删除一个会话记录
+   */
+  'deleteConversation': function (chatInfo) {
+    check(chatInfo, Object);
+    var cnt = UserConversation.remove(chatInfo._id);
+    return {'code': cnt === 1 ? 0 : -1};
+  },
+
 
   /**
    * 创建一个新会话，数据库层面，并不是显示层面，显示层只显示按时间降序前30个会话
@@ -86,6 +95,7 @@ Meteor.methods({
     var data = {
       'tid': tid,
       'uid': uid,
+      'isGroupChat': isChatGroup,
       'nickName': targetInfo.nickName || targetInfo.name,  //群组名称为name，用户名称为nickName
       'avatar': targetInfo.avatar,
       'updateTs': Date.now(),

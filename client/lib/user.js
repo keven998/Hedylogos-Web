@@ -130,6 +130,18 @@ _.extend(LxpUser.prototype, {
     self._showList('group');
   },
 
+  /**
+   * 删除一个会话记录
+   */
+  deleteConversation: function (chatInfo) {
+    var self = this;
+    Meteor.call('deleteConversation', chatInfo, function(err, res) {
+      if (!err && res.code === 0) {
+        // 只删消息，不删消息容器
+        $('#conversation-' + chatInfo.tid).empty();
+      }
+    });
+  },
 
   /**
    * 当前和谁聊天的icon（上下箭头）状态调整
@@ -231,6 +243,8 @@ _.extend(LxpUser.prototype, {
     self._hiddenDescPanel();
     // 显示chat列表
     self._showList('chat');
+    // 显示正在和谁聊天
+    $('.im-cur-chat-with-container').removeClass("hidden");
   },
 
   /**
