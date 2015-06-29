@@ -106,12 +106,12 @@
     margin: 7px auto;
 }
 
-.im-friend-item-container {
+.im-friend-item-container, .im-group-item-container{
     width: 100%;
     height: 70px;
 }
 
-.im-friend-item {
+.im-friend-item, .im-group-item {
     width: 100%;
     height: 100%;
     position: relative;
@@ -119,7 +119,7 @@
     padding-left: 7px;
 }
 
-.im-friend-avatar-container {
+.im-friend-avatar-container, .im-group-avatar-container {
     width: 50px;
     height: 50px;
     float: left;
@@ -127,17 +127,17 @@
     margin-right: 7px;
 }
 
-.im-friend-avatar {
+.im-friend-avatar, .im-group-avatar{
   border-radius: 3px;
 }
 
-.im-friend-info {
+.im-friend-info, .im-group-info {
     width: 100%;
     height: 100%;
     padding-left: 50px;
 }
 
-.im-friend-name {
+.im-friend-name, .im-group-name {
     padding-top: 10px;
     font-size: 7px;
 }
@@ -206,11 +206,52 @@
     border-left: 1px solid #ccc;
 }
 
-/*用户的信息展示 begin*/
-.im-friend-desc-container {
+/*用户和群组信息展示 begin*/
+.im-friend-desc-container{
     width: 50%;
     height: 100%;
     margin: 20px auto;
+}
+
+.im-group-desc-container {
+    width: 70%;
+    height: 100%;
+    margin: 20px auto;
+}
+
+
+.im-group-desc-img-container {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: scroll;
+    margin-bottom: 30px;
+}
+
+.im-group-member-desc-img {
+    width: 60px;
+    height: 60px;
+    margin: 7px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.im-group-member-desc-img:hover {
+    background-color: #0ff;
+    -webkit-animation-name: shake-little; -ms-animation-name: shake-little; animation-name: shake-little; -webkit-animation-duration: 100ms; -ms-animation-duration: 100ms; animation-duration: 100ms; -webkit-animation-iteration-count: infinite; -ms-animation-iteration-count: infinite; animation-iteration-count: infinite; -webkit-animation-timing-function: ease-in-out; -ms-animation-timing-function: ease-in-out; animation-timing-function: ease-in-out; -webkit-animation-delay: 0s; -ms-animation-delay: 0s; animation-delay: 0s; -webkit-animation-play-state: running; -ms-animation-play-state: running; animation-play-state: running;
+}
+
+
+.im-group-desc-name {
+    margin: 3px auto;
+    margin-bottom: 33px;
+    width: 100px;
+    text-align: center;
+}
+.im-group-desc-contact {
+    width: 90%;
+    height: 50px;
+    margin: 3px auto;
+    text-align: center;
 }
 
 .im-friend-desc-img-container {
@@ -432,3 +473,158 @@ img.im-received-avatar {
 }
 
 /*接收富文本信息 end*/
+
+
+/*抖动动画*/
+@-webkit-keyframes shake-little { 0% { -webkit-transform: translate(0px, 0px) rotate(0deg); }
+  2% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  4% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  6% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  8% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  10% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  12% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  14% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  16% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  18% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  20% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  22% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  24% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  26% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  28% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  30% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  32% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  34% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  36% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  38% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  40% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  42% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  44% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  46% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  48% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  50% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  52% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  54% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  56% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  58% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  60% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  62% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  64% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  66% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  68% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  70% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  72% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  74% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  76% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  78% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  80% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  82% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  84% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  86% { -webkit-transform: translate(0px, 0px) rotate(-0.5deg); }
+  88% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  90% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  92% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  94% { -webkit-transform: translate(0px, -1px) rotate(-0.5deg); }
+  96% { -webkit-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  98% { -webkit-transform: translate(-1px, -1px) rotate(-0.5deg); } }
+
+@-ms-keyframes shake-little { 0% { -ms-transform: translate(0px, 0px) rotate(0deg); }
+  2% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  4% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  6% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  8% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  10% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  12% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  14% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  16% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  18% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  20% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  22% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  24% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  26% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  28% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  30% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  32% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  34% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  36% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  38% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  40% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  42% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  44% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  46% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  48% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  50% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  52% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  54% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  56% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  58% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  60% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  62% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  64% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  66% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  68% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  70% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  72% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  74% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  76% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  78% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  80% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  82% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  84% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  86% { -ms-transform: translate(-1px, 0px) rotate(-0.5deg); }
+  88% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  90% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); }
+  92% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  94% { -ms-transform: translate(-1px, -1px) rotate(-0.5deg); }
+  96% { -ms-transform: translate(0px, -1px) rotate(-0.5deg); }
+  98% { -ms-transform: translate(0px, 0px) rotate(-0.5deg); } }
+
+@keyframes shake-little { 0% { transform: translate(0px, 0px) rotate(0deg); }
+  2% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  4% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  6% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  8% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  10% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  12% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  14% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  16% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  18% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  20% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  22% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  24% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  26% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  28% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  30% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  32% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  34% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  36% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  38% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  40% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  42% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  44% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  46% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  48% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  50% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  52% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  54% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  56% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  58% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  60% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  62% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  64% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  66% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  68% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  70% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  72% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  74% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  76% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  78% { transform: translate(-1px, -1px) rotate(-0.5deg); }
+  80% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  82% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  84% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  86% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  88% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  90% { transform: translate(-1px, 0px) rotate(-0.5deg); }
+  92% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  94% { transform: translate(0px, -1px) rotate(-0.5deg); }
+  96% { transform: translate(0px, 0px) rotate(-0.5deg); }
+  98% { transform: translate(0px, 0px) rotate(-0.5deg); } }

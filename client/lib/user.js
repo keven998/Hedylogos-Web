@@ -6,6 +6,7 @@ LxpUser = function () {
   self.chatWith = {};     //当前聊天对象的信息
   self.avatars = {};      // uid -> avatarUrl
   self.friends = new ReactiveVar([], function (o, n){ return o == n;});
+  self.groups = new ReactiveVar([], function (o, n){ return o == n;});
   self.chatWith = new ReactiveVar({}, function (o, n){ return o == n;});
 };
 
@@ -88,7 +89,6 @@ _.extend(LxpUser.prototype, {
    */
   getChatGroupList: function() {
     var self = this;
-    console.log('lxp in');
     Meteor.call('getGroupList', function (err, res) {
       if (err) {
         console.log(err);
@@ -96,18 +96,119 @@ _.extend(LxpUser.prototype, {
       }
       if (res && res.code === 0) {
         var groups = res.data;
-        // TODO
-        console.log(res);
+        self.groups.set(groups);
       }
     });
   },
 
   /**
+   * 点击会话列表
+   */
+  clickChatList: function () {
+    var self = this;
+    $('.im-cur-chat-with-container').removeClass("hidden");
+    self._removeDescContainer();
+    self._hiddenDescPanel();
+    self._showList('chat');
+  },
+
+  /**
+   * 点击好友列表
+   */
+  clickFriendList: function () {
+    var self = this;
+    self.getFriendsList();
+    self._showList('friend');
+  },
+
+  /**
+   * 点击群组列表
+   */
+  clickGroupList: function () {
+    var self = this;
+    self.getChatGroupList();
+    self._showList('group');
+  },
+
+
+  /**
+   * 当前和谁聊天的icon（上下箭头）状态调整
+   */
+  '_setIconOfChatWith': function () {
+    // 顶部标签复原
+    var dom = $('#im-cur-chat-chevron');
+    if (!dom.hasClass("glyphicon-chevron-down")) {
+      dom.removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+    }
+  },
+
+  /**
+   * 点击“发送信息”时，隐藏好友或者群组介绍页面
+   */
+  '_hiddenDescPanel': function () {
+    $('.im-frame-right-container').removeClass("hidden");
+    $('#im-friend-or-group-info').addClass("hidden");
+  },
+
+  /**
+   * 点击好友列表中的一个好友或者群组列表的一个群时，显示desc容器
+   */
+  '_showDescPanel': function () {
+    $('.im-frame-right-container').addClass("hidden");
+    $('#im-friend-or-group-info').removeClass("hidden");
+    $('.im-cur-chat-with-container').addClass("hidden");
+  },
+
+  /*
+   * 删除好友介绍或者群组介绍的信息容器
+   */
+  _removeDescContainer: function () {
+    $('.im-friend-desc-container').remove();
+    $('.im-group-desc-container').remove();
+  },
+
+  /**
+   * 点击好友列表中的一个好友，显示好友信息
+   */
+  'showFriendDesc': function (friendInfo) {
+    var self = this;
+    self._removeDescContainer();
+    self._showDescPanel();
+    Blaze.renderWithData(Template.friendDesc, friendInfo, $('#im-friend-or-group-info')[0]);
+  },
+
+  /**
+   * 点击群组列表中的一个群信息，显示群信息
+   */
+  'showGroupDesc': function (groupInfo) {
+    var self = this;
+    self._removeDescContainer();
+    self._showDescPanel();
+    Blaze.renderWithData(Template.groupDesc, groupInfo, $('#im-friend-or-group-info')[0]);
+  },
+
+  /**
+   * 点击“发送信息“后，显示chat聊表，（除了chat列表，还有好友链表和群组列表）
+   * @summary 显示不同的列表信息[chat|friend|group]
+   * @params {string}
+   */
+  _showList: function (type) {
+    var cls = ['chat', 'friend', 'group'];
+    if (cls.indexOf(type) === -1) {
+      return;
+    }
+    cls.forEach(function(ele) {
+      $('.im-' + ele + '-list').addClass("hidden");
+    });
+    $('.im-' + type + '-list').removeClass("hidden");
+  },
+
+  /**
    * 激活一个会话，使用场景：用户介绍页面或者群组介绍页面，点击“发送信息”
    */
-  activeOneChat: function (chatTargetInfo) {
+  _activeOneChat: function (chatTargetInfo, isGroupChat) {
     var self = this;
-    var chatId = chatTargetInfo.userId || chatTargetInfo.groupId;
+    var chatId = chatTargetInfo.userId || chatTargetInfo.chatGroupId;
     // 创建会话DOM
     self.checkChatExist(chatId);
     // 隐藏上次会话DOM，显示当前会话DOM
@@ -115,7 +216,37 @@ _.extend(LxpUser.prototype, {
     // 改变session
     Session.set('chatWith', chatTargetInfo);
     // 数据层面创建会话
-    Meteor.call('createConversationWithoutMsg', chatId);
+    isGroupChat ?
+      Meteor.call('createGroupConversationWithoutMsg', chatId)
+      :
+      Meteor.call('createConversationWithoutMsg', chatId);
+    // 删除好友介绍或者群组介绍列表
+    isGroupChat ?
+      $('.im-group-desc-container').remove()
+      :
+      $('.im-friend-desc-container').remove();
+    // 如果需要，则调整chatWith标签
+    self._setIconOfChatWith();
+    // 隐藏好友或者群组介绍界面
+    self._hiddenDescPanel();
+    // 显示chat列表
+    self._showList('chat');
+  },
+
+  /**
+   * 激活一个单聊会话
+   */
+  activeSingleChat: function(chatTargetInfo) {
+    var self = this;
+    self._activeOneChat(chatTargetInfo, false);
+  },
+
+  /**
+   * 激活一个群聊会话
+   */
+  activeGroupChat: function(chatTargetInfo) {
+    var self = this;
+    self._activeOneChat(chatTargetInfo, true);
   },
 
   /**

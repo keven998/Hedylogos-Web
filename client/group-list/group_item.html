@@ -1,0 +1,14 @@
+<template name="group">
+    {{#with groupInfo}}
+        <div class="im-group-item-container">
+            <div class="im-group-item" id="{{this.chatGroupId}}">
+                <div class="im-group-avatar-container">
+                    <img src="{{this.avatar}}" class="im-group-avatar" alt="" width="50" height="50">
+                </div>
+                <div class="im-group-info">
+                    <div class="im-group-name">{{this.name}}</div>
+                </div>
+            </div>
+        </div>
+    {{/with}}
+</template>

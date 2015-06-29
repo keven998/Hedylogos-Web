@@ -26,23 +26,14 @@ Meteor.methods({
    * 获取当前用户的群组列表
    */
   'getGroupList': function () {
-    console.log('服务端');
     var userId = i64UserId();
-    console.log(userId);
     if (!userId) {
       return {'code': -1, 'data': '传输数据错误'};
     }
-    // var options = {};
-    // options[lxpThriftType.ChatGroupProp.NAME] = 'ckckckck';
-    // var newGroup = Meteor.lxp.Userservice.createChatGroup(new thrift.Int64(100074), [new thrift.Int64(100009)], options);
-    // console.log(newGroup);
-
     var groupList = Meteor.lxp.Userservice.getUserChatGroups(userId, [
-      // lxpThriftType.ChatGroupProp.CHAT_GROUP_ID,
       lxpThriftType.ChatGroupProp.NAME,
     ], 0, 100);
-    // var groupList = 1;
-    console.log(groupList);
+    groupList.map(function(group){group.chatGroupId = parseInt(group.chatGroupId.toString())});
     return {'code': 0, 'data': groupList};
   },
 
@@ -60,11 +51,24 @@ Meteor.methods({
     return targetInfo
   },
 
+  /**
+   * 通过ID获取讨论组基本信息
+   */
+  'getChatGroup': function (gid) {
+    check(gid, Number);
+    var targetInfo = Meteor.lxp.Userservice.getChatGroup(new thrift.Int64(gid), [
+      lxpThriftType.ChatGroupProp.CHAT_GROUP_ID,
+      lxpThriftType.ChatGroupProp.NAME,
+      lxpThriftType.ChatGroupProp.AVATAR,
+    ]);
+    return targetInfo
+  },
+
 
   /**
    * 创建一个新会话，数据库层面，并不是显示层面，显示层只显示按时间降序前30个会话
    */
-  'createConversation': function (tid, hasNewMsg) {
+  'createConversation': function (tid, hasNewMsg, isChatGroup) {
     check(tid, Number);
     check(hasNewMsg, Boolean);
     var uid = getUserId();
@@ -73,11 +77,16 @@ Meteor.methods({
       UserConversation.update({'tid': tid, 'uid': uid}, {'$set': {'updateTs': Date.now()}});
       return;
     }
-    var targetInfo = Meteor.call('getUserById', tid);
+    var targetInfo;
+    if (!isChatGroup) {
+      targetInfo = Meteor.call('getUserById', tid);
+    } else {
+      targetInfo = Meteor.call('getChatGroup', tid);
+    }
     var data = {
       'tid': tid,
       'uid': uid,
-      'nickName': targetInfo.nickName,
+      'nickName': targetInfo.nickName || targetInfo.name,  //群组名称为name，用户名称为nickName
       'avatar': targetInfo.avatar,
       'updateTs': Date.now(),
       'hasMsg': hasNewMsg
@@ -87,20 +96,38 @@ Meteor.methods({
 
 
   /**
-   * 创建一个存在即时未读信息的会话，使用场景：来了新消息，自动创建一个会话
+   * 创建一个存在即时未读信息的会话，（单聊）使用场景：来了新消息，自动创建一个会话
    */
   'createConversationWithNewMsg': function(tid) {
     check(tid, Number);
-    Meteor.call('createConversation', tid, true);
+    Meteor.call('createConversation', tid, true, false);
   },
 
 
   /**
-   * 创建一个会话，使用场景：点击新建会话
+   * 创建一个会话，（单聊）使用场景：点击新建会话
    */
   'createConversationWithoutMsg': function(tid) {
     check(tid, Number);
-    Meteor.call('createConversation', tid, false);
+    Meteor.call('createConversation', tid, false, false);
+  },
+
+
+  /**
+   * 同createConversationWithNewMsg，但是为群聊会话
+   */
+  'createGroupConversationWithNewMsg': function(tid) {
+    check(tid, Number);
+    Meteor.call('createConversation', tid, true, true);
+  },
+
+
+  /**
+   * 同createConversationWithoutMsg，但是为群聊会话
+   */
+  'createGroupConversationWithoutMsg': function(tid) {
+    check(tid, Number);
+    Meteor.call('createConversation', tid, false, true);
   },
 
 
