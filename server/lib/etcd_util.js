@@ -7,8 +7,9 @@ EtcdClass = function() {
         path: '/backends/mongo-dev'
       },
       auth: {
-        user: '/project-conf/hedylogos/server/mongo/user',
-        password: '/project-conf/hedylogos/server/mongo/password'
+        user: '/project-conf/hedylogos-dev/server/mongo/user',
+        password: '/project-conf/hedylogos-dev/server/mongo/password',
+        db: '/project-conf/hedylogos-dev/server/mongo/db'
       }
     }
   };

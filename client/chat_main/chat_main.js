@@ -1,5 +1,9 @@
 Message1 = new Mongo.Collection('Message1');
 
+// 消息声音提示
+msgSound = new Howl({
+  src: ['msg.mp3']
+});
 
 Template.chatMain.onRendered(function () {
   // 初始化lxpUser
@@ -11,6 +15,8 @@ Template.chatMain.onRendered(function () {
     if (!newMsgs || !newMsgs.length) {
       return;
     }
+    // 新信息提示
+    msgSound.play();
     console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
       lxpUser.receivedMsgHander(msg);
@@ -22,6 +28,9 @@ Template.chatMain.onRendered(function () {
 Template.chatMain.helpers({
   'friends': function () {
     return lxpUser.friends.get();
+  },
+  'groups': function () {
+    return lxpUser.groups.get();
   },
   'curChatWith': function () {
     return Session.get('chatWith');
@@ -40,19 +49,17 @@ Template.chatMain.events({
 
   'click #J-im-btn-chat-list': function (e) {
     e.preventDefault();
-    showList('chat');
+    lxpUser.clickChatList();
   },
 
   'click #J-im-btn-contact-list': function (e) {
     e.preventDefault();
-    lxpUser.getFriendsList();
-    showList('friend');
+    lxpUser.clickFriendList();
   },
 
   'click #J-im-btn-group-list': function (e) {
     e.preventDefault();
-    showList('group');
-    // lxpUser.getChatGroupList();
+    lxpUser.clickGroupList();
   },
 
   // TODO 展示群内人员
@@ -66,21 +73,6 @@ Template.chatMain.events({
     }
   }
 });
-
-
-/* @summary 显示不同的列表信息[chat|friend|group]
- * @params {string}
- */
-showList = function (type) {
-  var cls = ['chat', 'friend', 'group'];
-  if (cls.indexOf(type) === -1) {
-    return;
-  }
-  cls.forEach(function(ele) {
-    $('.im-' + ele + '-list').addClass("hidden");
-  });
-  $('.im-' + type + '-list').removeClass("hidden");
-}
 
 
 

@@ -31,9 +31,9 @@ Meteor.methods({
       return {'code': -1, 'data': '传输数据错误'};
     }
     var groupList = Meteor.lxp.Userservice.getUserChatGroups(userId, [
-      lxpThriftType.ChatGroupProp.CHAT_GROUP_ID,
       lxpThriftType.ChatGroupProp.NAME,
-    ]);
+    ], 0, 100);
+    groupList.map(function(group){group.chatGroupId = parseInt(group.chatGroupId.toString())});
     return {'code': 0, 'data': groupList};
   },
 
@@ -51,18 +51,52 @@ Meteor.methods({
     return targetInfo
   },
 
+  /**
+   * 通过ID获取讨论组基本信息
+   */
+  'getChatGroup': function (gid) {
+    check(gid, Number);
+    var targetInfo = Meteor.lxp.Userservice.getChatGroup(new thrift.Int64(gid), [
+      lxpThriftType.ChatGroupProp.CHAT_GROUP_ID,
+      lxpThriftType.ChatGroupProp.NAME,
+      lxpThriftType.ChatGroupProp.AVATAR,
+    ]);
+    return targetInfo
+  },
+
+  /**
+   * 删除一个会话记录
+   */
+  'deleteConversation': function (chatInfo) {
+    check(chatInfo, Object);
+    var cnt = UserConversation.remove(chatInfo._id);
+    return {'code': cnt === 1 ? 0 : -1};
+  },
+
 
   /**
    * 创建一个新会话，数据库层面，并不是显示层面，显示层只显示按时间降序前30个会话
    */
-  'createConversation': function (tid, hasNewMsg) {
+  'createConversation': function (tid, hasNewMsg, isChatGroup) {
     check(tid, Number);
     check(hasNewMsg, Boolean);
-    var targetInfo = Meteor.call('getUserById', tid);
+    var uid = getUserId();
+    // 已经存在则不创建，更新下时间置顶
+    if (UserConversation.findOne({'tid': tid, 'uid': uid})) {
+      UserConversation.update({'tid': tid, 'uid': uid}, {'$set': {'updateTs': Date.now()}});
+      return;
+    }
+    var targetInfo;
+    if (!isChatGroup) {
+      targetInfo = Meteor.call('getUserById', tid);
+    } else {
+      targetInfo = Meteor.call('getChatGroup', tid);
+    }
     var data = {
       'tid': tid,
-      'uid': getUserId(),
-      'nickName': targetInfo.nickName,
+      'uid': uid,
+      'isGroupChat': isChatGroup,
+      'nickName': targetInfo.nickName || targetInfo.name,  //群组名称为name，用户名称为nickName
       'avatar': targetInfo.avatar,
       'updateTs': Date.now(),
       'hasMsg': hasNewMsg
@@ -72,20 +106,38 @@ Meteor.methods({
 
 
   /**
-   * 创建一个存在即时未读信息的会话，使用场景：来了新消息，自动创建一个会话
+   * 创建一个存在即时未读信息的会话，（单聊）使用场景：来了新消息，自动创建一个会话
    */
   'createConversationWithNewMsg': function(tid) {
     check(tid, Number);
-    Meteor.call('createConversation', tid, true);
+    Meteor.call('createConversation', tid, true, false);
   },
 
 
   /**
-   * 创建一个会话，使用场景：点击新建会话
+   * 创建一个会话，（单聊）使用场景：点击新建会话
    */
   'createConversationWithoutMsg': function(tid) {
     check(tid, Number);
-    Meteor.call('createConversation', tid, false);
+    Meteor.call('createConversation', tid, false, false);
+  },
+
+
+  /**
+   * 同createConversationWithNewMsg，但是为群聊会话
+   */
+  'createGroupConversationWithNewMsg': function(tid) {
+    check(tid, Number);
+    Meteor.call('createConversation', tid, true, true);
+  },
+
+
+  /**
+   * 同createConversationWithoutMsg，但是为群聊会话
+   */
+  'createGroupConversationWithoutMsg': function(tid) {
+    check(tid, Number);
+    Meteor.call('createConversation', tid, false, true);
   },
 
 
