@@ -28,12 +28,18 @@
 
         <div class="im-received-msg-content-container">
             <div class="im-received-content">
-                {{contents}}
+                {{{contents}}}
             </div>
         </div>
 
     </div>
 </template>
+
+<!-- emoji模板 -->
+<template name="emoji">
+    <img src="{{url}}" alt="" class="emoji-container">
+</template>
+
 
 <!-- 富文本接收信息的模板 -->
 <template name="planMsg">
@@ -53,5 +59,74 @@
                 </div>
             </div>
         </a>
+    </div>
+</template>
+
+<template name="noteMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/dayDetail.php?id={{contents.id}}" target=_blank>
+            <div class="im-msg-send-plan-content">
+                <div class="im-msg-send-plan-type">游记</div>
+                <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
+                <div class="im-msg-send-plan-content-text">
+                    <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
+                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</template>
+
+<template name="imageMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <div class="im-msg-send-plan-content-container">
+            <div class="im-msg-send-plan-content">
+                <img src="{{contents.thumb}}">
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<template name="voiceMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <div class="im-msg-send-plan-content-container">
+            <div class="im-msg-send-plan-content">
+                <audio src="{{contents.url}}" controls="controls">Your browser does not support the audio tag.</audio>
+                <!-- contents.duration -->
+            </div>
+        </div>
+    </div>
+</template>
+
+
+
+
+
+
+<template name="phizeMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <div class="im-msg-send-plan-content-container">
+            <div class="im-msg-send-plan-content">
+                <audio src="{{contents.url}}" controls="controls"></audio>
+                <!-- contents.duration -->
+            </div>
+        </div>
     </div>
 </template>
