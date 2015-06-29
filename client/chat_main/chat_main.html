@@ -54,6 +54,9 @@
                     </div>
                     <div class="im-group-list hidden">
                         群组
+                        {{#each groups}}
+                            {{> group groupInfo=this}}
+                        {{/each}}
                     </div>
                 </div>
                 <div class="im-frame-right-container">

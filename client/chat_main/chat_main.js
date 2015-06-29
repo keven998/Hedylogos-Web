@@ -29,6 +29,9 @@ Template.chatMain.helpers({
   'friends': function () {
     return lxpUser.friends.get();
   },
+  'groups': function () {
+    return lxpUser.groups.get();
+  },
   'curChatWith': function () {
     return Session.get('chatWith');
   },
@@ -46,32 +49,17 @@ Template.chatMain.events({
 
   'click #J-im-btn-chat-list': function (e) {
     e.preventDefault();
-    showList('chat');
-
-    // 右侧界面的切换，可以合并
-    $('.im-friend-desc-container').remove();
-    $('.im-frame-right-container').removeClass("hidden");
-    $('#im-friend-or-group-info').addClass("hidden");
+    lxpUser.clickChatList();
   },
 
   'click #J-im-btn-contact-list': function (e) {
     e.preventDefault();
-    lxpUser.getFriendsList();
-    showList('friend');
-
-    // 右侧界面的切换
-    $('.im-frame-right-container').addClass("hidden");
-    $('#im-friend-or-group-info').removeClass("hidden");
+    lxpUser.clickFriendList();
   },
 
   'click #J-im-btn-group-list': function (e) {
     e.preventDefault();
-    lxpUser.getChatGroupList();
-    showList('group');
-
-    // 右侧界面的切换
-    $('.im-frame-right-container').addClass("hidden");
-    $('#im-friend-or-group-info').removeClass("hidden");
+    lxpUser.clickGroupList();
   },
 
   // TODO 展示群内人员
@@ -85,21 +73,6 @@ Template.chatMain.events({
     }
   }
 });
-
-
-/* @summary 显示不同的列表信息[chat|friend|group]
- * @params {string}
- */
-showList = function (type) {
-  var cls = ['chat', 'friend', 'group'];
-  if (cls.indexOf(type) === -1) {
-    return;
-  }
-  cls.forEach(function(ele) {
-    $('.im-' + ele + '-list').addClass("hidden");
-  });
-  $('.im-' + type + '-list').removeClass("hidden");
-}
 
 
 
