@@ -364,6 +364,13 @@ _.extend(LxpUser.prototype, {
     return msg;
   },
   /**
+   * 根据修改信息，将已有的audio元素的src替换掉
+   */
+  'changeVoiceSrc': function (msg) {
+    var audio = $('#' + msg.id._str);
+    audio.attr('src', msg.fields.convertStatus.url).trigger('load');
+  },
+  /**
    * 将数据在前端展示，包含补充头像的逻辑
    * 取头像策略：本地缓存读取-》http获取
    */
@@ -371,24 +378,44 @@ _.extend(LxpUser.prototype, {
     var self = this;
     var tid = msg.senderId;
     var templateName = '';
-    console.log(msg);
-    // 攻略 plan
+
     if (msg.msgType === 0) {
       templateName = 'receivedMsg';
       msg = self.emojiConvert(msg);
     }
     if (msg.msgType === 1) {
-      templateName = 'voiceMsg';
-      msg = self.richTextMsg(msg);
+      if (msg.convertStatus) {
+        if (msg.convertStatus.code === 1){
+          // 处于等候转码状态
+          // TODO 超时重发请求？（记录timeStamp）
+          return ;
+        }
+        if (msg.convertStatus.code === 2){
+          // 处于转码成功状态
+          templateName = 'voiceMsg';
+          msg = self.richTextMsg(msg);
+          msg.voiceUrl = msg.convertStatus.url;
+          // TODO 修改 audio的src来源
+        }
+      } else {
+        templateName = 'voiceMsg';
+        msg = self.richTextMsg(msg);
+        msg.voiceUrl = msg.contents.url;
+        var url = parseUrl(msg.contents.url);
+        var key = url.path;
+        Meteor.call('convertAmrToMp3', msg._id, key, function (err, result) {
+          if (result.statusCode === 200) {
+            // success
+          } else {
+            // error
+          }
+        });
+      }
     }
     if (msg.msgType === 2) {
       templateName = 'imageMsg';
       msg = self.richTextMsg(msg);
     }
-    // if (msg.msgType === 4) {
-    //   templateName = 'phizeMsg';
-    //   msg = self.richTextMsg(msg);
-    // }
     if (msg.msgType === 10) {
       templateName = 'planMsg';
       msg = self.richTextMsg(msg);
@@ -538,6 +565,22 @@ _.extend(LxpUser.prototype, {
     });
   }
 });
+
+/**
+ * 解析URL
+ * @param  {[type]} url [description]
+ * @return {object}     以key-value的形式将url组成元素的类型与值相对应
+ */
+function parseUrl (url) {
+  var urlPattern = /^(?:([A-Za-z]+):)?(\/{0,3})([0-9.\-A-Za-z]+)(?::(\d+))?(?:\/([^?#]*))?(?:\?([^#]*))?(?:#(.*))?$/;
+  var result = urlPattern.exec(url);
+  var type = ['url', 'scheme', 'slash', 'host', 'port', 'path', 'query', 'hash'];
+  var parsedUrl = {};
+  for (var i = 0, len = type.length; i < len; i += 1) {
+    parsedUrl[type[i]] = result[i];
+  }
+  return parsedUrl;
+}
 
 // create a instance in client
 lxpUser = new LxpUser();

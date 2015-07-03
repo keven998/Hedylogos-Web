@@ -1,7 +1,7 @@
 Meteor.startup(function () {
   initApiCall();
-  var address = getThriftServerAddress(),
-      thriftConnectionInstance = connectThriftServer(address.ip, address.port);
+  var address = getThriftServerAddress();
+  var thriftConnectionInstance = connectThriftServer(address.ip, address.port);
   createThriftClient(thriftConnectionInstance, 'lxpthrift', 'Userservice');
 
   // 设置session过期日期为一天
@@ -59,7 +59,7 @@ function getThriftServerAddress () {
     port = Number(temp[1]);
   }
   if (!ip || !port) {
-    console.log('获取thrift server地址失败，请检查etcd配置地址');
+    console.log('获取thrift server地址失败，请检查etcd配置地址及yunkai服务是否开启');
     return;
   }
   return {

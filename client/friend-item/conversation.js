@@ -14,7 +14,6 @@ Template.imageMsg.events({
   },
 });
 
-
 /**
  * 渲染屏幕中央的图片模板
  * @param  {string} url 图片的地址

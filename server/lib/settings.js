@@ -6,15 +6,11 @@ var hedy = new MongoInternals.RemoteCollectionDriver(mongoUrlHedy);
 Message = new Mongo.Collection("Message", { _driver: hedy});
 
 function getHedyMongoUrl () {
-  var Etcd = new EtcdClass();
-  var result = Etcd.callEtcd();
-
   // 解析出相关参数
-  var mongoUrl = Etcd.getSettingValue(Etcd.settingPath.mongo.url.path, result);
-  var mongoUser = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.user, result);
-  var mongoPassword = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.password, result);
-  var mongoDb = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.db, result);
+  var mongoUrl = Etcd.getSettingValue(Etcd.settingPath.mongo.url.path, Etcd_Result);
+  var mongoUser = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.user, Etcd_Result);
+  var mongoPassword = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.password, Etcd_Result);
+  var mongoDb = Etcd.getSettingValue(Etcd.settingPath.mongo.auth.db, Etcd_Result);
 
   return 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoUrl.toString() + '/' + mongoDb;
 }
-
