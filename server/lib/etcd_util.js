@@ -11,6 +11,12 @@ EtcdClass = function() {
         password: '/project-conf/hedylogos-dev/server/mongo/password',
         db: '/project-conf/hedylogos-dev/server/mongo/db'
       }
+    },
+    qiniu: {
+      host: '/project-conf/hedylogos-web/qiniu/host',
+      bucket: '/project-conf/hedylogos-web/qiniu/bucket',
+      accessKey: '/project-conf/hedylogos-web/qiniu/accessKey',
+      secretKey: '/project-conf/hedylogos-web/qiniu/secretKey'
     }
   };
 
@@ -24,7 +30,7 @@ EtcdClass = function() {
       console.log(e);
     }
     return false;
-  }
+  };
 
   /** 
    * 解析etcd返回的数据，并返回path对应的配置值
@@ -74,5 +80,8 @@ EtcdClass = function() {
       result.push(node.value);
     });
     return result;
-  }
+  };
 };
+
+Etcd = new EtcdClass();
+Etcd_Result = Etcd.callEtcd();

@@ -1,4 +1,5 @@
 Message1 = new Mongo.Collection('Message1');
+AudioMsg = new Mongo.Collection('AudioMsg');
 
 // 消息声音提示
 msgSound = new Howl({
@@ -20,6 +21,18 @@ Template.chatMain.onRendered(function () {
     console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
       lxpUser.receivedMsgHander(msg);
+    });
+  });
+
+  Tracker.autorun(function () {
+    var newMsgs = AudioMsg.findOne({}).msgs;
+    if (!newMsgs || !newMsgs.length) {
+      return;
+    }
+    // 新的语音信息提示
+    console.log('语音转码成功！');
+    newMsgs.forEach(function(msg) {
+      lxpUser.changeVoiceSrc(msg);
     });
   });
 });
