@@ -1,0 +1,20 @@
+<template name="chatFaceContainer">
+  <div class="chat-face-container">
+      <!-- <ul class="chat-face-tab">
+        <li>QQ表情</li>
+        <li>符号表情</li>
+        <li>动画表情</li>
+      </ul>
+      <div class="chat-face-qq"></ul>
+      <div class="chat-face-gif"></ul> -->
+    <div class="chat-face-scroll-wrapper">
+      <div class="chat-face-emoji">
+          {{#each emoji}}
+            <div class="emoji-wrapper">
+              <i class="emoji-item" title="" style='background-image:url(/images/emoji/{{name}}.png)'></i>
+            </div>
+          {{/each}}
+      </div>
+    </div>
+  </div>
+</template>

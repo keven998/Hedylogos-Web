@@ -357,13 +357,13 @@ _.extend(LxpUser.prototype, {
   /**
    * 匹配emoji表情，并替换
    */
-  'emojiConvert': function (msg) {
+  'emojiConvert': function (contents) {
     for (i = 0;i < emojiArray.length;i++){
       var emojiStr = this.escapeRegExp(emojiArray[i].str);
       var regexp = new RegExp(emojiStr, 'g');
-      msg.contents = msg.contents.replace(regexp, '<img src="/emoji/' + emojiArray[i].name + '.png" alt="" class="emoji-container">');
+      var contents = contents.replace(regexp, '<img src="/images/emoji/' + emojiArray[i].name + '.png" alt="" class="emoji-container">');
     }
-    return msg;
+    return contents;
   },
   /**
    * 根据修改信息，将已有的audio元素的src替换掉
@@ -383,7 +383,7 @@ _.extend(LxpUser.prototype, {
 
     if (msg.msgType === 0) {
       templateName = 'receivedMsg';
-      msg = self.emojiConvert(msg);
+      msg.contents = self.emojiConvert(msg.contents);
     }
     if (msg.msgType === 1) {
       if (msg.convertStatus) {
@@ -499,6 +499,7 @@ _.extend(LxpUser.prototype, {
     var self = this;
     // 还不存在会话窗口，新建dom容器
     self.checkChatExist(receiverId);
+    var content = self.emojiConvert(content);
     var senderInfo = Meteor.user();
     senderInfo = _.extend(senderInfo, {'contents': content});
     Blaze.renderWithData(Template.sendedMsg, senderInfo, $('#conversation-' + receiverId)[0]);

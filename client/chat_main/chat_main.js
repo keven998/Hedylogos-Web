@@ -1,5 +1,3 @@
-Message1 = new Mongo.Collection('Message1');
-AudioMsg = new Mongo.Collection('AudioMsg');
 
 // 消息声音提示
 msgSound = new Howl({
@@ -84,6 +82,10 @@ Template.chatMain.events({
     } else {
       dom.removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
     }
+  },
+
+  'click .chat-face': function (e) {
+    $('.chat-face-container').toggle();
   }
 });
 
