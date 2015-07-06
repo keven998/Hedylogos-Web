@@ -167,6 +167,7 @@
 }
 
 .im-chat-input-container {
+    position: relative;
     width: 100%;
     height: 35%;
 }
@@ -666,3 +667,89 @@ img.im-received-avatar {
     width: 20px;
     height: 20px;
 }
+
+.im-chat-toolbar-container a{
+    background-size: contain;
+    display: inline-block;
+    height: 22px;
+    width: 22px;
+    margin-top: 8px;
+    margin-left: 15px;
+    vertical-align: middle;
+}
+
+.chat-face{
+    background: url(/images/emoji.png) no-repeat;
+}
+
+.chat-cut{
+    background: url(/images/cut.png) no-repeat;
+}
+
+.chat-file{
+    background: url(/images/file.png) no-repeat;
+}
+
+.chat-face-container{
+    border: 1px solid #dedede;
+    position: absolute;
+    top: -112px;
+    left: 8px;
+    width: 309px;
+    height: 115px;
+    z-index: 200;
+    background: #fff;
+    display: none;
+}
+
+.chat-face-container::before{
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 100%;
+    margin-left: -7px;
+    border: 7px solid transparent;
+    border-top-color: #FFF;
+}
+
+.chat-face-container::after{
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 100%;
+    margin-left: -7px;
+    margin-top: -1px;
+    border: 7px solid transparent;
+    border-top-color: #CFCFCF;
+}
+
+.chat-face-container .chat-face-scroll-wrapper{
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin: 15px 20px;
+    height: 97px;
+    padding-bottom: 10px;
+}
+
+.chat-face-container .chat-face-emoji{
+    overflow: hidden;
+    margin-right: -1px;
+    height: 118px;
+}
+
+.chat-face-container .chat-face-emoji .emoji-wrapper{
+    display: inline-block;
+    padding: 3px;
+    border-bottom: 1px solid #F0F0F0;
+    border-right: 1px solid #F0F0F0;
+}
+
+.chat-face-container .chat-face-emoji i{
+    display: inline-block;
+    height: 23px;
+    width: 23px;
+    background-size: contain;
+    vertical-align: middle;
+    cursor: pointer;
+}
+

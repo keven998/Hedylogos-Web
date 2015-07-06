@@ -11,22 +11,22 @@ Accounts.registerLoginHandler(function (loginRequest) {
   var username = user.username,
       password = user.password,
       src = 'web',
-      loginResponce = Meteor.lxp.Userservice.login(username, password, src);
+      loginResponse = Meteor.lxp.Userservice.login(username, password, src);
 
-  if (!loginResponce || !loginResponce.userId.toString()) {
+  if (!loginResponse || !loginResponse.userId.toString()) {
     throw "login failed!";
     return undefined;
   }
-  var userId = Number(loginResponce.userId.toString()),
+  var userId = Number(loginResponse.userId.toString()),
       uid = null;
-  loginResponce.userId = userId;
+  loginResponse.userId = userId;
   var user = Meteor.users.findOne({'userInfo.userId': userId});
   var ts = Date.now();
   if (!user) {
-    uid = Meteor.users.insert({'userInfo': loginResponce, 'loginTime': ts});
+    uid = Meteor.users.insert({'userInfo': loginResponse, 'loginTime': ts});
   } else {
     uid = user._id;
-    Meteor.users.update({'_id': uid}, {'$set': {'userInfo': loginResponce, 'loginTime': ts}});
+    Meteor.users.update({'_id': uid}, {'$set': {'userInfo': loginResponse, 'loginTime': ts}});
   }
 
   var stampedToken = Accounts._generateStampedLoginToken();
