@@ -6,7 +6,7 @@ Meteor.startup(function () {
 
   // 设置session过期日期为一天
   Accounts.config({
-     loginExpirationInDays: 1
+    loginExpirationInDays: 1
   });
 
 });
@@ -90,6 +90,7 @@ function createThriftClient (thriftServerConnection, npmPackageName, clientName)
     console.log('检查client名字');
     return;
   }
+
   var thrift  = Meteor.npmRequire('thrift'),
       service = lxpthrift[clientName],
       clientInstance = thrift.createClient(service, thriftServerConnection);

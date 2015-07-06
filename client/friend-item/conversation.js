@@ -10,7 +10,7 @@ function scrollIntoView () {
 
 Template.imageMsg.events({
   'click .im-msg-send-plan-content>img': function(e){
-    renderCenterPic(this.contents.full);
+    renderCenterImage(this.contents.full);
   },
 });
 

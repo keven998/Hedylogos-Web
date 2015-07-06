@@ -1,3 +1,5 @@
+// 私有方法的取名：使用下划线_作为名字的开头
+
 LxpUser = function () {
   var self = this;
   self.avatarInit = false;
