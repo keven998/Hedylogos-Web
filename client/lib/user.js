@@ -482,23 +482,22 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
-   * 显示信息
+   * 切换消息容器：将当前对话容器切换成tid对应的对话的容器
    */
   showMsgDom: function (tid) {
     var curDomId = this.chatWith.tid;
-    if (curDomId !== tid) {
-      $('#conversation-' + curDomId).hide();
-      $('#conversation-' + tid).show();
-    }
+    $('#conversation-' + curDomId).hide();
+    $('#conversation-' + tid).show();
   },
 
   /*
-   * 显示己方分送的信息
+   * 显示己方发送的信息
    */
   showSendedMsg: function (receiverId, content) {
     var self = this;
     // 还不存在会话窗口，新建dom容器
     self.checkChatExist(receiverId);
+    self.showMsgDom(receiverId);
     var content = self.emojiConvert(content);
     var senderInfo = Meteor.user();
     senderInfo = _.extend(senderInfo, {'contents': content});
@@ -511,7 +510,7 @@ _.extend(LxpUser.prototype, {
    * TODO：绑定shift+enter进行换行
    */
   bindSendMsg: function() {
-    var slef = this;
+    var self = this;
     $('#J-im-input-text').on('keydown', function(e) {
       if (e.which == 13 || e.keyCode == 13) {
         if (e.shiftKey) {
@@ -560,7 +559,7 @@ _.extend(LxpUser.prototype, {
               // 清空
               $('#J-im-input-text').val('');
               // 在聊天记录中显示该信息
-              slef.showSendedMsg(receiver, contents);
+              self.showSendedMsg(receiver, contents);
             }
           });
         }
