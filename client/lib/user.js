@@ -381,6 +381,7 @@ _.extend(LxpUser.prototype, {
     var tid = msg.senderId;
     var templateName = '';
 
+    console.log(msg);
     if (msg.msgType === 0) {
       templateName = 'receivedMsg';
       msg.contents = self.emojiConvert(msg.contents);
@@ -422,8 +423,16 @@ _.extend(LxpUser.prototype, {
       templateName = 'planMsg';
       msg = self.richTextMsg(msg);
     }
+    if (msg.msgType === 11) {
+      templateName = 'cityMsg';
+      msg = self.richTextMsg(msg);
+    }
     if (msg.msgType === 12) {
       templateName = 'noteMsg';
+      msg = self.richTextMsg(msg);
+    }
+    if (msg.msgType === 13) {
+      templateName = 'vsMsg';
       msg = self.richTextMsg(msg);
     }
     if (self.avatars[tid]) {
@@ -437,6 +446,8 @@ _.extend(LxpUser.prototype, {
           var avatar = userInfo.avatar;
           msg.avatar = avatar;
           self.avatars[tid] = avatar;
+          console.log(msg);
+          console.log(templateName);
           Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
         }
       });

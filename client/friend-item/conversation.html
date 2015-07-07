@@ -35,7 +35,43 @@
     </div>
 </template>
 
-<!-- 富文本接收信息的模板 -->
+<!-- 富文本接收信息的模板 start-->
+
+<!-- TODO 攻略、游记、城市、景点的模板的合并 -->
+
+<!-- 语音模板 -->
+<template name="voiceMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <div class="im-msg-send-plan-content-container">
+            <div class="im-msg-send-plan-content">
+                <audio src="{{voiceUrl}}" id="{{_id._str}}" controls="controls">Your browser does not support the audio tag.</audio>
+                <!-- contents.duration -->
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- 图片模板 -->
+<template name="imageMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <div class="im-msg-send-plan-content-container">
+            <div class="im-msg-send-plan-content">
+                <img src="{{contents.thumb}}">
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<!-- 攻略模板 -->
 <template name="planMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
@@ -56,6 +92,27 @@
     </div>
 </template>
 
+<!-- 城市模板 -->
+<template name="cityMsg">
+    <div class="im-msg-send-plan-container">
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
+        </div>
+
+        <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/dayDetail.php?id={{contents.id}}" target=_blank>
+            <div class="im-msg-send-plan-content">
+                <div class="im-msg-send-plan-type">城市</div>
+                <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
+                <div class="im-msg-send-plan-content-text">
+                    <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
+                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                </div>
+            </div>
+        </a>
+    </div>
+</template>
+
+<!-- 游记模板 -->
 <template name="noteMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
@@ -75,32 +132,26 @@
     </div>
 </template>
 
-<template name="imageMsg">
+<!-- 景点模板 -->
+<template name="vsMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
         </div>
 
-        <div class="im-msg-send-plan-content-container">
+        <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/dayDetail.php?id={{contents.id}}" target=_blank>
             <div class="im-msg-send-plan-content">
-                <img src="{{contents.thumb}}">
+                <div class="im-msg-send-plan-type">景点</div>
+                <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
+                <div class="im-msg-send-plan-content-text">
+                    <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
+                    <div class="im-msg-send-plan-content-time">{{contents.timeCost}}</div>
+                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </template>
 
 
-<template name="voiceMsg">
-    <div class="im-msg-send-plan-container">
-        <div class="im-msg-send-avatar-container">
-            <img src="{{avatar}}" alt="" class="im-send-avatar">
-        </div>
-
-        <div class="im-msg-send-plan-content-container">
-            <div class="im-msg-send-plan-content">
-                <audio src="{{voiceUrl}}" id="{{_id._str}}" controls="controls">Your browser does not support the audio tag.</audio>
-                <!-- contents.duration -->
-            </div>
-        </div>
-    </div>
-</template>
+<!-- 富文本接收信息的模板 end-->

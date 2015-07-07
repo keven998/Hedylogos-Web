@@ -194,6 +194,7 @@
     border: none;
     height: 100%;
     text-align: left;
+    resize: none;
 }
 
 .im-cur-chat-with-container {
