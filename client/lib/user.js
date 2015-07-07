@@ -243,6 +243,7 @@ _.extend(LxpUser.prototype, {
     self._setIconOfChatWith();
     // 隐藏好友或者群组介绍界面
     self._hiddenDescPanel();
+    $('#J-im-input-text').focus();
     // 显示chat列表
     self._showList('chat');
     // 显示正在和谁聊天
@@ -481,6 +482,7 @@ _.extend(LxpUser.prototype, {
   readMsg: function (chatInfo) {
     var self = this;
     var tid = chatInfo.tid;
+    $('#J-im-input-text').focus();
     Session.set('chatWith', chatInfo);
     // 显示信息
     this.showMsgDom(tid);
@@ -522,17 +524,15 @@ _.extend(LxpUser.prototype, {
    */
   bindSendMsg: function() {
     var self = this;
-    $('#J-im-input-text').on('keydown', function(e) {
+    var input = $('#J-im-input-text');
+    input.on('keydown', function(e) {
       if (e.which == 13 || e.keyCode == 13) {
         if (e.shiftKey) {
-          console.log('shift + enter');
-          console.log($(e.target).val() + '//EOM');
-          $(e.target).val($(e.target).val() + '\n');
-          console.log($(e.target).val() + '//EOM');
+          $(e.target).html($(e.target).html() + '\n');
         } else {
           e.preventDefault();
           e.stopPropagation();
-          var contents = $.trim($(e.target).val());
+          var contents = $.trim(input.val() || input.html());
           if (!contents) {
             return;
           }
@@ -568,7 +568,7 @@ _.extend(LxpUser.prototype, {
             }
             if (res.code === 0) {
               // 清空
-              $('#J-im-input-text').val('');
+              $('#J-im-input-text').html('');
               // 在聊天记录中显示该信息
               self.showSendedMsg(receiver, contents);
             }
