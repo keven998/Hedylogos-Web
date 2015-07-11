@@ -176,6 +176,25 @@ Meteor.methods({
     var uid = getUserId();
     UserConversation.update({'uid': uid, 'tid': tid}, {'$set': {'hasMsg': false}});
   },
+
+  /**
+   * 获取用户的计划列表
+   */
+  'getUserPlans': function () {
+    var uid = getUserId();
+    var url = api.host + 'guides?status=planned';
+    var options = {
+      headers: {
+        UserId: uid
+      }
+    }
+    var result = HTTP.call('GET', url, options);
+    if (!result || result.data.code !== 0){
+      console.log('Failed in getting guides from server!');
+      return ;
+    }
+    return result;
+  }
 });
 
 

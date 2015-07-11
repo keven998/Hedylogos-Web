@@ -86,6 +86,14 @@ Template.chatMain.events({
 
   'click .chat-face': function (e) {
     $('.chat-face-container').toggle();
+  },
+
+  'click .chat-plan': function (e) {
+    lxpUser.showPlanLayer();
+  },
+
+  'click .chat-search': function (e) {
+    lxpUser.showSearchLayer();
   }
 });
 

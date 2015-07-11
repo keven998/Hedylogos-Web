@@ -6,9 +6,8 @@ Template.chatFaceContainer.helpers({
 
 Template.chatFaceContainer.events({
   'click .emoji-wrapper': function(e) {
-  	var textarea = $('#J-im-input-text');
-  	var text = textarea.val();
-  	textarea.val(text + this.str);
+    var input = $('#J-im-input-text');
+    input.html(input.html() + '<img src="/images/emoji/' + this.name + '.png" alt="" class="emoji-container">');
     return ;
   }
 })

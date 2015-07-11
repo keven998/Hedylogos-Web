@@ -473,7 +473,7 @@ img.im-received-avatar {
     line-height: 1.5;
     margin: 0 10px;
     height: 100px;
-    max-width: 200px;
+    max-width: 260px;
     overflow: hidden;
 }
 
@@ -691,6 +691,24 @@ img.im-received-avatar {
     background: url(/images/file.png) no-repeat;
 }
 
+/*.chat-plan{
+    background: url(/images/plan_default.png) no-repeat;
+}
+*/
+
+.chat-plan{
+    background: url(/images/plan_selected.png) no-repeat;
+}
+
+/*.chat-search{
+    background: url(/images/search_defaulted.png) no-repeat;
+}
+*/
+
+.chat-search{
+    background: url(/images/search_selected.png) no-repeat;
+}
+
 .chat-face-container{
     border: 1px solid #dedede;
     position: absolute;
@@ -754,3 +772,10 @@ img.im-received-avatar {
     cursor: pointer;
 }
 
+.align-l{
+  text-align: left;
+}
+
+.align-r{
+  text-align: right;
+}

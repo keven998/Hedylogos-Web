@@ -243,6 +243,7 @@ _.extend(LxpUser.prototype, {
     self._setIconOfChatWith();
     // 隐藏好友或者群组介绍界面
     self._hiddenDescPanel();
+    $('#J-im-input-text').focus();
     // 显示chat列表
     self._showList('chat');
     // 显示正在和谁聊天
@@ -343,28 +344,31 @@ _.extend(LxpUser.prototype, {
   /**
    * 处理富文本信息，返回信息
    */
-  'richTextMsg': function (msg) {
+  '_richTextMsg': function (msg) {
     // 解析contents为json对象
     msg.contents = JSON.parse(msg.contents);
     return msg;
   },
+
   /**
    * 转义
    */
-  'escapeRegExp': function (string) {
+  '_escapeRegExp': function (string) {
     return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   },
+
   /**
    * 匹配emoji表情，并替换
    */
-  'emojiConvert': function (contents) {
+  '_emojiConvert': function (contents) {
     for (i = 0;i < emojiArray.length;i++){
-      var emojiStr = this.escapeRegExp(emojiArray[i].str);
+      var emojiStr = this._escapeRegExp(emojiArray[i].str);
       var regexp = new RegExp(emojiStr, 'g');
       var contents = contents.replace(regexp, '<img src="/images/emoji/' + emojiArray[i].name + '.png" alt="" class="emoji-container">');
     }
     return contents;
   },
+
   /**
    * 根据修改信息，将已有的audio元素的src替换掉
    */
@@ -372,6 +376,7 @@ _.extend(LxpUser.prototype, {
     var audio = $('#' + msg.id._str);
     audio.attr('src', msg.fields.convertStatus.url).trigger('load');
   },
+
   /**
    * 将数据在前端展示，包含补充头像的逻辑
    * 取头像策略：本地缓存读取-》http获取
@@ -384,7 +389,7 @@ _.extend(LxpUser.prototype, {
     console.log(msg);
     if (msg.msgType === 0) {
       templateName = 'receivedMsg';
-      msg.contents = self.emojiConvert(msg.contents);
+      msg.contents = self._emojiConvert(msg.contents);
     }
     if (msg.msgType === 1) {
       if (msg.convertStatus) {
@@ -396,13 +401,13 @@ _.extend(LxpUser.prototype, {
         if (msg.convertStatus.code === 2){
           // 处于转码成功状态
           templateName = 'voiceMsg';
-          msg = self.richTextMsg(msg);
+          msg = self._richTextMsg(msg);
           msg.voiceUrl = msg.convertStatus.url;
           // TODO 修改 audio的src来源
         }
       } else {
         templateName = 'voiceMsg';
-        msg = self.richTextMsg(msg);
+        msg = self._richTextMsg(msg);
         msg.voiceUrl = msg.contents.url;
         var url = parseUrl(msg.contents.url);
         var key = url.path;
@@ -417,23 +422,23 @@ _.extend(LxpUser.prototype, {
     }
     if (msg.msgType === 2) {
       templateName = 'imageMsg';
-      msg = self.richTextMsg(msg);
+      msg = self._richTextMsg(msg);
     }
     if (msg.msgType === 10) {
       templateName = 'planMsg';
-      msg = self.richTextMsg(msg);
+      msg = self._richTextMsg(msg);
     }
     if (msg.msgType === 11) {
       templateName = 'cityMsg';
-      msg = self.richTextMsg(msg);
+      msg = self._richTextMsg(msg);
     }
     if (msg.msgType === 12) {
       templateName = 'noteMsg';
-      msg = self.richTextMsg(msg);
+      msg = self._richTextMsg(msg);
     }
     if (msg.msgType === 13) {
       templateName = 'vsMsg';
-      msg = self.richTextMsg(msg);
+      msg = self._richTextMsg(msg);
     }
     if (self.avatars[tid]) {
       // 头像已经缓存
@@ -481,6 +486,7 @@ _.extend(LxpUser.prototype, {
   readMsg: function (chatInfo) {
     var self = this;
     var tid = chatInfo.tid;
+    $('#J-im-input-text').focus();
     Session.set('chatWith', chatInfo);
     // 显示信息
     this.showMsgDom(tid);
@@ -504,15 +510,40 @@ _.extend(LxpUser.prototype, {
   /*
    * 显示己方发送的信息
    */
-  showSendedMsg: function (receiverId, content) {
+  showSendedMsg: function (receiverId, msg) {
     var self = this;
     // 还不存在会话窗口，新建dom容器
     self.checkChatExist(receiverId);
     self.showMsgDom(receiverId);
-    var content = self.emojiConvert(content);
-    var senderInfo = Meteor.user();
-    senderInfo = _.extend(senderInfo, {'contents': content});
-    Blaze.renderWithData(Template.sendedMsg, senderInfo, $('#conversation-' + receiverId)[0]);
+
+    if (msg.msgType == 0) {
+      msg.contents = self._emojiConvert(msg.contents);
+      var templateName = 'sendedMsg';
+    }
+
+    if (msg.msgType == 10) {
+      msg = self._richTextMsg(msg);
+      var templateName = 'sendedPlanMsg';
+    }
+
+    if (msg.msgType == 11) {
+      msg = self._richTextMsg(msg);
+      var templateName = 'sendedPoiMsg';
+    }
+
+    if (msg.msgType == 13) {
+      msg = self._richTextMsg(msg);
+      var templateName = 'sendedVsMsg';
+    }
+
+    if (msg.msgType == 15) {
+      msg = self._richTextMsg(msg);
+      var templateName = 'sendedVsMsg';
+    }
+
+    var sendData = Meteor.user().userInfo;
+    sendData = _.extend(sendData, {'contents': msg.contents});
+    Blaze.renderWithData(Template[templateName], sendData, $('#conversation-' + receiverId)[0]);
   },
 
 
@@ -522,20 +553,30 @@ _.extend(LxpUser.prototype, {
    */
   bindSendMsg: function() {
     var self = this;
-    $('#J-im-input-text').on('keydown', function(e) {
+    var input = $('#J-im-input-text');
+    input.on('keydown', function(e) {
       if (e.which == 13 || e.keyCode == 13) {
         if (e.shiftKey) {
-          console.log('shift + enter');
-          console.log($(e.target).val() + '//EOM');
-          $(e.target).val($(e.target).val() + '\n');
-          console.log($(e.target).val() + '//EOM');
+          $(e.target).html($(e.target).html() + '\n');
         } else {
           e.preventDefault();
           e.stopPropagation();
-          var contents = $.trim($(e.target).val());
+          var contents = $.trim(input.html());
           if (!contents) {
             return;
           }
+
+          // 清空
+          input.html('');
+
+          var str1 = self._escapeRegExp('<img src="/images/emoji/ee_');
+          var str2 = self._escapeRegExp('.png" alt="" class="emoji-container">');
+          var regexp = new RegExp(str1+ '((\\d)*)' + str2, 'g');
+          contents = contents.replace(regexp, function($1, $2, $3, $4, $5){
+            return emojiArray[$2 - 1].str;
+          });
+
+
           var chatWith = Session.get('chatWith');
           var receiver = chatWith.userId || chatWith.tid,
               sender = lxpUser.getUserId();
@@ -561,19 +602,278 @@ _.extend(LxpUser.prototype, {
                 'header': header,
                 'data': msg
               };
+          console.log(contents);
           Meteor.call('sendMsg', option, function(err, res) {
             if (err) {
+              console.log(err);
               throwError('发送失败，请重试');
               return;
             }
             if (res.code === 0) {
-              // 清空
-              $('#J-im-input-text').val('');
+              console.log(res);
               // 在聊天记录中显示该信息
-              self.showSendedMsg(receiver, contents);
+              self.showSendedMsg(receiver, msg);
             }
           });
         }
+      }
+    });
+  },
+
+  /**
+   * 转换时间戳成 YYYY-MM-DD hh:mm:ss的格式
+   */
+  'convertTsToDate': function(ts) {
+    var date = new Date(ts);
+    Y = date.getFullYear() + '-';
+    M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+    D = date.getDate() + ' ';
+    h = date.getHours() + ':';
+    m = date.getMinutes() + ':';
+    s = date.getSeconds();
+    return (Y + M + D + h + m + s);
+  },
+
+  /**
+   * 解析plan数据
+   */
+  '_parsePlanData': function(res) {
+    res.content = JSON.parse(res.content);
+    if (res.content.result && res.content.result.length > 0){
+      for(var i = 0, l = res.content.result.length;i < l;i++) {
+        res.content.result[i].images = (res.content.result[i].images.length > 0)
+          ? res.content.result[i].images[0]
+          : {url: ''};
+        res.content.result[i].updateTime = this.convertTsToDate(res.content.result[i].updateTime);
+      }
+    }
+    return res.content;
+  },
+
+  /**
+   * 展示我的攻略
+   */
+  'showPlanLayer': function() {
+    var self = this;
+    if (self.planLayer) {
+      self.planLayer.show();
+    } else {
+      Meteor.call('getUserPlans', function(err, res){
+        if (err || !res) {
+          bootbox.alert('获取计划列表失败!');
+          return ;
+        };
+        var planList = self._parsePlanData(res);
+        var shareDialogInfo = {
+          template: Template.planLayer,
+          doc: planList
+        };
+        self.planLayer = ReactiveModal.initDialog(shareDialogInfo);
+        self.planLayer.show();
+      });
+    }
+  },
+
+  /**
+   * 展示搜索框
+   */
+  'showSearchLayer': function() {
+    var self = this;
+    if (self.searchLayer) {
+      self.searchLayer.show();
+      setTimeout("$('.search-layer .search-input').focus()", 500);
+    } else {
+      var shareDialogInfo = {
+        template: Template.searchLayer
+      };
+      self.searchLayer = ReactiveModal.initDialog(shareDialogInfo);
+      self.searchLayer.show();
+      setTimeout("$('.search-layer .search-input').focus()", 500);
+    }
+  },
+
+  '_filterImages': function(data) {
+    var types = ['locality', 'vs', 'restaurant', 'shopping'];
+    types.map(function(type){
+      if (data[type]) {
+        data[type].map(function(item){
+          item.images = item.images[0];
+        })
+      }
+      return ;
+    });
+    return data;
+  },
+
+  // 展示所有种类poi的搜索结果，每种最多5个结果
+  'showSearchFullPoi': function(text) {
+    var self = this;
+    Meteor.call('searchAllPoi', text, function(err, res){
+      if (err || !res) {
+        bootbox.alert('获取搜索结果失败!');
+        return ;
+      };
+      var data = self._filterImages(res);
+      self.clearSearchList();
+      Blaze.renderWithData(Template.searchList, data, $('.search-list')[0]);
+    });
+  },
+
+  // 展示单类poi的搜索结果，最多99个结果
+  'showSearchSinglePoi': function(text, poiType) {
+    var self = this;
+    Meteor.call('searchSinglePoi', text, poiType, function(err, res){
+      if (err || !res) {
+        bootbox.alert('获取搜索结果失败!');
+        return ;
+      };
+      var data = self._filterImages(res);
+      self.clearSearchList();
+      Blaze.renderWithData(Template.searchList, data, $('.search-list')[0]);
+    });
+  },
+
+  // 清除搜索结果列表
+  'clearSearchList': function() {
+    $('.search-list').empty();
+    return this;
+  },
+
+  /**
+   * 发送攻略信息
+   */
+  'sendPlanMsg': function(plan) {
+    var self = this;
+    self.planLayer.hide();
+    // TODO 把发送消息部分封装一下！
+    var contents = {
+      id: plan.id,
+      image: plan.images.url,
+      name: plan.title,
+      desc: plan.summary,
+      timeCost: plan.dayCnt
+    }
+
+    contents = JSON.stringify(contents);
+    var chatWith = Session.get('chatWith');
+    var receiver = chatWith.userId || chatWith.tid,
+        sender = lxpUser.getUserId();
+
+    if (!receiver || ! sender) {
+      console.log('没有接收者或者发送者信息');
+      return;
+    }
+
+    var msgType = 10,
+        chatType = 'single',
+        msg = {
+          'receiver': receiver,
+          'sender': sender,
+          'msgType': msgType,
+          'contents': contents,
+          'chatType': chatType
+        },
+        header = {
+          'Content-Type': 'application/json',
+        },
+        option = {
+          'header': header,
+          'data': msg
+        };
+    Meteor.call('sendMsg', option, function(err, res) {
+      if (err) {
+        throwError('发送失败，请重试');
+        return;
+      }
+      if (res.code === 0) {
+        // 在聊天记录中显示该信息
+        self.showSendedMsg(receiver, msg);
+      }
+    });
+  },
+
+  'sendPoiMsg': function(data){
+    var self = this;
+    self.searchLayer.hide();
+    // TODO 把发送消息部分封装一下！
+    // var msgType = self._getMsgType(data.type)
+    if (data.type == 'locality'){
+      var msgType = 11;
+      var contents = {
+        id: data.content.id,
+        image: data.content.images.url,
+        name: data.content.zhName,
+        desc: data.content.desc
+      }
+    }
+
+    if (data.type == 'vs'){
+      var msgType = 13;
+      var contents = {
+        id: data.content.id,
+        image: data.content.images.url,
+        name: data.content.zhName,
+        desc: data.content.desc
+      }
+    }
+
+    if (data.type == 'restaurant'){
+      var msgType = 14;
+      var contents = {
+        id: data.content.id,
+        image: data.content.images.url,
+        name: data.content.zhName,
+        desc: data.content.desc
+      }
+    }
+
+    if (data.type == 'shopping'){
+      var msgType = 15;
+      var contents = {
+        id: data.content.id,
+        image: data.content.images.url,
+        name: data.content.zhName,
+        desc: data.content.desc
+      }
+    }
+
+
+    contents = JSON.stringify(contents);
+    var chatWith = Session.get('chatWith');
+    var receiver = chatWith.userId || chatWith.tid,
+        sender = lxpUser.getUserId();
+
+    if (!receiver || ! sender) {
+      console.log('没有接收者或者发送者信息');
+      return;
+    }
+
+    var msgType = msgType,
+        chatType = 'single',
+        msg = {
+          'receiver': receiver,
+          'sender': sender,
+          'msgType': msgType,
+          'contents': contents,
+          'chatType': chatType
+        },
+        header = {
+          'Content-Type': 'application/json',
+        },
+        option = {
+          'header': header,
+          'data': msg
+        };
+
+    Meteor.call('sendMsg', option, function(err, res) {
+      if (err) {
+        console.log(err);
+        throwError('发送失败，请重试');
+        return;
+      }
+      if (res.code === 0) {
+        // 在聊天记录中显示该信息
+        self.showSendedMsg(receiver, msg);
       }
     });
   }
