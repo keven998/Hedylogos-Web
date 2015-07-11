@@ -1,0 +1,83 @@
+<!-- 我的攻略列表弹层 start -->
+<template name="planLayer">
+	<div class="plan-list">
+		{{#each result}}
+			<div class="plan">
+				<img src="{{images.url}}" alt="{{title}}" class="image">
+				<div class="title">{{title}}</div>
+				<div class="desc">
+					<div class="summary">{{summary}}</div>
+					<div class="dayCnt">{{dayCnt}}天</div>
+					<button type="button" class="btn btn-success">发送</button>
+					<div class="updatetime">{{updateTime}}</div>
+				</div>
+			</div>
+		{{/each}}
+	</div>
+</template>
+<!-- 我的攻略列表弹层 start -->
+
+<!-- poi搜索弹层 start -->
+<template name="searchLayer">
+	<div class="search-layer">
+		<input class="search-input" placeholder="城市/景点/美食/购物">
+		<button type="button" class="btn btn-success">搜索</button>
+		<div class="search-list"></div>
+	</div>
+</template>
+
+<template name="searchList">
+	{{! 注意，此处的type为loc，是因为search接口中的param参数定义为loc}}
+	{{#if locality}}
+		{{> poiList poiItem=locality type='loc' typeName='城市'}}
+	{{/if}}
+
+	{{#if vs}}
+		{{> poiList poiItem=vs type='vs' typeName='景点'}}
+	{{/if}}
+
+	{{#if restaurant}}
+		{{> poiList poiItem=restaurant type='restaurant' typeName='美食'}}
+	{{/if}}
+
+	{{#if shopping}}
+		{{> poiList poiItem=shopping type='shopping' typeName='购物'}}
+	{{/if}}
+</template>
+
+<template name="poiList">
+	<div class="{{type}}-list poi-list">
+		<div class="list-hd">
+			<h3>{{typeName}}</h3>
+			<span class="show-full">查看全部{{typeName}} >></span>
+		</div>
+		{{#each poiItem}}
+			{{> poi content=this type=type}}
+		{{/each}}
+	</div>
+</template>
+
+<template name="poi">
+	<div class="poi">
+		<img src="{{content.images.url}}" alt="" class="poi-image">
+		<div class="poi-content">
+			<div class="poi-name">{{content.zhName}}</div>
+			{{#if content.address}}
+				<div class="poi-address">{{content.address}}</div>
+			{{else}}
+				<div class="poi-address">{{content.zhName}}</div>
+			{{/if}}
+			<button type="button" class="btn btn-success">发送</button>
+		</div>
+	</div>
+</template>
+<!-- poi搜索弹层 end -->
+
+<!-- poi详情弹层 start -->
+<template name="poiDetail">
+	
+</template>
+<!-- poi详情弹层 end -->
+
+
+

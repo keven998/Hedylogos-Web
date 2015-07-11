@@ -1,0 +1,134 @@
+.modal-header .close{
+	margin-top: -10px;
+}
+
+/** 攻略弹层 start */
+.plan-list .plan{
+	position: relative;
+	margin: 15px 0;
+	cursor: pointer;
+}
+
+.plan-list .plan .title{
+	position: absolute;
+	left: -10px;
+	top: 10px;
+	padding: 1px 15px 5px;
+	letter-spacing: 3px;
+	font-size: 24px;
+	background-color: #4cae4c;
+	color: #fff;
+}
+
+.plan-list .plan img{
+	border: 1px solid #eee;
+	width: 420px;
+	height: 150px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.plan-list .plan .desc{
+	border: 1px dashed #999;
+	border-left: none;
+	height: 150px;
+	width: 140px;
+	display: inline-block;
+	position: relative;
+}
+
+.plan-list .plan .summary{
+	font-size: 20px;
+	margin: 5px 10px;
+}
+
+.plan-list .plan .dayCnt{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+
+.plan-list .plan .updatetime{
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	font-size: 14px;
+}
+
+.plan-list .plan .btn{
+	margin: 25px auto;
+	display: block;
+}
+
+/** 攻略弹层 end */
+
+/**	搜索弹层 start**/
+.search-layer .search-input{
+	width: 500px;
+	margin-left: 5px;
+}
+
+.search-list{
+	border-top: 1px solid #eee;
+	margin-top: 5px;
+}
+
+.search-list .list-hd{
+	position: relative;
+}
+
+.search-list .list-hd .show-full{
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	cursor: pointer;
+}
+
+.search-list .list-hd h3{
+	margin: 0;
+}
+
+.poi-list{
+	border-bottom: 1px solid #ccc;
+	padding: 10px 0;
+}
+
+.poi{
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 5px;
+	margin: 5px 0;
+}
+
+.poi img{
+	width: 100px;
+	height: 100px;
+	border-radius: 2px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.poi .poi-content{
+	display: inline-block;
+	position: relative;
+	width: 450px;
+	padding-right: 70px;
+}
+
+.poi .poi-address{
+	font-size: 18px;
+  	margin: 10px;
+}
+
+.poi .poi-name{
+	font-size: 22px;
+	margin: 10px;
+}
+
+.poi .btn{
+	position: absolute;
+	right: 10px;
+	top: 30px;
+}
+/**	搜索弹层 end**/
+
