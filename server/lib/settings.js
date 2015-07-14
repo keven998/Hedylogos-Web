@@ -2,7 +2,6 @@
 
 var mongoUrlHedy = getHedyMongoUrl();
 var hedy = new MongoInternals.RemoteCollectionDriver(mongoUrlHedy);
-
 Message = new Mongo.Collection("Message", { _driver: hedy});
 
 function getHedyMongoUrl () {

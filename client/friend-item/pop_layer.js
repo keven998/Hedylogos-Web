@@ -32,13 +32,19 @@ Template.searchList.events({
   }
 })
 
-Template.poi.events({
+Template.poiItem.events({
   'click .btn': function(e) {
     e.preventDefault();
     lxpUser.sendPoiMsg(this);
+  },
+  'click .poi-item': function(e) {
+    if ($(e.target).hasClass('btn'))
+      return ;
+    lxpUser.showPoiDetail(this.content, this.type);
   }
 })
 
+// 输入文本的验证：是否与上次的版本不同并且非空
 function textVerify(text, lastText){
   if ((text !== '') && ((!lastText) || (lastText === '') || ($.trim(text) !== $.trim(lastText))))
     return true;

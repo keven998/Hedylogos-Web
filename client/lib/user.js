@@ -739,6 +739,31 @@ _.extend(LxpUser.prototype, {
     return this;
   },
 
+  'showPoiDetail': function(content, type) {
+    // TODO 假如是上次那个，则继续展示，否则清空，发送请求，然后展示
+    var self = this;
+    if (self.poiLayer && self.poiLayer.doc.type === type && self.poiLayer.doc.id === content.id) {
+      self.poiLayer.show();
+    } else {
+      Meteor.call('getPoiDetail', content.id, type, function(err, res){
+        if (err || !res) {
+          bootbox.alert('获取路线详情失败!');
+          return ;
+        };
+        console.log(res);
+        var shareDialogInfo = {
+          template: Template.poiLayer,
+          doc: {
+            content: res,
+            type: type
+          }
+        };
+        self.poiLayer = ReactiveModal.initDialog(shareDialogInfo);
+        self.poiLayer.show();
+      });
+    }
+  },
+
   /**
    * 发送攻略信息
    */
