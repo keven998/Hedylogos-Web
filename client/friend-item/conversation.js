@@ -1,18 +1,19 @@
 Template.sendedMsg.onRendered(scrollIntoView());
 Template.receivedMsg.onRendered(scrollIntoView());
 
+Template.imageMsg.events({
+  'click .im-msg-send-plan-content>img': function(e){
+    renderCenterImage(this.contents.full);
+  },
+});
+
+// 新消息滚入页面
 function scrollIntoView () {
   return function (){
     var parent = $(this.firstNode).parent()[0];
     parent.scrollTop = parent.scrollHeight;
   }
 }
-
-Template.imageMsg.events({
-  'click .im-msg-send-plan-content>img': function(e){
-    renderCenterImage(this.contents.full);
-  },
-});
 
 /**
  * 渲染屏幕中央的图片模板
@@ -31,6 +32,7 @@ function renderCenterImage (url) {
   return ;
 };
 
+// 展示阴影层
 function showShadow(wW, wH){
   if (! showClass('full-screen-shadow')) {
     $('.full-screen-shadow').css('width', wW);
@@ -38,6 +40,7 @@ function showShadow(wW, wH){
   }
 }
 
+// 展示图片容器
 function showImageContainer (url) {
   showClass('center-image-container');
   $('.center-image-container').empty();
@@ -83,6 +86,7 @@ function adjustImageSize (wW, wH) {
   return ;
 };
 
+// 设置图片容器
 function setImageContainer (windowW, windowH) {
   var imageW = $('.center-image-container img').width();
   var imageH = $('.center-image-container img').height();

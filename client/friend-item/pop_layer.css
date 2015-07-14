@@ -93,14 +93,15 @@
 	padding: 10px 0;
 }
 
-.poi{
+.poi-item{
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	padding: 5px;
 	margin: 5px 0;
+	cursor: pointer;
 }
 
-.poi img{
+.poi-item img{
 	width: 100px;
 	height: 100px;
 	border-radius: 2px;
@@ -108,27 +109,62 @@
 	vertical-align: top;
 }
 
-.poi .poi-content{
+.poi-item .poi-content{
 	display: inline-block;
 	position: relative;
 	width: 450px;
 	padding-right: 70px;
 }
 
-.poi .poi-address{
+.poi-item .poi-address{
 	font-size: 18px;
   	margin: 10px;
 }
 
-.poi .poi-name{
+.poi-item .poi-name{
 	font-size: 22px;
 	margin: 10px;
 }
 
-.poi .btn{
+.poi-item .btn{
 	position: absolute;
 	right: 10px;
 	top: 30px;
 }
 /**	搜索弹层 end**/
+
+/**	poi详情弹层 start**/
+.poi-detail .name{
+	font-size: 22px;
+}
+
+.poi-detail .tag{
+	font-size: 16px;
+	border-bottom: 1px solid #ccc;
+	padding: 3px 0;
+	background: -webkit-gradient(linear,center top,center bottom,from(#fff), to(#acc));
+}
+
+.dining, .shopping{
+	word-spacing: 5px;
+}
+
+.poi-detail{
+	line-height: 1.8;
+}
+
+.poi-detail>div{
+	margin-bottom: 10px;
+}
+
+.poi-detail>div>div{
+  margin-bottom: 5px;
+}
+
+.comments{
+	position: absolute;
+	top: 25px;
+	right: 25px;
+}
+/**	poi详情弹层 end**/
 

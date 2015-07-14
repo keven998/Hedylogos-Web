@@ -48,8 +48,11 @@ Template.chatMain.helpers({
   },
   'chats': function () {
     return UserConversation.find({}, {'sort': {'updateTs': -1}});
+  },
+  'friendRequests': function () {
+    // UserConversation.find({}, {'sort': {'updateTs': -1}});lxpUser.getUserId();
+    return ;
   }
-
 });
 
 

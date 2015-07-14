@@ -28,6 +28,7 @@
 
 <template name="searchList">
 	{{! 注意，此处的type为loc，是因为search接口中的param参数定义为loc}}
+
 	{{#if locality}}
 		{{> poiList poiItem=locality type='loc' typeName='城市'}}
 	{{/if}}
@@ -49,16 +50,21 @@
 	<div class="{{type}}-list poi-list">
 		<div class="list-hd">
 			<h3>{{typeName}}</h3>
-			<span class="show-full">查看全部{{typeName}} >></span>
+			<div class="show-full">查看全部{{typeName}} >></div>
 		</div>
 		{{#each poiItem}}
-			{{> poi content=this type=type}}
+			{{! 注意，此处的type是poiItem中的type}}
+			{{#if type}}
+				{{> poiItem content=this type=type}}
+			{{else}}
+				{{> poiItem content=this type='loc'}}
+			{{/if}}
 		{{/each}}
 	</div>
 </template>
 
-<template name="poi">
-	<div class="poi">
+<template name="poiItem">
+	<div class="poi-item">
 		<img src="{{content.images.url}}" alt="" class="poi-image">
 		<div class="poi-content">
 			<div class="poi-name">{{content.zhName}}</div>
@@ -74,8 +80,82 @@
 <!-- poi搜索弹层 end -->
 
 <!-- poi详情弹层 start -->
-<template name="poiDetail">
-	
+<template name="poiLayer">
+	<div class="poi-detail">
+		{{#with content}}
+			<div class="name">
+				{{zhName}}
+			</div>
+			{{#if moreCommentsUrl}}
+				<a class="comments" href="{{moreCommentsUrl}}" target=_blank>用户评价 >></a>
+			{{/if}}
+			{{#if priceDesc}}
+				<div class="price-desc">
+					<div class='tag'>价格</div>
+					{{priceDesc}}
+				</div>
+			{{/if}}
+			{{#if openTime}}
+				<div class="open-time">
+					<div class='tag'>开放时间</div>
+					{{openTime}}
+				</div>
+			{{/if}}
+			{{#if address}}
+				<div class="address">
+					<div class='tag'>地址</div>
+					{{address}}
+				</div>
+			{{/if}}
+			{{#if diningTitles}}
+				<div class="dining">
+					<div class='tag'>特色美食</div>
+					{{diningTitles}}
+				</div>
+			{{/if}}
+			{{#if shoppingTitles}}
+				<div class="shopping">
+					<div class='tag'>特产清单</div>
+					{{shoppingTitles}}
+				</div>
+			{{/if}}
+			{{#if timeCostDesc}}
+				<div class="time-cost-desc">
+					<div class='tag'>推荐游玩时间</div>
+					{{timeCostDesc}}
+				</div>
+			{{/if}}
+			{{#if travelMonth}}
+				<div class="travel-month">
+					<div class='tag'>游玩最佳月份</div>
+					{{travelMonth}}
+				</div>
+			{{/if}}
+			{{#if desc}}
+				<div class="desc">
+					<div class='tag'>简介</div>
+					{{#if descUrl}}
+						<!-- <a href="{{descUrl}}" target=_blank>{{desc}}</a> -->
+						<iframe src="{{descUrl}}" id="iframepage" style="border:none;width:100%;"></iframe>
+					{{else}}
+						{{desc}}
+					{{/if}}
+				</div>
+			{{/if}}
+			{{#if tipsUrl}}
+				<div class="tips">
+					<div class='tag'>攻略</div>
+					<iframe src="{{tipsUrl}}" id="iframepage" style="border:none;width:100%;"></iframe>
+				</div>
+			{{/if}}
+			{{#if trafficInfoUrl}}
+				<div class="traffic">
+					<div class='tag'>交通</div>
+					<iframe src="{{trafficInfoUrl}}" id="iframepage" style="border:none;width:100%;"></iframe>
+				</div>
+			{{/if}}
+		{{/with}}
+	</div>
 </template>
 <!-- poi详情弹层 end -->
 
