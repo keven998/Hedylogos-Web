@@ -6,7 +6,7 @@ Meteor.publish('chatMessage', function (msgTs) {
     var newMsg = [];
     var audioMsg = [];
     // 监听Message的变化，并记录
-    var handle = Message.find({'receiverId': user.userInfo.userId, 'timestamp': {'$gte': msgTs}}).observeChanges({
+    var handle = Message.find({'targets': user.userInfo.userId, 'timestamp': {'$gte': msgTs}}).observeChanges({
       added: function (id, msg) {
         msg._id = new Mongo.ObjectID(id._str);
         newMsg.push(msg);

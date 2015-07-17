@@ -166,7 +166,8 @@ function getApiList (clientName) {
   var client = {
     Userservice: ['login', 'getUserById', 'updateUserInfo', 'isContact', 'addContact', 'addContacts',
     'removeContact', 'removeContacts', 'getContactList', 'createUser', 'createChatGroup', 'updateChatGroup',
-    'getChatGroup', 'getUserChatGroups', 'addChatGroupMembers', 'removeChatGroupMembers', 'getChatGroupMembers'],
+    'getChatGroup', 'getUserChatGroups', 'addChatGroupMembers', 'removeChatGroupMembers', 'getChatGroupMembers',
+    'acceptContactRequest', 'rejectContactRequest', 'cancelContactRequest'],
     // TODO add more client api
   };
   return client[clientName];

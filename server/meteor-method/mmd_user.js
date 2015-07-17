@@ -65,6 +65,45 @@ Meteor.methods({
   },
 
   /**
+   * 接受好友请求
+   */
+  'acceptContactRequest': function (requestId) {
+    try {
+      var result = Meteor.lxp.Userservice.acceptContactRequest(requestId);
+      return true;
+    } catch (e){
+      console.log(e);
+      return false;
+    }
+  },
+
+  /**
+   * 拒绝好友请求
+   */
+  'rejectContactRequest': function (requestId) {
+    try {
+      Meteor.lxp.Userservice.rejectContactRequest(requestId, '');
+      return true;
+    } catch (e){
+      console.log(e);
+      return false;
+    }
+  },
+
+  /**
+   * 取消好友请求
+   */
+  'cancelContactRequest': function (requestId) {
+    try {
+      Meteor.lxp.Userservice.cancelContactRequest(requestId);
+      return true;
+    } catch (e){
+      console.log(e);
+      return false;
+    }
+  },
+
+  /**
    * 删除一个会话记录
    */
   'deleteConversation': function (chatInfo) {

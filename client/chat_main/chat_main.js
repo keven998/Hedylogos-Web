@@ -50,8 +50,9 @@ Template.chatMain.helpers({
     return UserConversation.find({}, {'sort': {'updateTs': -1}});
   },
   'friendRequests': function () {
-    // UserConversation.find({}, {'sort': {'updateTs': -1}});lxpUser.getUserId();
-    return ;
+    // return ContactRequest.find({}, {'sort': {'updateTs': -1}});
+    Meteor.subscribe('contactRequest', lxpUser.getUserId());
+    return ContactRequest.find();
   }
 });
 

@@ -192,6 +192,18 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
+   * 点击好友请求列表中的一个请求，显示请求者信息
+   */
+  'showUserDesc': function (friendInfo) {
+    var self = this;
+    self._removeDescContainer();
+    self._showDescPanel();
+
+    friendInfo.notFriend = true;
+    Blaze.renderWithData(Template.friendDesc, friendInfo, $('#im-friend-or-group-info')[0]);
+  },
+
+  /**
    * 点击群组列表中的一个群信息，显示群信息
    */
   'showGroupDesc': function (groupInfo) {
@@ -281,7 +293,7 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
-   * 判断会话的dom容器是否存在
+   * 判断会话的dom容器是否存在,single通过userId,group通过conversationId
    */
   'checkChatExist': function (id) {
     // 不存在则新建一个
@@ -296,19 +308,19 @@ _.extend(LxpUser.prototype, {
    */
   'groupMsgHander': function (msg) {
     var self = this;
-    var senderId = msg.senderId;
-    // if (this.isInUnReadChats(senderId)) {
-    //   // 已存在，持续计数
-    //   var curMsgCnt = Number($('#J-msg-count-' + senderId).text()) + 1;
-    //   $('#J-msg-count-' + senderId).text(curMsgCnt);
-    // } else {
-    //   // 不存在，新建会话，并将未读信息置为 1
-    //   this.addConversation(senderId);
-    // }
-    // // 绑定数据到dom
-    // this.attachMsgToDom(msg);
-  },
+    var conversationId = msg.conversation._str;
+    if (this.isInUnReadChats(conversationId)) {
+      // 已存在，持续计数
+      var curMsgCnt = Number($('#J-msg-count-' + conversationId).text()) + 1;
+      $('#J-msg-count-' + conversationId).text(curMsgCnt);
+    } else {
+      // 不存在，新建会话，并将未读信息置为 1
+      this.addConversation(conversationId);
+    }
 
+    // 绑定数据到dom
+    this.attachMsgToDom(msg);
+  },
 
   /**
    * 单聊信息处理
@@ -335,7 +347,11 @@ _.extend(LxpUser.prototype, {
    * 将数据在dom中展示
    */
   'attachMsgToDom': function (msg) {
-    var tid = msg.senderId;
+    if (msg.chatType == 'single'){
+      var tid = msg.senderId;
+    } else {
+      var tid = msg.conversation._str;
+    }
     // 检测信息容器是否存在，不存在则新建
     this.checkChatExist(tid);
     this.renderData(msg);
@@ -446,6 +462,8 @@ _.extend(LxpUser.prototype, {
       Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
     } else {
       // 头像未缓存，从后段读取用户信息
+      console.log('tid');
+      console.log(tid);
       Meteor.call('getUserById', tid, function(err, userInfo) {
         if (!err) {
           var avatar = userInfo.avatar;
@@ -899,6 +917,49 @@ _.extend(LxpUser.prototype, {
       if (res.code === 0) {
         // 在聊天记录中显示该信息
         self.showSendedMsg(receiver, msg);
+      }
+    });
+  },
+
+  // 展示陌生人的信息
+  'showStrangerDesc': function (uid) {
+    var self = this;
+    Meteor.call('getUserById', uid, function(err, userInfo) {
+      if (!err) {
+        self.showUserDesc(userInfo);
+      }
+    });
+  },
+
+  // 接受好友请求
+  'acceptFriendRequest': function (requestId) {
+    Meteor.call('acceptContactRequest', requestId, function(err, res) {
+      if (!err && res === true) {
+        // 接受成功，数据库改动，页面随之改动
+      } else {
+        // 失败了
+      }
+    });
+  },
+
+  // 拒绝好友请求
+  'rejectFriendRequest': function (requestId) {
+    Meteor.call('rejectContactRequest', requestId, function(err, res) {
+      if (!err && res === true) {
+        // 接受成功，数据库改动，页面随之改动
+      } else {
+        // 失败了
+      }
+    });
+  },
+
+  // 取消好友请求
+  'cancelFriendRequest': function (requestId) {
+    Meteor.call('cancelContactRequest', requestId, function(err, res) {
+      if (!err && res === true) {
+        // 接受成功，数据库改动，页面随之改动
+      } else {
+        // 失败了
       }
     });
   }
