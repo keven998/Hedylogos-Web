@@ -40,7 +40,7 @@ Template.poiItem.events({
   'click .poi-item': function(e) {
     if ($(e.target).hasClass('btn'))
       return ;
-    lxpUser.showPoiDetail(this.content, this.type);
+    lxpUser.showPoiDetail(this.content.id, this.type);
   }
 })
 

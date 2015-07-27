@@ -4,23 +4,22 @@
     </div>
 </template>
 
-
-<template name="sendedMsg">
-    <div class="im-sended-msg-container">
-
-        <div class="im-sender-msg-content-container">
-            <div class="im-sender-content">
-                <span class="im-sended-content">{{{contents}}}</span>
-            </div>
-        </div>
-
-        <div class="im-sender-avatar-container">
-            <img src="{{avatar}}" alt="" class="im-sender-avatar">
-        </div>
+<template name="cmdText">
+    <div class="cmd-text">
+        '{{contents.operator.nickName}}'将
+        {{#each contents.targets}}
+            '{{nickName}}' 
+        {{/each}}
+        {{#if isInvite}}
+            邀请进了讨论组
+        {{else}}
+            踢出了讨论组
+        {{/if}}
     </div>
 </template>
 
-<template name="receivedMsg">
+<!-- 接收信息的模板 start-->
+<template name="receiveMsg">
     <div class="im-received-msg-container">
         <div class="im-received-avatar-container">
             <img src="{{avatar}}" alt="" class="im-received-avatar">
@@ -35,12 +34,8 @@
     </div>
 </template>
 
-<!-- 富文本接收信息的模板 start-->
-
-<!-- TODO 攻略、游记、城市、景点的模板的合并 -->
-
 <!-- 语音模板 -->
-<template name="voiceMsg">
+<template name="receiveVoiceMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
@@ -56,7 +51,7 @@
 </template>
 
 <!-- 图片模板 -->
-<template name="imageMsg">
+<template name="receiveImageMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
@@ -72,7 +67,7 @@
 
 
 <!-- 攻略模板 -->
-<template name="planMsg">
+<template name="receivePlanMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
@@ -92,29 +87,8 @@
     </div>
 </template>
 
-<!-- 城市模板 -->
-<template name="cityMsg">
-    <div class="im-msg-send-plan-container">
-        <div class="im-msg-send-avatar-container">
-            <img src="{{avatar}}" alt="" class="im-send-avatar">
-        </div>
-
-        <!-- <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/dayDetail.php?id={{contents.id}}" target=_blank> -->
-        <a class="im-msg-send-plan-content-container" href="javascript:;" target=_blank>
-            <div class="im-msg-send-plan-content">
-                <div class="im-msg-send-plan-type">城市</div>
-                <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
-                <div class="im-msg-send-plan-content-text">
-                    <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
-                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
-                </div>
-            </div>
-        </a>
-    </div>
-</template>
-
 <!-- 游记模板 -->
-<template name="noteMsg">
+<template name="receiveNoteMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
@@ -133,32 +107,39 @@
     </div>
 </template>
 
-<!-- 景点模板 -->
-<template name="vsMsg">
+<!-- poi模板 -->
+<template name="receivePoiMsg">
     <div class="im-msg-send-plan-container">
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
         </div>
 
-        <!-- <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/dayDetail.php?id={{contents.id}}" target=_blank> -->
-        <a class="im-msg-send-plan-content-container" href="javascript:;" target=_blank>
+        <div class="im-msg-send-plan-content-container" href="javascript:;" target=_blank id="show-poi">
             <div class="im-msg-send-plan-content">
-                <div class="im-msg-send-plan-type">景点</div>
+                <div class="im-msg-send-plan-type">{{poiType}}</div>
                 <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
                 <div class="im-msg-send-plan-content-text">
                     <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
-                    <div class="im-msg-send-plan-content-time">{{contents.timeCost}}</div>
-                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                    {{#if contents.timeCost}}
+                        <div class="im-msg-send-plan-content-time">{{contents.timeCost}}</div>
+                    {{/if}}
+                    {{#if contents.rating}}
+                        <div class="im-msg-send-plan-content-time">评分:{{contents.rating}} {{contents.price}}</div>
+                    {{/if}}
+                    {{#if contents.desc}}
+                        <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                    {{/if}}
+                    {{#if contents.address}}
+                        <div class="im-msg-send-plan-content-desc">{{contents.address}}</div>
+                    {{/if}}
                 </div>
             </div>
-        </a>
+        </div>
     </div>
 </template>
-
-
 <!-- 富文本接收信息的模板 end-->
 
-<!-- 发送Ext消息的模板 start -->
+<!-- 发送消息的模板 start -->
 <template name="sendMsg">
     <div class="im-sended-msg-container">
 
@@ -169,13 +150,13 @@
         </div>
 
         <div class="im-sender-avatar-container">
-            <img src="{{userInfo.avatar}}" alt="" class="im-sender-avatar">
+            <img src="{{avatar}}" alt="" class="im-sender-avatar">
         </div>
     </div>
 </template>
 
 <!-- 攻略模板 -->
-<template name="sendedPlanMsg">
+<template name="sendPlanMsg">
     <div class="im-msg-send-plan-container align-r">
         <a class="im-msg-send-plan-content-container align-l" href="http://h5.taozilvxing.com/planshare.php?pid={{contents.id}}" target=_blank>
             <div class="im-msg-send-plan-content">
@@ -195,18 +176,30 @@
     </div>
 </template>
 
-<template name="sendedPoiMsg">
+<!-- poi模板 -->
+<template name="sendPoiMsg">
     <div class="im-msg-send-plan-container align-r">
-        <a class="im-msg-send-plan-content-container align-l" href="javascript:;" target=_blank>
+        <div class="im-msg-send-plan-content-container align-l" href="javascript:;" id="show-poi">
             <div class="im-msg-send-plan-content">
-                <div class="im-msg-send-plan-type">城市</div>
+                <div class="im-msg-send-plan-type">{{poiType}}</div>
                 <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
                 <div class="im-msg-send-plan-content-text">
                     <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
-                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                    {{#if contents.timeCost}}
+                        <div class="im-msg-send-plan-content-time">{{contents.timeCost}}</div>
+                    {{/if}}
+                    {{#if contents.rating}}
+                        <div class="im-msg-send-plan-content-time">评分:{{contents.rating}} {{contents.price}}</div>
+                    {{/if}}
+                    {{#if contents.desc}}
+                        <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
+                    {{/if}}
+                    {{#if contents.address}}
+                        <div class="im-msg-send-plan-content-desc">{{contents.address}}</div>
+                    {{/if}}
                 </div>
             </div>
-        </a>
+        </div>
 
         <div class="im-msg-send-avatar-container">
             <img src="{{avatar}}" alt="" class="im-send-avatar">
@@ -214,23 +207,4 @@
     </div>
 </template>
 
-<template name="sendedVsMsg">
-    <div class="im-msg-send-plan-container align-r">
-        <a class="im-msg-send-plan-content-container align-l" href="javascript:;" target=_blank>
-            <div class="im-msg-send-plan-content">
-                <div class="im-msg-send-plan-type">景点</div>
-                <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
-                <div class="im-msg-send-plan-content-text">
-                    <div class="im-msg-send-plan-content-title">{{contents.name}}</div>
-                    <div class="im-msg-send-plan-content-time">{{contents.timeCost}}</div>
-                    <div class="im-msg-send-plan-content-desc">{{contents.desc}}</div>
-                </div>
-            </div>
-        </a>
-
-        <div class="im-msg-send-avatar-container">
-            <img src="{{avatar}}" alt="" class="im-send-avatar">
-        </div>
-    </div>
-</template>
 <!-- 发送Ext消息的模板 start -->

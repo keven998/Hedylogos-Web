@@ -1,3 +1,4 @@
+
 var msgHandlerHost = process.env['MSG_HANDLER_HOST'] + '/chats';
 if (!msgHandlerHost) {
   throw "缺少环境变量: MSG_HANDLER_HOST";

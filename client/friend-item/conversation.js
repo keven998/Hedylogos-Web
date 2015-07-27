@@ -1,11 +1,48 @@
-Template.sendedMsg.onRendered(scrollIntoView());
-Template.receivedMsg.onRendered(scrollIntoView());
+Template.sendMsg.onRendered(scrollIntoView());
+Template.receiveMsg.onRendered(scrollIntoView());
 
-Template.imageMsg.events({
+Template.receiveImageMsg.events({
   'click .im-msg-send-plan-content>img': function(e){
     renderCenterImage(this.contents.full);
   },
 });
+
+// Template.sendImageMsg.events({
+//   'click .im-msg-send-plan-content>img': function(e){
+//     renderCenterImage(this.contents.full);
+//   },
+// });
+
+Template.receivePoiMsg.events({
+  'click #show-poi': function(e){
+    showPoi(this);
+  },
+})
+
+Template.sendPoiMsg.events({
+  'click #show-poi': function(e){
+    showPoi(this);
+  },
+})
+
+function showPoi(data){
+  switch (data.poiType){
+    case '城市':
+      lxpUser.showPoiDetail(data.contents.id, 'loc');
+      break;
+    case '景点':
+      lxpUser.showPoiDetail(data.contents.id, 'vs');
+      break;
+    case '购物':
+      lxpUser.showPoiDetail(data.contents.id, 'shopping');
+      break;
+    case '美食':
+      lxpUser.showPoiDetail(data.contents.id, 'restaurant');
+      break;
+    default:
+      break;
+  }
+}
 
 // 新消息滚入页面
 function scrollIntoView () {
