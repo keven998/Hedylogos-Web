@@ -1,3 +1,4 @@
+
 Meteor.methods({
   // 获取poi详情
   'getPoiDetail': function (id, type) {

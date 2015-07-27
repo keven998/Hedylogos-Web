@@ -1,6 +1,6 @@
-var thrift = Meteor.npmRequire('thrift');
-var lxpThriftType = Meteor.npmRequire('lxpthrift').Userserver_types;
 
+var thrift = Meteor.npmRequire('thrift');
+var lxpThriftType = Meteor.npmRequire('lxpthrift2').Userserver_types;
 
 Meteor.methods({
   /**
@@ -65,6 +65,45 @@ Meteor.methods({
   },
 
   /**
+   * 接受好友请求
+   */
+  'acceptContactRequest': function (requestId) {
+    try {
+      var result = Meteor.lxp.Userservice.acceptContactRequest(requestId);
+      return true;
+    } catch (e){
+      console.log(e);
+      return false;
+    }
+  },
+
+  /**
+   * 拒绝好友请求
+   */
+  'rejectContactRequest': function (requestId) {
+    try {
+      Meteor.lxp.Userservice.rejectContactRequest(requestId, '');
+      return true;
+    } catch (e){
+      console.log(e);
+      return false;
+    }
+  },
+
+  /**
+   * 取消好友请求
+   */
+  'cancelContactRequest': function (requestId) {
+    try {
+      Meteor.lxp.Userservice.cancelContactRequest(requestId);
+      return true;
+    } catch (e){
+      console.log(e);
+      return false;
+    }
+  },
+
+  /**
    * 删除一个会话记录
    */
   'deleteConversation': function (chatInfo) {
@@ -80,18 +119,21 @@ Meteor.methods({
   'createConversation': function (tid, hasNewMsg, isChatGroup) {
     check(tid, Number);
     check(hasNewMsg, Boolean);
+
     var uid = getUserId();
     // 已经存在则不创建，更新下时间置顶
     if (UserConversation.findOne({'tid': tid, 'uid': uid})) {
       UserConversation.update({'tid': tid, 'uid': uid}, {'$set': {'updateTs': Date.now()}});
       return;
     }
+
     var targetInfo;
     if (!isChatGroup) {
       targetInfo = Meteor.call('getUserById', tid);
     } else {
       targetInfo = Meteor.call('getChatGroup', tid);
     }
+
     var data = {
       'tid': tid,
       'uid': uid,
@@ -108,36 +150,20 @@ Meteor.methods({
   /**
    * 创建一个存在即时未读信息的会话，（单聊）使用场景：来了新消息，自动创建一个会话
    */
-  'createConversationWithNewMsg': function(tid) {
+  'createConversationWithNewMsg': function(tid, isGroup) {
     check(tid, Number);
-    Meteor.call('createConversation', tid, true, false);
+    check(isGroup, Boolean);
+    Meteor.call('createConversation', tid, true, isGroup);
   },
 
 
   /**
    * 创建一个会话，（单聊）使用场景：点击新建会话
    */
-  'createConversationWithoutMsg': function(tid) {
+  'createConversationWithoutMsg': function(tid, isGroup) {
     check(tid, Number);
-    Meteor.call('createConversation', tid, false, false);
-  },
-
-
-  /**
-   * 同createConversationWithNewMsg，但是为群聊会话
-   */
-  'createGroupConversationWithNewMsg': function(tid) {
-    check(tid, Number);
-    Meteor.call('createConversation', tid, true, true);
-  },
-
-
-  /**
-   * 同createConversationWithoutMsg，但是为群聊会话
-   */
-  'createGroupConversationWithoutMsg': function(tid) {
-    check(tid, Number);
-    Meteor.call('createConversation', tid, false, true);
+    check(isGroup, Boolean);
+    Meteor.call('createConversation', tid, false, isGroup);
   },
 
 
@@ -154,15 +180,16 @@ Meteor.methods({
   /**
    * 创建包含未读信息的会话
    */
-  'addConversation': function (targetId) {
+  'addConversation': function (targetId, isGroup) {
     check(targetId, Number);
+    check(isGroup, Boolean);
     var conversation = Meteor.call('findConversation', targetId);
     if (conversation) {
       // 存在，只需要更新时间，打上有新消息的标签
       UserConversation.update({'_id': conversation._id}, {'$set': {'updateTs': Date.now(), 'hasMsg': true}});
     } else {
       // 不存在则需要新建会话记录
-      Meteor.call('createConversationWithNewMsg', targetId);
+      Meteor.call('createConversationWithNewMsg', targetId, isGroup);
     }
     return true;
   },

@@ -2,7 +2,7 @@ Meteor.startup(function () {
   initApiCall();
   var address = getThriftServerAddress();
   var thriftConnectionInstance = connectThriftServer(address.ip, address.port);
-  createThriftClient(thriftConnectionInstance, 'lxpthrift', 'Userservice');
+  createThriftClient(thriftConnectionInstance, 'lxpthrift2', 'Userservice');
 
   // 设置session过期日期为一天
   Accounts.config({
@@ -166,7 +166,8 @@ function getApiList (clientName) {
   var client = {
     Userservice: ['login', 'getUserById', 'updateUserInfo', 'isContact', 'addContact', 'addContacts',
     'removeContact', 'removeContacts', 'getContactList', 'createUser', 'createChatGroup', 'updateChatGroup',
-    'getChatGroup', 'getUserChatGroups', 'addChatGroupMembers', 'removeChatGroupMembers', 'getChatGroupMembers'],
+    'getChatGroup', 'getUserChatGroups', 'addChatGroupMembers', 'removeChatGroupMembers', 'getChatGroupMembers',
+    'acceptContactRequest', 'rejectContactRequest', 'cancelContactRequest'],
     // TODO add more client api
   };
   return client[clientName];

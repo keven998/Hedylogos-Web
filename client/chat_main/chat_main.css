@@ -140,7 +140,7 @@
 }
 
 .im-friend-avatar, .im-group-avatar{
-  border-radius: 3px;
+    border-radius: 3px;
 }
 
 .im-friend-info, .im-group-info {
@@ -155,7 +155,7 @@
 }
 
 .im-friend-item-container:hover {
-  background-color: #E8E8E8;
+    background-color: #E8E8E8;
 }
 
 .im-chat-info-container {
@@ -773,9 +773,9 @@ img.im-received-avatar {
 }
 
 .align-l{
-  text-align: left;
+    text-align: left;
 }
 
 .align-r{
-  text-align: right;
+    text-align: right;
 }

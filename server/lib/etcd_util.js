@@ -2,14 +2,23 @@ EtcdClass = function() {
   // 配置信息的etcd路径
   this.settingPath = {
     mongo: {
+      yunkai: {
+        auth: {
+          user: '/project-conf/hedylogos-web/mongo/yunkai/user',
+          password: '/project-conf/hedylogos-web/mongo/yunkai/password',
+          db: '/project-conf/hedylogos-web/mongo/yunkai/db'
+        }
+      },
+      hedy: {
+        auth: {
+          user: '/project-conf/hedylogos-web/mongo/hedy/user',
+          password: '/project-conf/hedylogos-web/mongo/hedy/password',
+          db: '/project-conf/hedylogos-web/mongo/hedy/db'
+        }
+      },
       url: {
         array: true,//会返回数组
         path: '/backends/mongo-dev'
-      },
-      auth: {
-        user: '/project-conf/hedylogos-dev/server/mongo/user',
-        password: '/project-conf/hedylogos-dev/server/mongo/password',
-        db: '/project-conf/hedylogos-dev/server/mongo/db'
       }
     },
     qiniu: {
@@ -84,4 +93,4 @@ EtcdClass = function() {
 };
 
 Etcd = new EtcdClass();
-Etcd_Result = Etcd.callEtcd();
+Etcd_Data = Etcd.callEtcd();

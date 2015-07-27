@@ -51,12 +51,9 @@
                         {{#each friends}}
                             {{> friend friendInfo=this}}
                         {{/each}}
-                        <!-- {{#if friendRequest}}
-                            <div class="friend-request-list">好友请求</div>
-                            {{#each friendRequest}}
-                                <div class="friend-request"></div>
-                            {{/each friendRequest}}
-                        {{/if}} -->
+                        {{#if friendRequests}}
+                            {{> friendRequestList friendRequests=friendRequests}}
+                        {{/if}}
                     </div>
                     <div class="im-group-list hidden">
                         群组

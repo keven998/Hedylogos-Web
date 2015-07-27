@@ -192,6 +192,18 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
+   * 点击好友请求列表中的一个请求，显示请求者信息
+   */
+  'showUserDesc': function (friendInfo) {
+    var self = this;
+    self._removeDescContainer();
+    self._showDescPanel();
+
+    friendInfo.notFriend = true;
+    Blaze.renderWithData(Template.friendDesc, friendInfo, $('#im-friend-or-group-info')[0]);
+  },
+
+  /**
    * 点击群组列表中的一个群信息，显示群信息
    */
   'showGroupDesc': function (groupInfo) {
@@ -230,10 +242,7 @@ _.extend(LxpUser.prototype, {
     // 改变session
     Session.set('chatWith', chatTargetInfo);
     // 数据层面创建会话
-    isGroupChat ?
-      Meteor.call('createGroupConversationWithoutMsg', chatId)
-      :
-      Meteor.call('createConversationWithoutMsg', chatId);
+    Meteor.call('createConversationWithoutMsg', chatId, isGroupChat);
     // 删除好友介绍或者群组介绍列表
     isGroupChat ?
       $('.im-group-desc-container').remove()
@@ -267,78 +276,129 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
-   * 接收信息的操作逻辑框架
+   * 消息的处理框架
    */
-  'receivedMsgHander': function (msg) {
+  'msgHandler': function (msg) {
+    var userId = this.getUserId();
+    if (userId == msg.senderId){
+      this.sendedMsgHandler(msg);
+      return ;
+    }
+    if ((userId == msg.receiverId && msg.chatType == 'single') || (_.indexOf(msg.targets, userId) != -1 && msg.chatType == 'group')){
+      this.receivedMsgHandler(msg);
+      return ;
+    }
+    console.log('Wrong msg to user:' + userId);
+    console.log(msg);
+  },
+
+  /**
+   * 发送消息的操作逻辑
+   */
+  'sendedMsgHandler': function (msg) {
     if (msg.chatType === 'single') {
-      this.singleMsgHander(msg);
+      this.singleSendMsgHandler(msg);
+      return;
+    }
+    // if (msg.chatType === 'group') {
+    //   this.groupSendMsgHandler(msg);
+    //   return;
+    // }
+  },
+
+  /**
+   * 接收信息的操作逻辑
+   */
+  'receivedMsgHandler': function (msg) {
+    if (msg.chatType === 'single') {
+      this.singleMsgHandler(msg);
       return;
     }
     if (msg.chatType === 'group') {
-      this.groupMsgHander(msg);
+      this.groupMsgHandler(msg);
       return;
     }
   },
 
   /**
-   * 判断会话的dom容器是否存在
+   * 判断会话的dom容器是否存在,single通过userId,group通过conversationId
    */
-  'checkChatExist': function (id) {
+  'checkChatExist': function (tid) {
     // 不存在则新建一个
-    if ($('#conversation-' + id).length === 0) {
-      Blaze.renderWithData(Template.conversation, {'id': id}, $('.im-chat-info-container')[0]);
+    if ($('#conversation-' + tid).length === 0) {
+      Blaze.renderWithData(Template.conversation, {'id': tid}, $('.im-chat-info-container')[0]);
     }
     return;
   },
 
   /**
-   * 群聊信息处理
+   * 单聊发送信息处理
    */
-  'groupMsgHander': function (msg) {
+  'singleSendMsgHandler': function (msg) {
     var self = this;
-    var senderId = msg.senderId;
-    // if (this.isInUnReadChats(senderId)) {
-    //   // 已存在，持续计数
-    //   var curMsgCnt = Number($('#J-msg-count-' + senderId).text()) + 1;
-    //   $('#J-msg-count-' + senderId).text(curMsgCnt);
-    // } else {
-    //   // 不存在，新建会话，并将未读信息置为 1
-    //   this.addConversation(senderId);
-    // }
-    // // 绑定数据到dom
-    // this.attachMsgToDom(msg);
-  },
-
-
-  /**
-   * 单聊信息处理
-   */
-  'singleMsgHander': function (msg) {
-    var self = this;
-    var senderId = msg.senderId;
-    if (senderId !== this.chatWith.tid) {
-      if (self.isInUnReadChats(senderId)) {
+    var targetId = msg.receiverId;
+    if (targetId !== this.chatWith.tid) {
+      if (self.isInUnReadChats(targetId)) {
         // 已存在，持续计数
-        var curMsgCnt = Number($('#J-msg-count-' + senderId).text()) + 1;
-        $('#J-msg-count-' + senderId).text(curMsgCnt);
+        var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
+        $('#J-msg-count-' + targetId).text(curMsgCnt);
       } else {
         // 不存在，新建会话，并将未读信息置为 1
-        self.addConversation(senderId);
+        self.addConversation(targetId, false);
       }
     }
 
     // 绑定数据到dom
-    this.attachMsgToDom(msg);
+    this.attachMsgToDom(msg, targetId);
+  },
+
+  /**
+   * 群聊信息处理
+   */
+  'groupMsgHandler': function (msg) {
+    var self = this;
+    var targetId = msg.receiverId;
+    if (this.isInUnReadChats(targetId)) {
+      // 已存在，持续计数
+      var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
+      $('#J-msg-count-' + targetId).text(curMsgCnt);
+    } else {
+      // 不存在，新建会话，并将未读信息置为 1
+      this.addConversation(targetId, true);
+    }
+
+    // 绑定数据到dom
+    this.attachMsgToDom(msg, targetId);
+  },
+
+  /**
+   * 单聊信息处理
+   */
+  'singleMsgHandler': function (msg) {
+    var self = this;
+    var targetId = msg.senderId;
+    if (targetId !== this.chatWith.tid) {
+      if (self.isInUnReadChats(targetId)) {
+        // 已存在，持续计数
+        var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
+        $('#J-msg-count-' + targetId).text(curMsgCnt);
+      } else {
+        // 不存在，新建会话，并将未读信息置为 1
+        self.addConversation(targetId, false);
+      }
+    }
+
+    // 绑定数据到dom
+    this.attachMsgToDom(msg, targetId);
   },
 
   /**
    * 将数据在dom中展示
    */
-  'attachMsgToDom': function (msg) {
-    var tid = msg.senderId;
+  'attachMsgToDom': function (msg, tid) {
     // 检测信息容器是否存在，不存在则新建
     this.checkChatExist(tid);
-    this.renderData(msg);
+    this.renderData(msg, tid);
   },
 
   /**
@@ -379,16 +439,20 @@ _.extend(LxpUser.prototype, {
 
   /**
    * 将数据在前端展示，包含补充头像的逻辑
-   * 取头像策略：本地缓存读取-》http获取
+   * 取头像策略：本地缓存读取 => http获取
    */
-  'renderData': function (msg) {
+  'renderData': function (msg, tid) {
     var self = this;
-    var tid = msg.senderId;
     var templateName = '';
 
-    console.log(msg);
+    if (msg.msgType === 200) {
+      msg = self._richTextMsg(msg);
+      msg.isInvite = (msg.contents.tipType == 2001) ? true : false;
+      Blaze.renderWithData(Template['cmdText'], msg, $('#conversation-' + tid)[0]);
+    }
+
     if (msg.msgType === 0) {
-      templateName = 'receivedMsg';
+      templateName = 'Msg';
       msg.contents = self._emojiConvert(msg.contents);
     }
     if (msg.msgType === 1) {
@@ -400,18 +464,19 @@ _.extend(LxpUser.prototype, {
         }
         if (msg.convertStatus.code === 2){
           // 处于转码成功状态
-          templateName = 'voiceMsg';
+          templateName = 'VoiceMsg';
           msg = self._richTextMsg(msg);
           msg.voiceUrl = msg.convertStatus.url;
           // TODO 修改 audio的src来源
         }
       } else {
-        templateName = 'voiceMsg';
+        templateName = 'VoiceMsg';
         msg = self._richTextMsg(msg);
         msg.voiceUrl = msg.contents.url;
         var url = parseUrl(msg.contents.url);
         var key = url.path;
         Meteor.call('convertAmrToMp3', msg._id, key, function (err, result) {
+          console.log(result);
           if (result.statusCode === 200) {
             // success
           } else {
@@ -421,38 +486,58 @@ _.extend(LxpUser.prototype, {
       }
     }
     if (msg.msgType === 2) {
-      templateName = 'imageMsg';
+      templateName = 'ImageMsg';
       msg = self._richTextMsg(msg);
     }
     if (msg.msgType === 10) {
-      templateName = 'planMsg';
+      templateName = 'PlanMsg';
       msg = self._richTextMsg(msg);
     }
     if (msg.msgType === 11) {
-      templateName = 'cityMsg';
+      templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
+      msg.poiType = '城市';
     }
     if (msg.msgType === 12) {
-      templateName = 'noteMsg';
+      templateName = 'NoteMsg';
       msg = self._richTextMsg(msg);
     }
     if (msg.msgType === 13) {
-      templateName = 'vsMsg';
+      templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
+      msg.poiType = '景点';
     }
-    if (self.avatars[tid]) {
+    if (msg.msgType === 14) {
+      templateName = 'PoiMsg';
+      msg = self._richTextMsg(msg);
+      msg.poiType = '美食';
+    }
+    if (msg.msgType === 15) {
+      templateName = 'PoiMsg';
+      msg = self._richTextMsg(msg);
+      msg.poiType = '购物';
+    }
+
+    // 假如是发送的消息
+    if (tid != msg.senderId)
+      templateName = 'send' + templateName;
+    else
+      templateName = 'receive' + templateName;
+
+    if (self.avatars[msg.senderId]) {
       // 头像已经缓存
-      msg.avatar = this.avatars[tid];
+      msg.avatar = this.avatars[msg.senderId];
       Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
     } else {
-      // 头像未缓存，从后段读取用户信息
-      Meteor.call('getUserById', tid, function(err, userInfo) {
+      // 头像未缓存，从后端读取用户信息
+      Meteor.call('getUserById', msg.senderId, function(err, userInfo) {
         if (!err) {
-          var avatar = userInfo.avatar;
-          msg.avatar = avatar;
-          self.avatars[tid] = avatar;
-          console.log(msg);
-          console.log(templateName);
+          // 缓存头像
+          if (userInfo.avatar){
+            var avatar = userInfo.avatar;
+            msg.avatar = avatar;
+            self.avatars[tid] = avatar;
+          }
           Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
         }
       });
@@ -462,9 +547,8 @@ _.extend(LxpUser.prototype, {
   /**
    * 判断一个信息是否在未读信息列表里
    */
-
-  'isInUnReadChats': function (senderId) {
-    if (this.unReadChats[senderId]) {
+  'isInUnReadChats': function (targetId) {
+    if (this.unReadChats[targetId]) {
       return true;
     }
     return false;
@@ -472,12 +556,13 @@ _.extend(LxpUser.prototype, {
 
   /**
    * 创建未读会话信息
+   * targetId = senderId/groupId
    */
-  'addConversation': function (senderId) {
+  'addConversation': function (targetId, isGroup) {
     // 不在未读列表，添加进去
-    this.unReadChats[senderId] = true;
+    this.unReadChats[targetId] = true;
     // 更新数据库时间
-    Meteor.call('addConversation', senderId);
+    Meteor.call('addConversation', targetId, isGroup);
   },
 
   /**
@@ -547,6 +632,65 @@ _.extend(LxpUser.prototype, {
   },
 
 
+  /**
+   * 发送攻略信息
+   */
+  'sendPlanMsg': function(plan) {
+    var self = this;
+    self.planLayer.hide();
+    self.sendExtMsg(plan, 'plan');
+  },
+
+  /**
+   * 发送poi消息
+   */
+  'sendPoiMsg': function(data){
+    var self = this;
+    self.searchLayer.hide();
+    self.sendExtMsg(data.content, data.type);
+  },
+
+  /**
+   * 发送特殊格式的信息
+   */
+  'sendExtMsg': function(data, type){
+    var self = this;
+
+    var contents = {
+      id: data.id,
+      image: data.images ? data.images.url : "",
+      name: data.title || data.zhName,
+      desc: data.summary || data.desc || "",
+      rating: data.rating ? data.rating * 100 / 20 : "",//先转换成整数再计算，否则会有误差！
+      price: data.priceDesc || "",
+      timeCost: data.dayCnt ? (data.dayCnt + '天') : (data.timeCostDesc || ""),
+      address: data.address || ""
+    }
+
+    if (type == 'plan'){
+      var msgType = 10;
+    }
+
+    if (type == 'loc'){
+      var msgType = 11;
+    }
+
+    if (type == 'vs'){
+      var msgType = 13;
+    }
+
+    if (type == 'restaurant'){
+      var msgType = 14;
+    }
+
+    if (type == 'shopping'){
+      var msgType = 15;
+    }
+
+    contents = JSON.stringify(contents);
+    self.sendMsg(msgType, contents);
+  },
+
   /*
    * 消息输入框，绑定回车键进行信息发布
    * TODO：绑定shift+enter进行换行
@@ -576,46 +720,48 @@ _.extend(LxpUser.prototype, {
             return emojiArray[$2 - 1].str;
           });
 
-
-          var chatWith = Session.get('chatWith');
-          var receiver = chatWith.userId || chatWith.tid,
-              sender = lxpUser.getUserId();
-
-          if (!receiver || ! sender) {
-            console.log('没有接收者或者发送者信息');
-            return;
-          }
-
-          var msgType = 0,
-              chatType = 'single',
-              msg = {
-                'receiver': receiver,
-                'sender': sender,
-                'msgType': msgType,
-                'contents': contents,
-                'chatType': chatType
-              },
-              header = {
-                'Content-Type': 'application/json',
-              },
-              option = {
-                'header': header,
-                'data': msg
-              };
-          console.log(contents);
-          Meteor.call('sendMsg', option, function(err, res) {
-            if (err) {
-              console.log(err);
-              throwError('发送失败，请重试');
-              return;
-            }
-            if (res.code === 0) {
-              console.log(res);
-              // 在聊天记录中显示该信息
-              self.showSendedMsg(receiver, msg);
-            }
-          });
+          self.sendMsg(0, contents);
         }
+      }
+    });
+  },
+
+  //发送消息
+  sendMsg: function(msgType, contents) {
+    var chatWith = Session.get('chatWith');
+    var receiver = chatWith.userId || chatWith.tid,
+        sender = lxpUser.getUserId();
+
+    if (!receiver || ! sender) {
+      console.log('没有接收者或者发送者信息');
+      return;
+    }
+
+    var msgType = msgType,
+        chatType = 'single',
+        msg = {
+          'receiver': receiver,
+          'sender': sender,
+          'msgType': msgType,
+          'contents': contents,
+          'chatType': chatType
+        },
+        header = {
+          'Content-Type': 'application/json',
+        },
+        option = {
+          'header': header,
+          'data': msg
+        };
+
+    Meteor.call('sendMsg', option, function(err, res) {
+      if (err) {
+        console.log(err);
+        throwError('发送失败，请重试');
+        return;
+      }
+      if (res.code === 0) {
+        // 在聊天记录中显示该信息
       }
     });
   },
@@ -739,13 +885,14 @@ _.extend(LxpUser.prototype, {
     return this;
   },
 
-  'showPoiDetail': function(content, type) {
+  //展示poi详情
+  'showPoiDetail': function(pid, poiType) {
     // TODO 假如是上次那个，则继续展示，否则清空，发送请求，然后展示
     var self = this;
-    if (self.poiLayer && self.poiLayer.doc.type === type && self.poiLayer.doc.id === content.id) {
+    if (self.poiLayer && self.poiLayer.doc.type === poiType && self.poiLayer.doc.id === pid) {
       self.poiLayer.show();
     } else {
-      Meteor.call('getPoiDetail', content.id, type, function(err, res){
+      Meteor.call('getPoiDetail', pid, poiType, function(err, res){
         if (err || !res) {
           bootbox.alert('获取路线详情失败!');
           return ;
@@ -755,7 +902,7 @@ _.extend(LxpUser.prototype, {
           template: Template.poiLayer,
           doc: {
             content: res,
-            type: type
+            type: poiType
           }
         };
         self.poiLayer = ReactiveModal.initDialog(shareDialogInfo);
@@ -764,141 +911,45 @@ _.extend(LxpUser.prototype, {
     }
   },
 
-  /**
-   * 发送攻略信息
-   */
-  'sendPlanMsg': function(plan) {
+  // 展示陌生人的信息
+  'showStrangerDesc': function (uid) {
     var self = this;
-    self.planLayer.hide();
-    // TODO 把发送消息部分封装一下！
-    var contents = {
-      id: plan.id,
-      image: plan.images.url,
-      name: plan.title,
-      desc: plan.summary,
-      timeCost: plan.dayCnt
-    }
-
-    contents = JSON.stringify(contents);
-    var chatWith = Session.get('chatWith');
-    var receiver = chatWith.userId || chatWith.tid,
-        sender = lxpUser.getUserId();
-
-    if (!receiver || ! sender) {
-      console.log('没有接收者或者发送者信息');
-      return;
-    }
-
-    var msgType = 10,
-        chatType = 'single',
-        msg = {
-          'receiver': receiver,
-          'sender': sender,
-          'msgType': msgType,
-          'contents': contents,
-          'chatType': chatType
-        },
-        header = {
-          'Content-Type': 'application/json',
-        },
-        option = {
-          'header': header,
-          'data': msg
-        };
-    Meteor.call('sendMsg', option, function(err, res) {
-      if (err) {
-        throwError('发送失败，请重试');
-        return;
-      }
-      if (res.code === 0) {
-        // 在聊天记录中显示该信息
-        self.showSendedMsg(receiver, msg);
+    Meteor.call('getUserById', uid, function(err, userInfo) {
+      if (!err) {
+        self.showUserDesc(userInfo);
       }
     });
   },
 
-  'sendPoiMsg': function(data){
-    var self = this;
-    self.searchLayer.hide();
-    // TODO 把发送消息部分封装一下！
-    // var msgType = self._getMsgType(data.type)
-    if (data.type == 'locality'){
-      var msgType = 11;
-      var contents = {
-        id: data.content.id,
-        image: data.content.images.url,
-        name: data.content.zhName,
-        desc: data.content.desc
+  // 接受好友请求
+  'acceptFriendRequest': function (requestId) {
+    Meteor.call('acceptContactRequest', requestId, function(err, res) {
+      if (!err && res === true) {
+        // 接受成功，数据库改动，页面随之改动
+      } else {
+        // 失败了
       }
-    }
+    });
+  },
 
-    if (data.type == 'vs'){
-      var msgType = 13;
-      var contents = {
-        id: data.content.id,
-        image: data.content.images.url,
-        name: data.content.zhName,
-        desc: data.content.desc
+  // 拒绝好友请求
+  'rejectFriendRequest': function (requestId) {
+    Meteor.call('rejectContactRequest', requestId, function(err, res) {
+      if (!err && res === true) {
+        // 接受成功，数据库改动，页面随之改动
+      } else {
+        // 失败了
       }
-    }
+    });
+  },
 
-    if (data.type == 'restaurant'){
-      var msgType = 14;
-      var contents = {
-        id: data.content.id,
-        image: data.content.images.url,
-        name: data.content.zhName,
-        desc: data.content.desc
-      }
-    }
-
-    if (data.type == 'shopping'){
-      var msgType = 15;
-      var contents = {
-        id: data.content.id,
-        image: data.content.images.url,
-        name: data.content.zhName,
-        desc: data.content.desc
-      }
-    }
-
-
-    contents = JSON.stringify(contents);
-    var chatWith = Session.get('chatWith');
-    var receiver = chatWith.userId || chatWith.tid,
-        sender = lxpUser.getUserId();
-
-    if (!receiver || ! sender) {
-      console.log('没有接收者或者发送者信息');
-      return;
-    }
-
-    var msgType = msgType,
-        chatType = 'single',
-        msg = {
-          'receiver': receiver,
-          'sender': sender,
-          'msgType': msgType,
-          'contents': contents,
-          'chatType': chatType
-        },
-        header = {
-          'Content-Type': 'application/json',
-        },
-        option = {
-          'header': header,
-          'data': msg
-        };
-
-    Meteor.call('sendMsg', option, function(err, res) {
-      if (err) {
-        console.log(err);
-        throwError('发送失败，请重试');
-        return;
-      }
-      if (res.code === 0) {
-        // 在聊天记录中显示该信息
-        self.showSendedMsg(receiver, msg);
+  // 取消好友请求
+  'cancelFriendRequest': function (requestId) {
+    Meteor.call('cancelContactRequest', requestId, function(err, res) {
+      if (!err && res === true) {
+        // 接受成功，数据库改动，页面随之改动
+      } else {
+        // 失败了
       }
     });
   }

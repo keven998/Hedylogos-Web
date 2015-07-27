@@ -8,11 +8,12 @@
             <div class="im-friend-desc-name">
                 {{nickName}}
             </div>
-            <div class="im-friend-desc-contact">
-                <span id="J-set-contact">
-                    发送消息
-                </span>
-            </div>
+            {{#if notFriend}}
+            {{else}}
+                <div class="im-friend-desc-contact">
+                    <span id="J-set-contact">发送消息</span>
+                </div>
+            {{/if}}
         </div>
     </div>
 </template>

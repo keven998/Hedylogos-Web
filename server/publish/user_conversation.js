@@ -1,6 +1,3 @@
-UserConversation = new Mongo.Collection('UserConversation');
-
-
 Meteor.publish('userConversation', function () {
   if (!this.userId) {
     return this.ready();

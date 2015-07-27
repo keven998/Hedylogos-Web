@@ -1,0 +1,16 @@
+<template name="friendRequestList">
+    <div class="friend-request-list">
+    	好友请求
+        {{#each friendRequests}}
+            <div class="friend-request-item">
+                <div class="desc">用户 {{sender}} 请求添加您为好友</div>
+                <div class="message">附加信息：{{requestMessage}}</div>
+                <div class="request-btn-list">
+	                <i class="glyphicon glyphicon-ok request-btn" title="接受"></i>
+	                <i class="glyphicon glyphicon-remove request-btn" title="拒绝"></i>
+	                <i class="glyphicon glyphicon-minus request-btn" title="取消"></i>
+	            </div>
+            </div>
+        {{/each}}
+    </div>
+</template>

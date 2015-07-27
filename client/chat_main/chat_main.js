@@ -18,7 +18,7 @@ Template.chatMain.onRendered(function () {
     msgSound.play();
     console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
-      lxpUser.receivedMsgHander(msg);
+      lxpUser.msgHandler(msg);
     });
   });
 
@@ -50,8 +50,9 @@ Template.chatMain.helpers({
     return UserConversation.find({}, {'sort': {'updateTs': -1}});
   },
   'friendRequests': function () {
-    // UserConversation.find({}, {'sort': {'updateTs': -1}});lxpUser.getUserId();
-    return ;
+    // return ContactRequest.find({}, {'sort': {'updateTs': -1}});
+    Meteor.subscribe('contactRequest', lxpUser.getUserId());
+    return ContactRequest.find();
   }
 });
 

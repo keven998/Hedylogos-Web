@@ -1,0 +1,37 @@
+.friend-request-item{
+    font-size: 13px;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+
+.friend-request-item:hover{
+    background-color: #E8E8E8;
+}
+
+.friend-request-item .glyphicon-ok:hover:before{
+	content: '\e089';
+}
+
+.friend-request-item .glyphicon-remove:hover:before{
+	content: '\e088';
+}
+
+.friend-request-item .glyphicon-minus:hover:before{
+	content: '\e082';
+}
+
+.friend-request-item .request-btn{
+	vertical-align: top;
+  	padding: 4px;
+	font-size: 14px;
+}
+
+.friend-request-item .request-btn:hover{
+  	font-size: 22px;
+	padding: 0;
+}
+
+.request-btn-list{
+	text-align: right;
+	margin-right: 5px;
+}
