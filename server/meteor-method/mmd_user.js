@@ -209,13 +209,8 @@ Meteor.methods({
    */
   'getUserPlans': function () {
     var uid = getUserId();
-    var url = api.host + 'guides?status=planned';
-    var options = {
-      headers: {
-        UserId: uid
-      }
-    }
-    var result = HTTP.call('GET', url, options);
+    var url = api.host + 'users/' + uid + '/guides?status=planned';
+    var result = HTTP.call('GET', url);
     if (!result || result.data.code !== 0){
       console.log('Failed in getting guides from server!');
       return ;
