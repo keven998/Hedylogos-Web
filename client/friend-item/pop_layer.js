@@ -7,7 +7,8 @@ Template.planLayer.events({
   'click .plan': function(e) {
     if ($(e.target).hasClass('btn'))
       return ;
-    window.open('http://h5.taozilvxing.com/planshare.php?pid=' + this.id);
+    var uid = lxpUser.getUserId();
+    window.open('http://h5.taozilvxing.com/planshare.php?pid=' + this.id + '&uid=' + uid);
   }
 })
 
@@ -40,7 +41,7 @@ Template.poiItem.events({
   'click .poi-item': function(e) {
     if ($(e.target).hasClass('btn'))
       return ;
-    lxpUser.showPoiDetail(this.content.id, this.type);
+    lxpUser.showPoiDetail(this.content.id, this.type, this.content.zhName);
   }
 })
 

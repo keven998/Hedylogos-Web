@@ -28,16 +28,16 @@ Template.sendPoiMsg.events({
 function showPoi(data){
   switch (data.poiType){
     case '城市':
-      lxpUser.showPoiDetail(data.contents.id, 'loc');
+      lxpUser.showPoiDetail(data.contents.id, 'loc', data.contents.zhName);
       break;
     case '景点':
-      lxpUser.showPoiDetail(data.contents.id, 'vs');
+      lxpUser.showPoiDetail(data.contents.id, 'vs', data.contents.zhName);
       break;
     case '购物':
-      lxpUser.showPoiDetail(data.contents.id, 'shopping');
+      lxpUser.showPoiDetail(data.contents.id, 'shopping', data.contents.zhName);
       break;
     case '美食':
-      lxpUser.showPoiDetail(data.contents.id, 'restaurant');
+      lxpUser.showPoiDetail(data.contents.id, 'restaurant', data.contents.zhName);
       break;
     default:
       break;

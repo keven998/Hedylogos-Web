@@ -7,6 +7,20 @@ Meteor.methods({
     if (type == 'loc'){
       var url = api.host + 'geo/' + 'localities' + '/' + id;
     } else {
+      switch (type){
+        case 'vs':
+          type = 'viewspots';
+          break;
+        case 'restaurant':
+          type = 'restaurants';
+          break;
+        case 'shopping':
+          type = 'shopping';
+          break;
+        default:
+          console.log('Received a wrong poi type');
+          break;
+      }
       var url = api.host + 'poi/' + type + '/' + id;
     }
 

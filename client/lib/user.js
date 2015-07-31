@@ -886,7 +886,7 @@ _.extend(LxpUser.prototype, {
   },
 
   //展示poi详情
-  'showPoiDetail': function(pid, poiType) {
+  'showPoiDetail': function(pid, poiType, zhName) {
     // TODO 假如是上次那个，则继续展示，否则清空，发送请求，然后展示
     var self = this;
     if (self.poiLayer && self.poiLayer.doc.type === poiType && self.poiLayer.doc.id === pid) {
@@ -894,7 +894,7 @@ _.extend(LxpUser.prototype, {
     } else {
       Meteor.call('getPoiDetail', pid, poiType, function(err, res){
         if (err || !res) {
-          bootbox.alert('获取路线详情失败!');
+          bootbox.alert('获取 "' + zhName + '" 详情失败!');
           return ;
         };
         console.log(res);
