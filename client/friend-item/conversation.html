@@ -73,7 +73,7 @@
             <img src="{{avatar}}" alt="" class="im-send-avatar">
         </div>
 
-        <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/planshare.php?pid={{contents.id}}" target=_blank>
+        <a class="im-msg-send-plan-content-container" href="http://h5.taozilvxing.com/planshare.php?pid={{contents.id}}&uid={{senderId}}" target=_blank>
             <div class="im-msg-send-plan-content">
                 <div class="im-msg-send-plan-type">计划</div>
                 <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
@@ -158,7 +158,7 @@
 <!-- 攻略模板 -->
 <template name="sendPlanMsg">
     <div class="im-msg-send-plan-container align-r">
-        <a class="im-msg-send-plan-content-container align-l" href="http://h5.taozilvxing.com/planshare.php?pid={{contents.id}}" target=_blank>
+        <a class="im-msg-send-plan-content-container align-l" href="http://h5.taozilvxing.com/planshare.php?pid={{contents.id}}&uid={{senderId}}" target=_blank>
             <div class="im-msg-send-plan-content">
                 <div class="im-msg-send-plan-type">计划</div>
                 <img src="{{contents.image}}" alt="" class="im-msg-send-plan-content-image">
