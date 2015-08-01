@@ -30,7 +30,7 @@ Template.chatMain.onRendered(function () {
     // 新的语音信息提示
     console.log('语音转码成功！');
     newMsgs.forEach(function(msg) {
-      lxpUser.changeVoiceSrc(msg);
+      lxpUser.changeVoiceSrc(msg);//目前只能接收音频消息
     });
   });
 });

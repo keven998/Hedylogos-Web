@@ -232,19 +232,19 @@ _.extend(LxpUser.prototype, {
   /**
    * 激活一个会话，使用场景：用户介绍页面或者群组介绍页面，点击“发送信息”
    */
-  _activeOneChat: function (chatTargetInfo, isGroupChat) {
+  _activeOneChat: function (chatTargetInfo, isGroup) {
     var self = this;
-    var chatId = chatTargetInfo.userId || chatTargetInfo.chatGroupId;
+    var chatId = (isGroup) ? chatTargetInfo.chatGroupId : chatTargetInfo.userId;
     // 创建会话DOM
-    self.checkChatExist(chatId);
+    self.checkChatExist(chatId, isGroup);
     // 隐藏上次会话DOM，显示当前会话DOM
     self.showMsgDom(chatId);
     // 改变session
     Session.set('chatWith', chatTargetInfo);
     // 数据层面创建会话
-    Meteor.call('createConversationWithoutMsg', chatId, isGroupChat);
+    Meteor.call('createConversationWithoutMsg', chatId, isGroup);
     // 删除好友介绍或者群组介绍列表
-    isGroupChat ?
+    isGroup ?
       $('.im-group-desc-container').remove()
       :
       $('.im-friend-desc-container').remove();
@@ -264,7 +264,8 @@ _.extend(LxpUser.prototype, {
    */
   activeSingleChat: function(chatTargetInfo) {
     var self = this;
-    self._activeOneChat(chatTargetInfo, false);
+    var isGroup = false;
+    self._activeOneChat(chatTargetInfo, isGroup);
   },
 
   /**
@@ -272,132 +273,64 @@ _.extend(LxpUser.prototype, {
    */
   activeGroupChat: function(chatTargetInfo) {
     var self = this;
-    self._activeOneChat(chatTargetInfo, true);
+    var isGroup = true;
+    self._activeOneChat(chatTargetInfo, isGroup);
   },
 
-  /**
+  /**P:
    * 消息的处理框架
    */
   'msgHandler': function (msg) {
     var userId = this.getUserId();
-    if (userId == msg.senderId){
-      this.sendedMsgHandler(msg);
-      return ;
-    }
-    if ((userId == msg.receiverId && msg.chatType == 'single') || (_.indexOf(msg.targets, userId) != -1 && msg.chatType == 'group')){
-      this.receivedMsgHandler(msg);
-      return ;
-    }
-    console.log('Wrong msg to user:' + userId);
-    console.log(msg);
+    var targetId = (userId == msg.receiverId && msg.chatType == 'single')
+        ? msg.senderId
+        : msg.receiverId;
+    this.msgCheckConversation(msg, targetId);
   },
 
   /**
    * 发送消息的操作逻辑
    */
-  'sendedMsgHandler': function (msg) {
-    if (msg.chatType === 'single') {
-      this.singleSendMsgHandler(msg);
-      return;
+  'msgCheckConversation': function (msg, targetId) {
+    var self = this;
+    var isGroup = (msg.chatType === 'group');
+    // 假如不是聊天对象，则计数
+    // 假如是聊天对象，则不计数
+    if (targetId !== this.chatWith.tid) {
+      if (self.isInUnReadChats(targetId)) {
+        // 已存在，持续计数
+        var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
+        $('#J-msg-count-' + targetId).text(curMsgCnt);
+      } else {
+        // 不存在，新建会话，并将未读信息置为 1
+        self.addConversation(targetId, isGroup);
+      }
     }
-    // if (msg.chatType === 'group') {
-    //   this.groupSendMsgHandler(msg);
-    //   return;
-    // }
+
+    // 绑定数据到dom
+    this.attachMsgToDom(msg, targetId, isGroup);
   },
 
-  /**
-   * 接收信息的操作逻辑
-   */
-  'receivedMsgHandler': function (msg) {
-    if (msg.chatType === 'single') {
-      this.singleMsgHandler(msg);
-      return;
-    }
-    if (msg.chatType === 'group') {
-      this.groupMsgHandler(msg);
-      return;
-    }
-  },
 
   /**
-   * 判断会话的dom容器是否存在,single通过userId,group通过conversationId
+   * 判断会话的dom容器是否存在
    */
-  'checkChatExist': function (tid) {
+  'checkChatExist': function (tid, isGroup) {
     // 不存在则新建一个
+    var chatType = (isGroup) ? 'group' : 'single';
     if ($('#conversation-' + tid).length === 0) {
-      Blaze.renderWithData(Template.conversation, {'id': tid}, $('.im-chat-info-container')[0]);
+      Blaze.renderWithData(Template.conversation, {'id': tid, 'chatType': chatType}, $('.im-chat-info-container')[0]);
     }
     return;
   },
 
-  /**
-   * 单聊发送信息处理
-   */
-  'singleSendMsgHandler': function (msg) {
-    var self = this;
-    var targetId = msg.receiverId;
-    if (targetId !== this.chatWith.tid) {
-      if (self.isInUnReadChats(targetId)) {
-        // 已存在，持续计数
-        var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
-        $('#J-msg-count-' + targetId).text(curMsgCnt);
-      } else {
-        // 不存在，新建会话，并将未读信息置为 1
-        self.addConversation(targetId, false);
-      }
-    }
-
-    // 绑定数据到dom
-    this.attachMsgToDom(msg, targetId);
-  },
-
-  /**
-   * 群聊信息处理
-   */
-  'groupMsgHandler': function (msg) {
-    var self = this;
-    var targetId = msg.receiverId;
-    if (this.isInUnReadChats(targetId)) {
-      // 已存在，持续计数
-      var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
-      $('#J-msg-count-' + targetId).text(curMsgCnt);
-    } else {
-      // 不存在，新建会话，并将未读信息置为 1
-      this.addConversation(targetId, true);
-    }
-
-    // 绑定数据到dom
-    this.attachMsgToDom(msg, targetId);
-  },
-
-  /**
-   * 单聊信息处理
-   */
-  'singleMsgHandler': function (msg) {
-    var self = this;
-    var targetId = msg.senderId;
-    if (targetId !== this.chatWith.tid) {
-      if (self.isInUnReadChats(targetId)) {
-        // 已存在，持续计数
-        var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
-        $('#J-msg-count-' + targetId).text(curMsgCnt);
-      } else {
-        // 不存在，新建会话，并将未读信息置为 1
-        self.addConversation(targetId, false);
-      }
-    }
-
-    // 绑定数据到dom
-    this.attachMsgToDom(msg, targetId);
-  },
 
   /**
    * 将数据在dom中展示
    */
-  'attachMsgToDom': function (msg, tid) {
+  'attachMsgToDom': function (msg, tid, chatType) {
     // 检测信息容器是否存在，不存在则新建
-    this.checkChatExist(tid);
+    this.checkChatExist(tid, chatType);
     this.renderData(msg, tid);
   },
 
@@ -800,7 +733,7 @@ _.extend(LxpUser.prototype, {
     }
 
     var msgType = msgType,
-        chatType = 'single',
+        chatType = $('#conversation-' + receiver).attr('data-chattype'),
         msg = {
           'receiver': receiver,
           'sender': sender,

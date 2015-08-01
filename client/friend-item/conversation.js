@@ -7,11 +7,11 @@ Template.receiveImageMsg.events({
   },
 });
 
-// Template.sendImageMsg.events({
-//   'click .im-msg-send-plan-content>img': function(e){
-//     renderCenterImage(this.contents.full);
-//   },
-// });
+Template.sendImageMsg.events({
+  'click .im-msg-send-plan-content>img': function(e){
+    renderCenterImage(this.contents.full);
+  },
+});
 
 Template.receivePoiMsg.events({
   'click #show-poi': function(e){
