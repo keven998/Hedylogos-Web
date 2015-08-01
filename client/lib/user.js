@@ -592,6 +592,7 @@ _.extend(LxpUser.prototype, {
     $('#conversation-' + tid).show();
   },
 
+  //貌似废弃了
   /*
    * 显示己方发送的信息
    */
@@ -604,6 +605,11 @@ _.extend(LxpUser.prototype, {
     if (msg.msgType == 0) {
       msg.contents = self._emojiConvert(msg.contents);
       var templateName = 'sendedMsg';
+    }
+
+    if (msg.msgType == 2) {
+      msg.contents = self._emojiConvert(msg.contents);
+      var templateName = 'sendedImageMsg';
     }
 
     if (msg.msgType == 10) {
@@ -631,6 +637,62 @@ _.extend(LxpUser.prototype, {
     Blaze.renderWithData(Template[templateName], sendData, $('#conversation-' + receiverId)[0]);
   },
 
+  /**
+   * 上传并且发送图片
+   */
+  'upAndSendImage': function() {
+    var self = this;
+    //从服务器获取token和key
+    Meteor.call('getPicUpToken', function(error, result) {
+      if (error) {
+        return throwError(error.reason);
+      }
+      if (result){
+        $("#picUpToken").val(result.upToken);
+        $("#picUpKey").val(result.key);
+        var form_data = new FormData($('#pic-up')[0]);
+
+        //用jquery.ajax提交表单
+        $.ajax({
+          type: 'post',
+          url: 'https://up.qbox.me/',
+          async: false,
+          cache: false,
+          contentType: false,
+          processData: false,
+          data: form_data,
+          success: function(data) {
+            // 上传了其它格式的文件
+            if (! data.fmt) {
+              alert('暂不支持其它格式的文件发送！请上传图片等');
+            }
+
+            self.sendImageMsg(data, result.url);
+            self.uploadLayer.hide();
+            // alert("发送图片成功");
+          }
+        });
+      }else{
+        alert("上传图片失败！");
+      }
+    });
+  },
+
+  /**
+   * 上传图片
+   */
+  'sendImageMsg': function(data, url) {
+    var self = this;
+    var imageInfo = {
+      width: data.w,
+      height: data.h,
+      thumb: url + '!thumb',
+      origin: url,
+      full: url + '!full'
+    };
+    imageInfo = JSON.stringify(imageInfo);
+    self.sendMsg(2, imageInfo);
+  },
 
   /**
    * 发送攻略信息
@@ -778,6 +840,23 @@ _.extend(LxpUser.prototype, {
     m = date.getMinutes() + ':';
     s = date.getSeconds();
     return (Y + M + D + h + m + s);
+  },
+
+  /**
+   * 展示文件上传容器
+   */
+  'showFileLoader': function () {
+    var self = this;
+    if (self.uploadLayer) {
+      self.uploadLayer.show();
+    } else {
+      var shareDialogInfo = {
+        template: Template.uploadLayer,
+        doc: {}
+      };
+      self.uploadLayer = ReactiveModal.initDialog(shareDialogInfo);
+      self.uploadLayer.show();
+    }
   },
 
   /**

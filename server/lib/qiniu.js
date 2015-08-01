@@ -273,9 +273,16 @@ var defaultHost = Etcd.getSettingValue(Etcd.settingPath.qiniu.host, Etcd_Data);
 var defaultAccessKey = Etcd.getSettingValue(Etcd.settingPath.qiniu.accessKey, Etcd_Data);
 var defaultSecretKey = Etcd.getSettingValue(Etcd.settingPath.qiniu.secretKey, Etcd_Data);
 
-Qiniu = new QiniuSDK(defaultAccessKey, defaultSecretKey, defaultBucket);
+Qiniu = new QiniuSDK(defaultAccessKey, defaultSecretKey, defaultBucket, defaultHost);
 
 Meteor.methods({
+  /**
+   * 将Amr格式文件转化成Mp3格式，并改变数据库中相应消息的状态
+   * @param  {[type]} id  [description]
+   * @param  {[type]} key [description]
+   * @param  {[type]} bk  [description]
+   * @return {[type]}     [description]
+   */
   'convertAmrToMp3': function(id, key, bk){
     var result = Qiniu.convertAmrToMp3(key);
     var bk = bk || defaultBucket;
@@ -296,5 +303,16 @@ Meteor.methods({
       //
     }
     return result;
+  },
+
+  /**
+   * 获取表单上传图片要用的数据
+   * @return {object} uptoken,key,url等
+   */
+  'getPicUpToken': function(){
+    var options = {
+      expires: 1800
+    };
+    return Qiniu.getUpInfo(options);
   },
 })

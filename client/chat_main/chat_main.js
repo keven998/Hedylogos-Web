@@ -96,6 +96,10 @@ Template.chatMain.events({
     lxpUser.showPlanLayer();
   },
 
+  'click .chat-file': function (e) {
+    lxpUser.showFileLoader();
+  },
+
   'click .chat-search': function (e) {
     lxpUser.showSearchLayer();
   }

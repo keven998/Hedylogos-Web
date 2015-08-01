@@ -45,6 +45,12 @@ Template.poiItem.events({
   }
 })
 
+Template.uploadLayer.events({
+  "click #pic-up-sub": function(e){
+    lxpUser.upAndSendImage();
+  }
+})
+
 // 输入文本的验证：是否与上次的版本不同并且非空
 function textVerify(text, lastText){
   if ((text !== '') && ((!lastText) || (lastText === '') || ($.trim(text) !== $.trim(lastText))))
