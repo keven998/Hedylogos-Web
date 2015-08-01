@@ -6,4 +6,4 @@
 .idea
 .idea/
 
-packages/npm-container/.npm/
+packages/npm-container/.npm/package/npm-shrinkwrap.json
