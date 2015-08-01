@@ -168,3 +168,9 @@
 }
 /**	poi详情弹层 end**/
 
+#pic-up-sub{
+	float: right;
+	margin-top: 15px;
+	margin-right: 20px;
+	line-height: 15px;
+}

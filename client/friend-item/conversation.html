@@ -141,8 +141,7 @@
 
 <!-- 发送消息的模板 start -->
 <template name="sendMsg">
-    <div class="im-sended-msg-container">
-
+    <div class="im-sended-msg-container align-r">
         <div class="im-sender-msg-content-container">
             <div class="im-sender-content">
                 <span class="im-sended-content">{{{contents}}}</span>
@@ -151,6 +150,21 @@
 
         <div class="im-sender-avatar-container">
             <img src="{{avatar}}" alt="" class="im-sender-avatar">
+        </div>
+    </div>
+</template>
+
+<!-- 图片模板 -->
+<template name="sendImageMsg">
+    <div class="im-msg-send-plan-container align-r">
+        <div class="im-msg-send-plan-content-container align-l">
+            <div class="im-msg-send-plan-content">
+                <img src="{{contents.thumb}}">
+            </div>
+        </div>
+
+        <div class="im-msg-send-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-send-avatar">
         </div>
     </div>
 </template>
