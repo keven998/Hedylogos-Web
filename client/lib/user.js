@@ -519,7 +519,7 @@ _.extend(LxpUser.prototype, {
     }
 
     // 假如是发送的消息
-    if (tid != msg.senderId)
+    if (self.getUserId()== msg.senderId)
       templateName = 'send' + templateName;
     else
       templateName = 'receive' + templateName;

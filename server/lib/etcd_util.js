@@ -4,21 +4,43 @@ EtcdClass = function() {
     mongo: {
       yunkai: {
         auth: {
-          user: '/project-conf/hedylogos-web/mongo/yunkai/user',
-          password: '/project-conf/hedylogos-web/mongo/yunkai/password',
+          // user: '/project-conf/hedylogos-web/mongo/yunkai/user',
+          // password: '/project-conf/hedylogos-web/mongo/yunkai/password',
           db: '/project-conf/hedylogos-web/mongo/yunkai/db'
         }
       },
       hedy: {
         auth: {
-          user: '/project-conf/hedylogos-web/mongo/hedy/user',
-          password: '/project-conf/hedylogos-web/mongo/hedy/password',
+          // user: '/project-conf/hedylogos-web/mongo/hedy/user',
+          // password: '/project-conf/hedylogos-web/mongo/hedy/password',
           db: '/project-conf/hedylogos-web/mongo/hedy/db'
         }
       },
-      url: {
-        array: true,//会返回数组
-        path: '/backends/mongo-dev'
+      'yunkai-dev': {
+        auth: {
+          user: '/project-conf/hedylogos-web/mongo/yunkai-dev/user',
+          password: '/project-conf/hedylogos-web/mongo/yunkai-dev/password',
+          db: '/project-conf/hedylogos-web/mongo/yunkai-dev/db'
+        }
+      },
+      'hedy-dev': {
+        auth: {
+          user: '/project-conf/hedylogos-web/mongo/hedy-dev/user',
+          password: '/project-conf/hedylogos-web/mongo/hedy-dev/password',
+          db: '/project-conf/hedylogos-web/mongo/hedy-dev/db'
+        }
+      },
+      'mongo':{
+        url: {
+          array: true,//会返回数组
+          path: '/backends/mongo'
+        }
+      },
+      'mongo-dev':{
+        url: {
+          array: true,//会返回数组
+          path: '/backends/mongo-dev'
+        }
       }
     },
     qiniu: {
