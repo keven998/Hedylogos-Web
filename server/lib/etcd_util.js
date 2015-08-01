@@ -1,35 +1,7 @@
 EtcdClass = function() {
   // 配置信息的etcd路径
   this.settingPath = {
-    mongo: {
-      yunkai: {
-        auth: {
-          // user: '/project-conf/hedylogos-web/mongo/yunkai/user',
-          // password: '/project-conf/hedylogos-web/mongo/yunkai/password',
-          db: '/project-conf/hedylogos-web/mongo/yunkai/db'
-        }
-      },
-      hedy: {
-        auth: {
-          // user: '/project-conf/hedylogos-web/mongo/hedy/user',
-          // password: '/project-conf/hedylogos-web/mongo/hedy/password',
-          db: '/project-conf/hedylogos-web/mongo/hedy/db'
-        }
-      },
-      'yunkai-dev': {
-        auth: {
-          user: '/project-conf/hedylogos-web/mongo/yunkai-dev/user',
-          password: '/project-conf/hedylogos-web/mongo/yunkai-dev/password',
-          db: '/project-conf/hedylogos-web/mongo/yunkai-dev/db'
-        }
-      },
-      'hedy-dev': {
-        auth: {
-          user: '/project-conf/hedylogos-web/mongo/hedy-dev/user',
-          password: '/project-conf/hedylogos-web/mongo/hedy-dev/password',
-          db: '/project-conf/hedylogos-web/mongo/hedy-dev/db'
-        }
-      },
+    backends: {
       'mongo':{
         url: {
           array: true,//会返回数组
@@ -43,18 +15,50 @@ EtcdClass = function() {
         }
       }
     },
-    qiniu: {
-      host: '/project-conf/hedylogos-web/qiniu/host',
-      bucket: '/project-conf/hedylogos-web/qiniu/bucket',
-      accessKey: '/project-conf/hedylogos-web/qiniu/accessKey',
-      secretKey: '/project-conf/hedylogos-web/qiniu/secretKey'
+    'project-conf': {
+      mongo: {
+        yunkai: {
+          auth: {
+            // user: '/project-conf/hedylogos-web/mongo/yunkai/user',
+            // password: '/project-conf/hedylogos-web/mongo/yunkai/password',
+            db: '/project-conf/hedylogos-web/mongo/yunkai/db'
+          }
+        },
+        hedy: {
+          auth: {
+            // user: '/project-conf/hedylogos-web/mongo/hedy/user',
+            // password: '/project-conf/hedylogos-web/mongo/hedy/password',
+            db: '/project-conf/hedylogos-web/mongo/hedy/db'
+          }
+        },
+        'yunkai-dev': {
+          auth: {
+            user: '/project-conf/hedylogos-web/mongo/yunkai-dev/user',
+            password: '/project-conf/hedylogos-web/mongo/yunkai-dev/password',
+            db: '/project-conf/hedylogos-web/mongo/yunkai-dev/db'
+          }
+        },
+        'hedy-dev': {
+          auth: {
+            user: '/project-conf/hedylogos-web/mongo/hedy-dev/user',
+            password: '/project-conf/hedylogos-web/mongo/hedy-dev/password',
+            db: '/project-conf/hedylogos-web/mongo/hedy-dev/db'
+          }
+        },
+      },
+      qiniu: {
+        host: '/project-conf/hedylogos-web/qiniu/host',
+        bucket: '/project-conf/hedylogos-web/qiniu/bucket',
+        accessKey: '/project-conf/hedylogos-web/qiniu/accessKey',
+        secretKey: '/project-conf/hedylogos-web/qiniu/secretKey'
+      }
     }
   };
 
   // 从etcd获取数据
-  this.callEtcd = function () {
+  this.callEtcd = function (dir) {
     try{
-      var callUrl = process.env.ETCD_URL + '/v2/keys?recursive=true';
+      var callUrl = process.env.ETCD_URL + '/v2/keys/' + dir + '?recursive=true';
       return HTTP.call('GET', callUrl).data.node;
     }catch(e){
       console.log("Failed in getting settings : " + callUrl);
@@ -115,4 +119,10 @@ EtcdClass = function() {
 };
 
 Etcd = new EtcdClass();
-Etcd_Data = Etcd.callEtcd();
+Etcd_Data = {
+  'project-conf': Etcd.callEtcd('project-conf'),
+  'backends': Etcd.callEtcd('backends')
+}
+
+
+

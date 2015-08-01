@@ -268,10 +268,10 @@ function base64ToUrlSafe(v){
 // var defaultAccessKey = "TchpexGkbyuY0nMt-T1_xIpbsgN90lBg3QyD3utE";
 // var defaultSecretKey = "P60odlMezH9fG8nQbDsQMukdbyanVFtNUsJJ5zt6";
 
-var defaultBucket = Etcd.getSettingValue(Etcd.settingPath.qiniu.bucket, Etcd_Data);
-var defaultHost = Etcd.getSettingValue(Etcd.settingPath.qiniu.host, Etcd_Data);
-var defaultAccessKey = Etcd.getSettingValue(Etcd.settingPath.qiniu.accessKey, Etcd_Data);
-var defaultSecretKey = Etcd.getSettingValue(Etcd.settingPath.qiniu.secretKey, Etcd_Data);
+var defaultBucket = Etcd.getSettingValue(Etcd.settingPath['project-conf'].qiniu.bucket, Etcd_Data['project-conf']);
+var defaultHost = Etcd.getSettingValue(Etcd.settingPath['project-conf'].qiniu.host, Etcd_Data['project-conf']);
+var defaultAccessKey = Etcd.getSettingValue(Etcd.settingPath['project-conf'].qiniu.accessKey, Etcd_Data['project-conf']);
+var defaultSecretKey = Etcd.getSettingValue(Etcd.settingPath['project-conf'].qiniu.secretKey, Etcd_Data['project-conf']);
 
 Qiniu = new QiniuSDK(defaultAccessKey, defaultSecretKey, defaultBucket, defaultHost);
 
