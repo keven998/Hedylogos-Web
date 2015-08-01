@@ -283,8 +283,8 @@ _.extend(LxpUser.prototype, {
   'msgHandler': function (msg) {
     var userId = this.getUserId();
     var targetId = (userId == msg.receiverId && msg.chatType == 'single')
-        ? msg.senderId
-        : msg.receiverId;
+      ? msg.senderId
+      : msg.receiverId;
     this.msgCheckConversation(msg, targetId);
   },
 
@@ -409,7 +409,6 @@ _.extend(LxpUser.prototype, {
         var url = parseUrl(msg.contents.url);
         var key = url.path;
         Meteor.call('convertAmrToMp3', msg._id, key, function (err, result) {
-          console.log(result);
           if (result.statusCode === 200) {
             // success
           } else {
@@ -507,7 +506,7 @@ _.extend(LxpUser.prototype, {
     $('#J-im-input-text').focus();
     Session.set('chatWith', chatInfo);
     // 显示信息
-    this.showMsgDom(tid);
+    this.showMsgDom(tid, chatInfo.isGroupChat);
     // 如果是未读信息，对数据层进行修改
     if (self.unReadChats[tid]) {
       $('#J-msg-count-' + tid).text();
@@ -519,9 +518,10 @@ _.extend(LxpUser.prototype, {
   /**
    * 切换消息容器：将当前对话容器切换成tid对应的对话的容器
    */
-  showMsgDom: function (tid) {
+  showMsgDom: function (tid, isGroup) {
     var curDomId = this.chatWith.tid;
     $('#conversation-' + curDomId).hide();
+    this.checkChatExist(tid, isGroup);
     $('#conversation-' + tid).show();
   },
 
@@ -529,46 +529,46 @@ _.extend(LxpUser.prototype, {
   /*
    * 显示己方发送的信息
    */
-  showSendedMsg: function (receiverId, msg) {
-    var self = this;
-    // 还不存在会话窗口，新建dom容器
-    self.checkChatExist(receiverId);
-    self.showMsgDom(receiverId);
+  // showSendedMsg: function (receiverId, msg) {
+  //   var self = this;
+  //   // 还不存在会话窗口，新建dom容器
+  //   self.checkChatExist(receiverId);
+  //   self.showMsgDom(receiverId);
 
-    if (msg.msgType == 0) {
-      msg.contents = self._emojiConvert(msg.contents);
-      var templateName = 'sendedMsg';
-    }
+  //   if (msg.msgType == 0) {
+  //     msg.contents = self._emojiConvert(msg.contents);
+  //     var templateName = 'sendedMsg';
+  //   }
 
-    if (msg.msgType == 2) {
-      msg.contents = self._emojiConvert(msg.contents);
-      var templateName = 'sendedImageMsg';
-    }
+  //   if (msg.msgType == 2) {
+  //     msg.contents = self._emojiConvert(msg.contents);
+  //     var templateName = 'sendedImageMsg';
+  //   }
 
-    if (msg.msgType == 10) {
-      msg = self._richTextMsg(msg);
-      var templateName = 'sendedPlanMsg';
-    }
+  //   if (msg.msgType == 10) {
+  //     msg = self._richTextMsg(msg);
+  //     var templateName = 'sendedPlanMsg';
+  //   }
 
-    if (msg.msgType == 11) {
-      msg = self._richTextMsg(msg);
-      var templateName = 'sendedPoiMsg';
-    }
+  //   if (msg.msgType == 11) {
+  //     msg = self._richTextMsg(msg);
+  //     var templateName = 'sendedPoiMsg';
+  //   }
 
-    if (msg.msgType == 13) {
-      msg = self._richTextMsg(msg);
-      var templateName = 'sendedVsMsg';
-    }
+  //   if (msg.msgType == 13) {
+  //     msg = self._richTextMsg(msg);
+  //     var templateName = 'sendedVsMsg';
+  //   }
 
-    if (msg.msgType == 15) {
-      msg = self._richTextMsg(msg);
-      var templateName = 'sendedVsMsg';
-    }
+  //   if (msg.msgType == 15) {
+  //     msg = self._richTextMsg(msg);
+  //     var templateName = 'sendedVsMsg';
+  //   }
 
-    var sendData = Meteor.user().userInfo;
-    sendData = _.extend(sendData, {'contents': msg.contents});
-    Blaze.renderWithData(Template[templateName], sendData, $('#conversation-' + receiverId)[0]);
-  },
+  //   var sendData = Meteor.user().userInfo;
+  //   sendData = _.extend(sendData, {'contents': msg.contents});
+  //   Blaze.renderWithData(Template[templateName], sendData, $('#conversation-' + receiverId)[0]);
+  // },
 
   /**
    * 上传并且发送图片
@@ -909,7 +909,6 @@ _.extend(LxpUser.prototype, {
           bootbox.alert('获取 "' + zhName + '" 详情失败!');
           return ;
         };
-        console.log(res);
         var shareDialogInfo = {
           template: Template.poiLayer,
           doc: {
