@@ -3,13 +3,13 @@ Template.receiveMsg.onRendered(scrollIntoView());
 
 Template.receiveImageMsg.events({
   'click .im-msg-send-plan-content>img': function(e){
-    renderCenterImage(this.contents.full);
+    renderCenterImage(this.contents.origin);
   },
 });
 
 Template.sendImageMsg.events({
   'click .im-msg-send-plan-content>img': function(e){
-    renderCenterImage(this.contents.full);
+    renderCenterImage(this.contents.origin);
   },
 });
 
