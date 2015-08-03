@@ -6,19 +6,38 @@
 
 <template name="cmdText">
     <div class="cmd-text">
-        '{{contents.operator.nickName}}'将
-        {{#each contents.targets}}
-            '{{nickName}}' 
-        {{/each}}
-        {{#if isInvite}}
-            邀请进了讨论组
+        {{#if contents.targets}}
+            '{{contents.operator.nickName}}'将
+            {{#each contents.targets}}
+                '{{nickName}}' 
+            {{/each}}
+            {{#if isInvite}}
+                邀请进了讨论组
+            {{else}}
+                踢出了讨论组
+            {{/if}}
         {{else}}
-            踢出了讨论组
+            '{{contents.operator.nickName}}'退出了讨论组
         {{/if}}
     </div>
 </template>
 
 <!-- 接收信息的模板 start-->
+<template name="receiveUnknownMsg">
+    <div class="im-received-msg-container">
+        <div class="im-received-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-received-avatar">
+        </div>
+
+        <div class="im-received-msg-content-container">
+            <div class="im-received-content" style="color:#f00;">
+                暂时不支持该格式的消息！
+            </div>
+        </div>
+
+    </div>
+</template>
+
 <template name="receiveMsg">
     <div class="im-received-msg-container">
         <div class="im-received-avatar-container">
@@ -140,6 +159,20 @@
 <!-- 富文本接收信息的模板 end-->
 
 <!-- 发送消息的模板 start -->
+<template name="sendUnkownMsg">
+    <div class="im-sended-msg-container align-r">
+        <div class="im-sender-msg-content-container">
+            <div class="im-sender-content">
+                <span class="im-sended-content">暂时不支持该格式的消息！</span>
+            </div>
+        </div>
+
+        <div class="im-sender-avatar-container">
+            <img src="{{avatar}}" alt="" class="im-sender-avatar">
+        </div>
+    </div>
+</template>
+
 <template name="sendMsg">
     <div class="im-sended-msg-container align-r">
         <div class="im-sender-msg-content-container">

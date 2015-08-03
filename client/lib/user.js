@@ -376,12 +376,15 @@ _.extend(LxpUser.prototype, {
    */
   'renderData': function (msg, tid) {
     var self = this;
-    var templateName = '';
+    var templateName = 'UnknownMsg';
 
+    console.log(msg);
+    // 群通知消息
     if (msg.msgType === 200) {
       msg = self._richTextMsg(msg);
-      msg.isInvite = (msg.contents.tipType == 2001) ? true : false;
+      msg.isInvite = (msg.contents.tipType == 2001) ? true : false;//判断是退群还是入群
       Blaze.renderWithData(Template['cmdText'], msg, $('#conversation-' + tid)[0]);
+      return ;
     }
 
     if (msg.msgType === 0) {
