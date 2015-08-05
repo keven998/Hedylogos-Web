@@ -45,14 +45,15 @@
 	color: #fff;
 }
 
-.download-app{
+.download{
 	margin-top: 43px;
+	overflow: hidden;
 }
 
 .download-app{
 	cursor: pointer;
 	display: inline-block;
-	width: 118px;
+	width: 116px;
 	height: 36px;
 	background-image: url(/images/login/download_app.png);
 }
@@ -60,7 +61,8 @@
 .download-and{
 	cursor: pointer;
 	display: inline-block;
-	width: 118px;
+	float: right;
+	width: 116px;
 	height: 36px;
 	background-image: url(/images/login/download_and.png);
 }
