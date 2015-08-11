@@ -17,7 +17,9 @@ Template.login.events({
     }
 
     lxpUser.login(username, password, function(err, res) {
+      console.log(res);
       if (err) {
+        console.log(err);
         alert('账户或密码错误！');
         throwError('账户或密码错误！');
         return;
