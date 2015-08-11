@@ -110,12 +110,14 @@
     width: 40px;
     height: 40px;
     margin: 7px auto;
+    cursor: pointer;
 }
 
-#J-im-btn-group-list, #J-im-btn-contact-list {
+#logout{
     width: 40px;
-    height: 40px;
-    margin: 7px auto;
+    margin: 0 auto;
+    cursor: pointer;
+    color: #fff;
 }
 
 .im-friend-item-container, .im-group-item-container{

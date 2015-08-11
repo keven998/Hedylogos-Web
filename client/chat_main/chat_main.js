@@ -63,16 +63,19 @@ Template.chatMain.events({
 
   },
 
+  // 展示会话列表
   'click #J-im-btn-chat-list': function (e) {
     e.preventDefault();
     lxpUser.clickChatList();
   },
 
+  // 展示好友列表
   'click #J-im-btn-contact-list': function (e) {
     e.preventDefault();
     lxpUser.clickFriendList();
   },
 
+  // 展示群组列表
   'click #J-im-btn-group-list': function (e) {
     e.preventDefault();
     lxpUser.clickGroupList();
@@ -103,6 +106,15 @@ Template.chatMain.events({
 
   'click .chat-search': function (e) {
     lxpUser.showSearchLayer();
+  },
+
+  'click #logout': function (e) {
+    Meteor.logout(function(error){
+      if(error){
+        // TODO
+      }
+      Router.go('login');
+    });
   }
 });
 

@@ -10,8 +10,9 @@ Accounts.registerLoginHandler(function (loginRequest) {
   }
   var username = user.username,
       password = user.password,
-      src = 'web',
-      loginResponse = Meteor.lxp.Userservice.login(username, password, src);
+      src = 'web';
+
+  var loginResponse = Meteor.lxp.Userservice.login(username, password, src);//假如失败，下面的程序便不再执行！
 
   if (!loginResponse || !loginResponse.userId.toString()) {
     throw "login failed!";
