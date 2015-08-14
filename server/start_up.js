@@ -1,14 +1,11 @@
-Meteor.startup(function () {
+Meteor.startup(function(){
   initApiCall();
-  var address = getThriftServerAddress();
-  var thriftConnectionInstance = connectThriftServer(address.ip, address.port);
-  createThriftClient(thriftConnectionInstance, 'lxpthrift2', 'Userservice');
+  thriftConnect();
 
   // 设置session过期日期为一天
   Accounts.config({
     loginExpirationInDays: 1
   });
-
 });
 
 
@@ -138,10 +135,15 @@ function connectThriftServer(ip, port, transportType, protocolType) {
         protocol : protocol
       });
 
+  // 失败重连
   connection.on('error', function(err) {
     console.log('Connection Failed!');
     console.log(err);
+
+    // 重新建立连接
+    thriftConnect();
   });
+
   console.log('thrift server ip:' + ip + ', port:' + port);
   return connection;
 }
@@ -171,4 +173,11 @@ function getApiList (clientName) {
     // TODO add more client api
   };
   return client[clientName];
+}
+
+// 建立thrift连接
+function thriftConnect() {
+  var address = getThriftServerAddress();
+  var thriftConnectionInstance = connectThriftServer(address.ip, address.port);
+  createThriftClient(thriftConnectionInstance, 'lxpthrift2', 'Userservice');
 }
