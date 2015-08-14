@@ -5,9 +5,8 @@ var mongoUrlHedy = getMongoUrl(Etcd.settingPath['project-conf'].mongo['hedy'].au
 hedy = new MongoInternals.RemoteCollectionDriver(mongoUrlHedy);
 Message = new Mongo.Collection("Message", { _driver: hedy});
 
-var mongoUrlYunkai = getMongoUrl(Etcd.settingPath['project-conf'].mongo['yunkai-dev'].auth, Etcd.settingPath['backends']['mongo-dev'].url.path);
-// yunkai都是用测试库
-// var mongoUrlYunkai = getMongoUrl(Etcd.settingPath.mongo['yunkai'].auth, Etcd.settingPath.mongo['mongo'].url.path);
+// var mongoUrlYunkai = getMongoUrl(Etcd.settingPath['project-conf'].mongo['yunkai-dev'].auth, Etcd.settingPath['backends']['mongo-dev'].url.path);
+var mongoUrlYunkai = getMongoUrl(Etcd.settingPath['project-conf'].mongo['yunkai'].auth, Etcd.settingPath['backends']['mongo'].url.path);
 yunkai = new MongoInternals.RemoteCollectionDriver(mongoUrlYunkai);
 ContactRequest = new Mongo.Collection("ContactRequest", { _driver: yunkai});
 
