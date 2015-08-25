@@ -697,6 +697,7 @@ _.extend(LxpUser.prototype, {
     var self = this;
     var input = $('#J-im-input-text');
     input.on('keydown', function(e) {
+      // 假如为'enter'(判断回车键)
       if (e.which == 13 || e.keyCode == 13) {
         if (e.shiftKey) {
           $(e.target).html($(e.target).html() + '\n');
@@ -719,6 +720,16 @@ _.extend(LxpUser.prototype, {
           });
 
           self.sendMsg(0, contents);
+        }
+
+        return ;
+      };
+
+      // 假如为'v'(判断粘贴操作)
+      if (e.which == 86 || e.keyCode == 86) {
+        // 假如为苹果且同时按了command键 或者 非苹果且同时按了ctrl键
+        if((navigator.userAgent.indexOf("Mac OS X") > 0 && e.metaKey) || (navigator.userAgent.indexOf("Mac OS X") > 0 ^ e.ctrlKey)) {
+          setTimeout("deleteTag()", 500);
         }
       }
     });
@@ -987,3 +998,13 @@ function parseUrl (url) {
 
 // create a instance in client
 lxpUser = new LxpUser();
+
+
+deleteTag = function (){
+  var input = $('#J-im-input-text');
+  var contents = input.html();
+  var span = '<\/?span[^>]*>';
+  var regexp = new RegExp(span, 'g');
+  contents = contents.replace(regexp, "");
+  input.html(contents);
+}
