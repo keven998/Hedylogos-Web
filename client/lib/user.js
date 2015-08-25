@@ -697,6 +697,7 @@ _.extend(LxpUser.prototype, {
     var self = this;
     var input = $('#J-im-input-text');
     input.on('keydown', function(e) {
+      console.log(e);
       // 假如为'enter'(判断回车键)
       if (e.which == 13 || e.keyCode == 13) {
         if (e.shiftKey) {
@@ -725,14 +726,20 @@ _.extend(LxpUser.prototype, {
         return ;
       };
 
-      // 假如为'v'(判断粘贴操作)
-      if (e.which == 86 || e.keyCode == 86) {
-        // 假如为苹果且同时按了command键 或者 非苹果且同时按了ctrl键
-        if((navigator.userAgent.indexOf("Mac OS X") > 0 && e.metaKey) || (navigator.userAgent.indexOf("Mac OS X") > 0 ^ e.ctrlKey)) {
-          setTimeout("deleteTag()", 500);
-        }
-      }
+      // 在copy时去掉span标签
+      // // 假如为'v'(判断粘贴操作)
+      // if (e.which == 86 || e.keyCode == 86) {
+      //   // 假如为苹果且同时按了command键 或者 非苹果且同时按了ctrl键
+      //   if((navigator.userAgent.indexOf("Mac OS X") > 0 && e.metaKey) || (navigator.userAgent.indexOf("Mac OS X") > 0 ^ e.ctrlKey)) {
+      //     setTimeout("deleteTag()", 500);
+      //   }
+      // }
     });
+
+    input.on('input', function() {
+      console.log('input');
+      setTimeout("deleteTag()", 500);
+    })
   },
 
   //发送消息
