@@ -781,3 +781,10 @@ img.im-received-avatar {
 .align-r{
     text-align: right;
 }
+
+.time{
+  font-size: 10px;
+  color: #aaa;
+  margin-top: -5px;
+  margin-bottom: -2px;
+}
