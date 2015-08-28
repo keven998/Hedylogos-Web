@@ -13,17 +13,25 @@ ContactRequest = new Mongo.Collection("ContactRequest", { _driver: yunkai});
 
 function getMongoUrl (settings, mongoPath) {
   // 解析出相关参数
-  var mongoUrl = Etcd.getSettingValue(mongoPath, Etcd_Data['backends']);
+  var mongoUri = 'mongodb://';
+  var mongoHostPort = Etcd.getSettingValue(mongoPath, Etcd_Data['backends']);
   var mongoDb = Etcd.getSettingValue(settings.db, Etcd_Data['project-conf']);
 
   if (settings.user && settings.password) {
     var mongoUser = Etcd.getSettingValue(settings.user, Etcd_Data['project-conf']);
     var mongoPassword = Etcd.getSettingValue(settings.password, Etcd_Data['project-conf']);
 
-    return 'mongodb://' + mongoUser + ':' + mongoPassword + '@' + mongoUrl.toString() + '/' + mongoDb;
+    mongoUri += mongoUser + ':' + mongoPassword + '@';
   }
 
-  return  'mongodb://' + mongoUrl.toString() + '/' + mongoDb;
+  mongoUri += mongoHostPort.toString() + '/' + mongoDb;
+  mongoUri += '?replicaSet=' + settings.replicaSet + '&readPreference=' + settings.readPreference;
+
+  if (settings.authSource) {
+    mongoUri += '&authSource=' + settings.authSource;
+  }
+
+  return mongoUri;
 }
 
 

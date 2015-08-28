@@ -5,46 +5,54 @@ EtcdClass = function() {
       'mongo':{
         url: {
           array: true,//会返回数组
-          path: '/backends/mongo'
+          path: '/backends/mongo-production'
         }
       },
-      'mongo-dev':{
-        url: {
-          array: true,//会返回数组
-          path: '/backends/mongo-dev'
-        }
-      }
+      // 测试用
+      // 'mongo-dev':{
+      //   url: {
+      //     array: true,//会返回数组
+      //     path: '/backends/mongo-dev'
+      //   }
+      // }
     },
     'project-conf': {
       mongo: {
         yunkai: {
           auth: {
-            // user: '/project-conf/hedylogos-web/mongo/yunkai/user',
-            // password: '/project-conf/hedylogos-web/mongo/yunkai/password',
-            db: '/project-conf/hedylogos-web/mongo/yunkai/db'
+            user: '/project-conf/hedyweb/mongo/user',
+            password: '/project-conf/hedyweb/mongo/password',
+            db: '/project-conf/hedylogos-web/mongo/yunkai/db',
+            replicaSet: 'foba',
+            readPreference: 'primaryPreferred',
+            authSource: 'hedyweb'
           }
         },
         hedy: {
           auth: {
-            // user: '/project-conf/hedylogos-web/mongo/hedy/user',
-            // password: '/project-conf/hedylogos-web/mongo/hedy/password',
-            db: '/project-conf/hedylogos-web/mongo/hedy/db'
+            user: '/project-conf/hedyweb/mongo/user',
+            password: '/project-conf/hedyweb/mongo/password',
+            db: '/project-conf/hedylogos-web/mongo/hedy/db',
+            replicaSet: 'foba',
+            readPreference: 'primaryPreferred',
+            authSource: 'hedyweb'
           }
         },
-        'yunkai-dev': {
-          auth: {
-            user: '/project-conf/hedylogos-web/mongo/yunkai-dev/user',
-            password: '/project-conf/hedylogos-web/mongo/yunkai-dev/password',
-            db: '/project-conf/hedylogos-web/mongo/yunkai-dev/db'
-          }
-        },
-        'hedy-dev': {
-          auth: {
-            user: '/project-conf/hedylogos-web/mongo/hedy-dev/user',
-            password: '/project-conf/hedylogos-web/mongo/hedy-dev/password',
-            db: '/project-conf/hedylogos-web/mongo/hedy-dev/db'
-          }
-        },
+        // 测试环境
+        // 'yunkai-dev': {
+        //   auth: {
+        //     user: '/project-conf/hedylogos-web/mongo/yunkai-dev/user',
+        //     password: '/project-conf/hedylogos-web/mongo/yunkai-dev/password',
+        //     db: '/project-conf/hedylogos-web/mongo/yunkai-dev/db'
+        //   }
+        // },
+        // 'hedy-dev': {
+        //   auth: {
+        //     user: '/project-conf/hedylogos-web/mongo/hedy-dev/user',
+        //     password: '/project-conf/hedylogos-web/mongo/hedy-dev/password',
+        //     db: '/project-conf/hedylogos-web/mongo/hedy-dev/db'
+        //   }
+        // },
       },
       qiniu: {
         host: '/project-conf/hedylogos-web/qiniu/host',
