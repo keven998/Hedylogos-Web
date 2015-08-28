@@ -362,6 +362,12 @@ _.extend(LxpUser.prototype, {
     return contents;
   },
 
+  // 日期格式化
+  '_msgTimeFommat': function (msg){
+    msg.timestamp = getFormatTime(msg.timestamp, 1);
+    return msg;
+  },
+
   /**
    * 根据修改信息，将已有的audio元素的src替换掉
    */
@@ -378,7 +384,9 @@ _.extend(LxpUser.prototype, {
     var self = this;
     var templateName = 'UnknownMsg';
 
+    msg = self._msgTimeFommat(msg);
     console.log(msg);
+
     // 群通知消息
     if (msg.msgType === 200) {
       msg = self._richTextMsg(msg);
