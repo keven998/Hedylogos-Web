@@ -168,8 +168,14 @@
         <form method="post" enctype="multipart/form-data" id="pic-up" name="pic-up" class="form-group">
             <input name="key" type="hidden" value="" id="picUpKey">
             <input name="token" type="hidden" value="" id="picUpToken">
-            <input name="file" type="file"/>
+            <!-- <input name="file" type="file" multiple/> -->
+            <input name="file" type="file" id='file'/>
         </form>
+        <div id="progress_bar">
+            <div class="percent">0%</div>
+        </div>
+        <button class='abort-load'>中断上传</button>
+        <output id="list"></output>
     </div>
 </template>
 <!--  上传发送图片弹层 end -->
