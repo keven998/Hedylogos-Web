@@ -1,4 +1,4 @@
-// 私有方法的取名：使用下划线_作为名字的开头
+// 私有方法(没有被外部应用)的取名：使用下划线_作为名字的开头
 
 LxpUser = function () {
   var self = this;
@@ -285,13 +285,13 @@ _.extend(LxpUser.prototype, {
     var targetId = (userId == msg.receiverId && msg.chatType == 'single')
       ? msg.senderId
       : msg.receiverId;
-    this.msgCheckConversation(msg, targetId);
+    this._msgCheckConversation(msg, targetId);
   },
 
   /**
    * 发送消息的操作逻辑
    */
-  'msgCheckConversation': function (msg, targetId) {
+  '_msgCheckConversation': function (msg, targetId) {
     var self = this;
     var isGroup = (msg.chatType === 'group');
     // 假如不是聊天对象，则计数
@@ -308,7 +308,7 @@ _.extend(LxpUser.prototype, {
     }
 
     // 绑定数据到dom
-    this.attachMsgToDom(msg, targetId, isGroup);
+    this._attachMsgToDom(msg, targetId, isGroup);
   },
 
 
@@ -328,10 +328,10 @@ _.extend(LxpUser.prototype, {
   /**
    * 将数据在dom中展示
    */
-  'attachMsgToDom': function (msg, tid, chatType) {
+  '_attachMsgToDom': function (msg, tid, chatType) {
     // 检测信息容器是否存在，不存在则新建
     this.checkChatExist(tid, chatType);
-    this.renderData(msg, tid);
+    this._renderMsg(msg, tid);
   },
 
   /**
@@ -380,7 +380,7 @@ _.extend(LxpUser.prototype, {
    * 将数据在前端展示，包含补充头像的逻辑
    * 取头像策略：本地缓存读取 => http获取
    */
-  'renderData': function (msg, tid) {
+  '_renderMsg': function (msg, tid) {
     var self = this;
     var templateName = 'UnknownMsg';
 
@@ -527,6 +527,15 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
+   * 对话窗口自动滚至最后一条消息
+   * @param  {[type]} conversationCon DOM元素，当前对话对应的消息窗口
+   */
+  'scrollIntoView': function (conversationCon) {
+    conversationCon.scrollTop = conversationCon.scrollHeight;
+    return this;
+  },
+
+  /**
    * 切换消息容器：将当前对话容器切换成tid对应的对话的容器
    */
   showMsgDom: function (tid, isGroup) {
@@ -534,6 +543,7 @@ _.extend(LxpUser.prototype, {
     $('#conversation-' + curDomId).hide();
     this.checkChatExist(tid, isGroup);
     $('#conversation-' + tid).show();
+    this.scrollIntoView($('#conversation-' + tid)[0]);
   },
 
   //貌似废弃了
