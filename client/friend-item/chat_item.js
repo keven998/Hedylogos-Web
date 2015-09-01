@@ -16,7 +16,7 @@ Template.chatItem.onRendered(function() {
   if (chatItemInfo.isGroupChat) {
     cssSelector = '#J_groupChat_';
     funcName = 'showGroupDesc';
-  }else {
+  } else {
     cssSelector = '#J_singleChat_';
     funcName = 'showFriendDesc';
   }

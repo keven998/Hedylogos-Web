@@ -1,4 +1,4 @@
-// 私有方法的取名：使用下划线_作为名字的开头
+// 私有方法(没有被外部应用)的取名：使用下划线_作为名字的开头
 
 LxpUser = function () {
   var self = this;
@@ -282,20 +282,21 @@ _.extend(LxpUser.prototype, {
    */
   'msgHandler': function (msg) {
     var userId = this.getUserId();
+    // 得到对话方的id
     var targetId = (userId == msg.receiverId && msg.chatType == 'single')
       ? msg.senderId
       : msg.receiverId;
-    this.msgCheckConversation(msg, targetId);
+    this._msgCheckConversation(msg, targetId);
   },
 
   /**
    * 发送消息的操作逻辑
    */
-  'msgCheckConversation': function (msg, targetId) {
+  '_msgCheckConversation': function (msg, targetId) {
     var self = this;
     var isGroup = (msg.chatType === 'group');
+
     // 假如不是聊天对象，则计数
-    // 假如是聊天对象，则不计数
     if (targetId !== this.chatWith.tid) {
       if (self.isInUnReadChats(targetId)) {
         // 已存在，持续计数
@@ -308,7 +309,7 @@ _.extend(LxpUser.prototype, {
     }
 
     // 绑定数据到dom
-    this.attachMsgToDom(msg, targetId, isGroup);
+    this._attachMsgToDom(msg, targetId, isGroup);
   },
 
 
@@ -328,10 +329,10 @@ _.extend(LxpUser.prototype, {
   /**
    * 将数据在dom中展示
    */
-  'attachMsgToDom': function (msg, tid, chatType) {
+  '_attachMsgToDom': function (msg, tid, chatType) {
     // 检测信息容器是否存在，不存在则新建
     this.checkChatExist(tid, chatType);
-    this.renderData(msg, tid);
+    this._renderMsg(msg, tid);
   },
 
   /**
@@ -380,12 +381,16 @@ _.extend(LxpUser.prototype, {
    * 将数据在前端展示，包含补充头像的逻辑
    * 取头像策略：本地缓存读取 => http获取
    */
-  'renderData': function (msg, tid) {
+  '_renderMsg': function (msg, tid) {
     var self = this;
     var templateName = 'UnknownMsg';
 
     msg = self._msgTimeFommat(msg);
     console.log(msg);
+
+    // 会话项增加最后一条msg的消息缩略
+    var $chatInfo = $('#' + tid).children('.im-friend-info');
+    var insertMsgAbbr;
 
     // 群通知消息
     if (msg.msgType === 200) {
@@ -397,6 +402,7 @@ _.extend(LxpUser.prototype, {
 
     if (msg.msgType === 0) {
       templateName = 'Msg';
+      insertMsgAbbr = msg.contents;
       msg.contents = self._emojiConvert(msg.contents);
     }
     if (msg.msgType === 1) {
@@ -411,6 +417,7 @@ _.extend(LxpUser.prototype, {
           templateName = 'VoiceMsg';
           msg = self._richTextMsg(msg);
           msg.voiceUrl = msg.convertStatus.url;
+          insertMsgAbbr = '[语音消息]';
           // TODO 修改 audio的src来源
         }
       } else {
@@ -431,38 +438,52 @@ _.extend(LxpUser.prototype, {
     if (msg.msgType === 2) {
       templateName = 'ImageMsg';
       msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[图片]';
     }
     if (msg.msgType === 10) {
       templateName = 'PlanMsg';
       msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[路线]' + msg.contents.name;
     }
     if (msg.msgType === 11) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '城市';
+      insertMsgAbbr = '[城市]' + msg.contents.name;
     }
     if (msg.msgType === 12) {
       templateName = 'NoteMsg';
       msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[游记]' + msg.contents.name;
     }
     if (msg.msgType === 13) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '景点';
+      insertMsgAbbr = '[景点]' + msg.contents.name;
     }
     if (msg.msgType === 14) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '美食';
+      insertMsgAbbr = '[美食]' + msg.contents.name;
     }
     if (msg.msgType === 15) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '购物';
+      insertMsgAbbr = '[购物]' + msg.contents.name;
+    }
+
+    if (insertMsgAbbr){
+      // TODO 群发且非自己发需要加上发送者"昵称"！
+      // insertMsgAbbr = (msg.chatType == 'group' && self.getUserId() != msg.senderId) ? (msg.senderId + insertMsgAbbr) : insertMsgAbbr;
+      $chatInfo.children('.lastmsg-abbr').remove();
+      $chatInfo.append('<div class="lastmsg-abbr">' + insertMsgAbbr + '</div>');
     }
 
     // 假如是发送的消息
-    if (self.getUserId()== msg.senderId)
+    if (self.getUserId() == msg.senderId)
       templateName = 'send' + templateName;
     else
       templateName = 'receive' + templateName;
@@ -527,6 +548,15 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
+   * 对话窗口自动滚至最后一条消息
+   * @param  {[type]} conversationCon DOM元素，当前对话对应的消息窗口
+   */
+  'scrollIntoView': function (conversationCon) {
+    conversationCon.scrollTop = conversationCon.scrollHeight;
+    return this;
+  },
+
+  /**
    * 切换消息容器：将当前对话容器切换成tid对应的对话的容器
    */
   showMsgDom: function (tid, isGroup) {
@@ -534,6 +564,7 @@ _.extend(LxpUser.prototype, {
     $('#conversation-' + curDomId).hide();
     this.checkChatExist(tid, isGroup);
     $('#conversation-' + tid).show();
+    this.scrollIntoView($('#conversation-' + tid)[0]);
   },
 
   //貌似废弃了

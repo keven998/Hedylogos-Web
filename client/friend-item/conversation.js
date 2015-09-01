@@ -47,8 +47,7 @@ function showPoi(data){
 // 新消息滚入页面
 function scrollIntoView () {
   return function (){
-    var parent = $(this.firstNode).parent()[0];
-    parent.scrollTop = parent.scrollHeight;
+    lxpUser.scrollIntoView( $(this.firstNode).parent()[0] );
   }
 }
 
