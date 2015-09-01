@@ -282,6 +282,7 @@ _.extend(LxpUser.prototype, {
    */
   'msgHandler': function (msg) {
     var userId = this.getUserId();
+    // 得到对话方的id
     var targetId = (userId == msg.receiverId && msg.chatType == 'single')
       ? msg.senderId
       : msg.receiverId;
@@ -294,8 +295,8 @@ _.extend(LxpUser.prototype, {
   '_msgCheckConversation': function (msg, targetId) {
     var self = this;
     var isGroup = (msg.chatType === 'group');
+
     // 假如不是聊天对象，则计数
-    // 假如是聊天对象，则不计数
     if (targetId !== this.chatWith.tid) {
       if (self.isInUnReadChats(targetId)) {
         // 已存在，持续计数
@@ -387,6 +388,10 @@ _.extend(LxpUser.prototype, {
     msg = self._msgTimeFommat(msg);
     console.log(msg);
 
+    // 会话项增加最后一条msg的消息缩略
+    var $chatInfo = $('#' + tid).children('.im-friend-info');
+    var insertMsgAbbr;
+
     // 群通知消息
     if (msg.msgType === 200) {
       msg = self._richTextMsg(msg);
@@ -397,6 +402,7 @@ _.extend(LxpUser.prototype, {
 
     if (msg.msgType === 0) {
       templateName = 'Msg';
+      insertMsgAbbr = msg.contents;
       msg.contents = self._emojiConvert(msg.contents);
     }
     if (msg.msgType === 1) {
@@ -411,6 +417,7 @@ _.extend(LxpUser.prototype, {
           templateName = 'VoiceMsg';
           msg = self._richTextMsg(msg);
           msg.voiceUrl = msg.convertStatus.url;
+          insertMsgAbbr = '[语音消息]';
           // TODO 修改 audio的src来源
         }
       } else {
@@ -431,38 +438,52 @@ _.extend(LxpUser.prototype, {
     if (msg.msgType === 2) {
       templateName = 'ImageMsg';
       msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[图片]';
     }
     if (msg.msgType === 10) {
       templateName = 'PlanMsg';
       msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[路线]' + msg.contents.name;
     }
     if (msg.msgType === 11) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '城市';
+      insertMsgAbbr = '[城市]' + msg.contents.name;
     }
     if (msg.msgType === 12) {
       templateName = 'NoteMsg';
       msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[游记]' + msg.contents.name;
     }
     if (msg.msgType === 13) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '景点';
+      insertMsgAbbr = '[景点]' + msg.contents.name;
     }
     if (msg.msgType === 14) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '美食';
+      insertMsgAbbr = '[美食]' + msg.contents.name;
     }
     if (msg.msgType === 15) {
       templateName = 'PoiMsg';
       msg = self._richTextMsg(msg);
       msg.poiType = '购物';
+      insertMsgAbbr = '[购物]' + msg.contents.name;
+    }
+
+    if (insertMsgAbbr){
+      // TODO 群发且非自己发需要加上发送者"昵称"！
+      // insertMsgAbbr = (msg.chatType == 'group' && self.getUserId() != msg.senderId) ? (msg.senderId + insertMsgAbbr) : insertMsgAbbr;
+      $chatInfo.children('.lastmsg-abbr').remove();
+      $chatInfo.append('<div class="lastmsg-abbr">' + insertMsgAbbr + '</div>');
     }
 
     // 假如是发送的消息
-    if (self.getUserId()== msg.senderId)
+    if (self.getUserId() == msg.senderId)
       templateName = 'send' + templateName;
     else
       templateName = 'receive' + templateName;

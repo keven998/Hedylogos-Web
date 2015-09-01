@@ -151,6 +151,14 @@
     padding-left: 50px;
 }
 
+.im-friend-info .lastmsg-abbr{
+    margin-top: 5px;
+    color: #777;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
 .im-friend-name, .im-group-name {
     padding-top: 10px;
     font-size: 7px;
