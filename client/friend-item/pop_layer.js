@@ -107,6 +107,7 @@ Template.uploadLayer.events({
     reader.readAsBinaryString(evt.target.files[0]);
   },
 
+  // 中断上传功能
   'click .abort-load': function(e){
     reader && reader.abort();
   }
