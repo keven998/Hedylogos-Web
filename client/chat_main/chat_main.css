@@ -159,6 +159,13 @@
     overflow:hidden;
 }
 
+.im-friend-info .nickname{
+    color: #555;
+    margin-right: 2px;
+    font-size: 13px;
+    font-family: "Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
+}
+
 .im-friend-name, .im-group-name {
     padding-top: 10px;
     font-size: 7px;
@@ -260,11 +267,9 @@
     -webkit-animation-name: shake-little; -ms-animation-name: shake-little; animation-name: shake-little; -webkit-animation-duration: 100ms; -ms-animation-duration: 100ms; animation-duration: 100ms; -webkit-animation-iteration-count: infinite; -ms-animation-iteration-count: infinite; animation-iteration-count: infinite; -webkit-animation-timing-function: ease-in-out; -ms-animation-timing-function: ease-in-out; animation-timing-function: ease-in-out; -webkit-animation-delay: 0s; -ms-animation-delay: 0s; animation-delay: 0s; -webkit-animation-play-state: running; -ms-animation-play-state: running; animation-play-state: running;
 }
 
-
 .im-group-desc-name {
     margin: 3px auto;
     margin-bottom: 33px;
-    width: 100px;
     text-align: center;
 }
 .im-group-desc-contact {

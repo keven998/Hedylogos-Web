@@ -13,12 +13,17 @@ Template.chatItem.onRendered(function() {
   var chatItemInfo = Template.currentData().chatItemInfo,
       cssSelector = '',
       funcName;
+
   if (chatItemInfo.isGroupChat) {
     cssSelector = '#J_groupChat_';
     funcName = 'showGroupDesc';
+    chatItemInfo.chatGroupId = chatItemInfo.tid;
+    chatItemInfo.name = chatItemInfo.nickName;
   } else {
     cssSelector = '#J_singleChat_';
     funcName = 'showFriendDesc';
+    chatItemInfo.userId = chatItemInfo.tid;
+    chatItemInfo.signature = lxpUser.signatures[chatItemInfo.tid];
   }
   cssSelector += chatItemInfo.tid;
 
