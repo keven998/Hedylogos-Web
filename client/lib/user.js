@@ -555,7 +555,6 @@ _.extend(LxpUser.prototype, {
    * 点击会话信息的动作
    */
   readMsg: function (chatInfo) {
-    console.log(chatInfo);
     var self = this;
     var tid = chatInfo.tid;
     $('#J-im-input-text').focus();
