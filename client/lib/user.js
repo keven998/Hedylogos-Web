@@ -76,7 +76,6 @@ _.extend(LxpUser.prototype, {
       if (res && res.code === 0) {
         var data = res.data;
         self.friends.set(data);
-        console.log(data);
         // 缓存好友头像
         data.forEach(function (friend) {
           self.avatars[friend.userId] = friend.avatar;
@@ -393,7 +392,7 @@ _.extend(LxpUser.prototype, {
 
     // 会话项增加最后一条msg的消息缩略
     var $chatInfo = $('#' + tid).children('.im-friend-info');
-    var insertMsgAbbr;
+    var insertMsgAbbr, insertMsgNickname = '';
 
     // 群通知消息
     if (msg.msgType === 200) {
@@ -480,12 +479,12 @@ _.extend(LxpUser.prototype, {
 
     if (insertMsgAbbr){
       // 群发且非自己发需要加上发送者"昵称"
-      if ( msg.chatType == 'single' || isSend || self.nicknames[msg.senderId]) {
-        if (self.nicknames[msg.senderId]) {
-          insertMsgAbbr = self.nicknames[msg.senderId] + insertMsgAbbr;
+      if ( msg.chatType == 'single' || isSend || self.nicknames[tid]) {
+        if (self.nicknames[tid]) {
+          insertMsgNickname = '<span class="nickName">' + self.nicknames[tid] + '</span>';
         }
         $chatInfo.children('.lastmsg-abbr').remove();
-        $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgAbbr + '</div>');
+        $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgNickname + insertMsgAbbr + '</div>');
       }
     }
 
@@ -517,10 +516,10 @@ _.extend(LxpUser.prototype, {
             if (isGroup) {
               // 群发且非自己发需要加上发送者"昵称"
               if (! isSend){
-                insertMsgAbbr = self.nicknames[msg.senderId] + insertMsgAbbr;
+                insertMsgNickname = '<span class="nickname">' + self.nicknames[tid] + ':</span>';
               }
               $chatInfo.children('.lastmsg-abbr').remove();
-              $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgAbbr + '</div>');
+              $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgNickname + insertMsgAbbr + '</div>');
               msg.nickName = userInfo.nickName;
             }
           }

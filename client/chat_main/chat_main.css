@@ -159,6 +159,13 @@
     overflow:hidden;
 }
 
+.im-friend-info .nickname{
+    color: #555;
+    margin-right: 2px;
+    font-size: 13px;
+    font-family: "Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
+}
+
 .im-friend-name, .im-group-name {
     padding-top: 10px;
     font-size: 7px;
