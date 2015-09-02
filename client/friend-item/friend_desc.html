@@ -2,12 +2,12 @@
     <div class="im-friend-desc-container">
         <div class="im-delete-desc" id="J_delete_desc">X</div>
         <div class="im-friend-desc">
+            <div class="im-friend-desc-name">ID: {{userId}}</div>
             <div class="im-friend-desc-img-container">
                 <img src="{{avatar}}" alt="" class="im-friend-desc-img">
             </div>
-            <div class="im-friend-desc-name">
-                {{nickName}}
-            </div>
+            <div class="im-friend-desc-name">{{nickName}}</div>
+            <div class="im-friend-signature text-center">{{signature}}</div>
             {{#if notFriend}}
             {{else}}
                 <div class="im-friend-desc-contact">

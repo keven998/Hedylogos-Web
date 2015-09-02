@@ -45,7 +45,12 @@
         </div>
 
         <div class="im-received-msg-content-container">
-            <div class="time">{{timestamp}}</div>
+            <div>
+                {{#if isGroup}}
+                    <span class="name">{{nickName}}</span>
+                {{/if}}
+                <span class="time">{{timestamp}}</span>
+            </div>
             <div class="im-received-content">
                 {{{contents}}}
             </div>

@@ -2,11 +2,12 @@
 
 LxpUser = function () {
   var self = this;
-  self.avatarInit = false;
   self.unReadChats = {};  //未读信息
   self.chatIds = {};      //会话列表中的所有会话
   self.chatWith = {};     //当前聊天对象的信息
   self.avatars = {};      // uid -> avatarUrl
+  self.nicknames = {};    // uid -> nickName
+  self.signatures = {};   // uid -> signatures
   self.friends = new ReactiveVar([], function (o, n){ return o == n;});
   self.groups = new ReactiveVar([], function (o, n){ return o == n;});
   self.chatWith = new ReactiveVar({}, function (o, n){ return o == n;});
@@ -75,13 +76,13 @@ _.extend(LxpUser.prototype, {
       if (res && res.code === 0) {
         var data = res.data;
         self.friends.set(data);
+        console.log(data);
         // 缓存好友头像
-        if (!self.avatarInit) {
-          data.forEach(function (friend) {
-            self.avatars[friend.userId] = friend.avatar;
-          });
-          self.avatarInit = true;
-        }
+        data.forEach(function (friend) {
+          self.avatars[friend.userId] = friend.avatar;
+          self.nicknames[friend.userId] = friend.nickName;
+          self.signatures[friend.userId] = friend.signature;
+        });
       }
     });
   },
@@ -214,7 +215,7 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
-   * 点击“发送信息“后，显示chat聊表，（除了chat列表，还有好友链表和群组列表）
+   * 点击“会话“后，显示chat列表，（除了chat列表，还有好友链表和群组列表）
    * @summary 显示不同的列表信息[chat|friend|group]
    * @params {string}
    */
@@ -384,6 +385,8 @@ _.extend(LxpUser.prototype, {
   '_renderMsg': function (msg, tid) {
     var self = this;
     var templateName = 'UnknownMsg';
+    var isGroup = (msg.chatType == 'group');
+    var isSend = (self.getUserId() == msg.senderId);
 
     msg = self._msgTimeFommat(msg);
     console.log(msg);
@@ -476,21 +479,29 @@ _.extend(LxpUser.prototype, {
     }
 
     if (insertMsgAbbr){
-      // TODO 群发且非自己发需要加上发送者"昵称"！
-      // insertMsgAbbr = (msg.chatType == 'group' && self.getUserId() != msg.senderId) ? (msg.senderId + insertMsgAbbr) : insertMsgAbbr;
-      $chatInfo.children('.lastmsg-abbr').remove();
-      $chatInfo.append('<div class="lastmsg-abbr">' + insertMsgAbbr + '</div>');
+      // 群发且非自己发需要加上发送者"昵称"
+      if ( msg.chatType == 'single' || isSend || self.nicknames[msg.senderId]) {
+        if (self.nicknames[msg.senderId]) {
+          insertMsgAbbr = self.nicknames[msg.senderId] + insertMsgAbbr;
+        }
+        $chatInfo.children('.lastmsg-abbr').remove();
+        $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgAbbr + '</div>');
+      }
     }
 
     // 假如是发送的消息
-    if (self.getUserId() == msg.senderId)
-      templateName = 'send' + templateName;
-    else
-      templateName = 'receive' + templateName;
+    templateName = ((isSend) ? 'send' : 'receive') + templateName;
+    // if (isSend)
+    //   templateName = 'send' + templateName;
+    // else
+    //   templateName = 'receive' + templateName;
 
+    msg.isGroup = isGroup;
     if (self.avatars[msg.senderId]) {
       // 头像已经缓存
       msg.avatar = this.avatars[msg.senderId];
+      if (isGroup)
+        msg.nickName = this.nicknames[msg.senderId];
       Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
     } else {
       // 头像未缓存，从后端读取用户信息
@@ -501,6 +512,17 @@ _.extend(LxpUser.prototype, {
             var avatar = userInfo.avatar;
             msg.avatar = avatar;
             self.avatars[tid] = avatar;
+            self.nicknames[tid] = userInfo.nickName;
+
+            if (isGroup) {
+              // 群发且非自己发需要加上发送者"昵称"
+              if (! isSend){
+                insertMsgAbbr = self.nicknames[msg.senderId] + insertMsgAbbr;
+              }
+              $chatInfo.children('.lastmsg-abbr').remove();
+              $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgAbbr + '</div>');
+              msg.nickName = userInfo.nickName;
+            }
           }
           Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
         }

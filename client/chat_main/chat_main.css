@@ -151,7 +151,7 @@
     padding-left: 50px;
 }
 
-.im-friend-info .lastmsg-abbr{
+.im-friend-info .lastmsg-abbr, .im-friend-signature{
     margin-top: 5px;
     color: #777;
     text-overflow:ellipsis;
@@ -795,4 +795,5 @@ img.im-received-avatar {
   color: #aaa;
   margin-top: -5px;
   margin-bottom: -2px;
+  margin-left: 5px;
 }

@@ -8,6 +8,6 @@ Template.friend.events({
   'click .im-friend-item': function (e) {
     e.preventDefault();
     lxpUser.showFriendDesc(this);
-  },
+  }
 });
 
