@@ -15,6 +15,7 @@ Meteor.methods({
       lxpThriftType.UserInfoProp.USER_ID,
       lxpThriftType.UserInfoProp.NICK_NAME,
       lxpThriftType.UserInfoProp.AVATAR,
+      lxpThriftType.UserInfoProp.SIGNATURE,
     ], 0, 2000);
     // transform i64 object to number
     friendList.map(function(friend){friend.userId = parseInt(friend.userId.toString())});
@@ -47,6 +48,7 @@ Meteor.methods({
       lxpThriftType.UserInfoProp.USER_ID,
       lxpThriftType.UserInfoProp.NICK_NAME,
       lxpThriftType.UserInfoProp.AVATAR,
+      lxpThriftType.UserInfoProp.SIGNATURE
     ]);
     return targetInfo
   },
