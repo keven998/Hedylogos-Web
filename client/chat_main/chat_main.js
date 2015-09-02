@@ -53,7 +53,7 @@ Template.chatMain.helpers({
   'friendRequests': function () {
     // return ContactRequest.find({}, {'sort': {'updateTs': -1}});
     Meteor.subscribe('contactRequest', lxpUser.getUserId());
-    return ContactRequest.find();
+    return ContactRequest.find({}, {'sort': {'updateTs': -1}});
   }
 });
 

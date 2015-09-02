@@ -32,7 +32,8 @@ _.extend(LxpUser.prototype, {
     Tracker.autorun(function () {
       self.chatWith =  Session.get('chatWith');
       // 切换后，当前会话的信息直接展示，所以在unReadChats标记为false
-      self.unReadChats[self.chatWith.tid] = false;
+      if (self.chatWith.tid)
+        self.unReadChats[self.chatWith.tid] = false;
     });
 
     // 获取好友列表
@@ -277,7 +278,7 @@ _.extend(LxpUser.prototype, {
     self._activeOneChat(chatTargetInfo, isGroup);
   },
 
-  /**P:
+  /**
    * 消息的处理框架
    */
   'msgHandler': function (msg) {
@@ -290,7 +291,7 @@ _.extend(LxpUser.prototype, {
   },
 
   /**
-   * 发送消息的操作逻辑
+   * 接收消息的操作逻辑
    */
   '_msgCheckConversation': function (msg, targetId) {
     var self = this;
@@ -554,18 +555,19 @@ _.extend(LxpUser.prototype, {
    * 点击会话信息的动作
    */
   readMsg: function (chatInfo) {
+    console.log(chatInfo);
     var self = this;
     var tid = chatInfo.tid;
     $('#J-im-input-text').focus();
     Session.set('chatWith', chatInfo);
+
     // 显示信息
     this.showMsgDom(tid, chatInfo.isGroupChat);
-    // 如果是未读信息，对数据层进行修改
-    if (self.unReadChats[tid]) {
-      $('#J-msg-count-' + tid).text();
-      self.unReadChats[tid] = false;
-      Meteor.call('readNewMsgs', tid);
-    }
+
+    // 对数据层进行修改
+    $('#J-msg-count-' + tid).text();
+    self.unReadChats[tid] = false;
+    Meteor.call('readNewMsgs', tid);
   },
 
   /**
