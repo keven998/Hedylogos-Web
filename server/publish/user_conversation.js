@@ -10,5 +10,6 @@ Meteor.publish('userConversation', function () {
   }
   var uid = user.userInfo.userId;
 
-  return UserConversation.find({'uid': uid}, {'sort': {'updateTs': -1}, 'limit': 50});
+  return UserConversation.find({'uid': uid}, {'sort': {'updateTs': -1}, 'limit': 100});
+  // return UserConversation.find({'uid': uid}, {'sort': {'updateTs': -1}});
 });

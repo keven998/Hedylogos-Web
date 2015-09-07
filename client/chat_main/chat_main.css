@@ -153,22 +153,27 @@
 
 .im-friend-info .lastmsg-abbr, .im-friend-signature{
     margin-top: 5px;
-    color: #777;
+    color: #888;
     text-overflow:ellipsis;
     white-space:nowrap;
     overflow:hidden;
+    font-size: 12px;
+}
+
+.im-friend-info .lastmsg-abbr .nickname{
+    font-size: 12px;
 }
 
 .im-friend-info .nickname{
     color: #555;
     margin-right: 2px;
-    font-size: 13px;
+    font-size: 14px;
     font-family: "Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
 }
 
 .im-friend-name, .im-group-name {
     padding-top: 10px;
-    font-size: 7px;
+    font-size: 12px;
 }
 
 .im-friend-item-container:hover {
