@@ -3,7 +3,11 @@
         <div class="im-friend-item-container" id="J_{{#if isGroupChat}}groupChat{{else}}singleChat{{/if}}_{{tid}}">
             <div class="im-friend-item" id="{{this.tid}}">
                 <div class="im-friend-avatar-container">
-                    <img src="{{this.avatar}}" class="im-friend-avatar" alt="" width="50" height="50">
+                    {{#if this.avatar}}
+                        <img src="{{this.avatar}}" class="im-friend-avatar" alt="" width="50" height="50">
+                    {{else}}
+                        <img src="/images/avatar1.JPG" class="im-friend-avatar" alt="" width="50" height="50">
+                    {{/if}}
                 </div>
                 <div class="im-friend-info">
                     <div class="im-friend-name">{{this.nickName}}</div>
