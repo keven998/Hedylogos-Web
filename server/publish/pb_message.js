@@ -10,6 +10,7 @@ Meteor.publish('chatMessage', function (msgTs) {
       added: function (id, msg) {
         msg._id = new Mongo.ObjectID(id._str);
         newMsg.push(msg);
+        console.log(msg);
       },
       changed: function (id, fields) {
         if (fields.convertStatus && fields.convertStatus.code && fields.convertStatus.code === 2){

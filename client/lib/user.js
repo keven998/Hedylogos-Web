@@ -283,7 +283,7 @@ _.extend(LxpUser.prototype, {
    */
   'msgHandler': function (msg) {
     var userId = this.getUserId();
-    // 得到对话方的id
+    // 得到对话方的id(单聊则为对方的ID，群聊则为群的Id)
     var targetId = (userId == msg.receiverId && msg.chatType == 'single')
       ? msg.senderId
       : msg.receiverId;
@@ -304,9 +304,11 @@ _.extend(LxpUser.prototype, {
         var curMsgCnt = Number($('#J-msg-count-' + targetId).text()) + 1;
         $('#J-msg-count-' + targetId).text(curMsgCnt);
       } else {
-        // 不存在，新建会话，并将未读信息置为 1
-        self.addConversation(targetId, isGroup);
+        // 不存在，将未读信息置为 1
+        this.unReadChats[targetId] = true;
       }
+      // 不存在则新建对话，否则更新时间
+      Meteor.call('addConversation', targetId, isGroup, msg.timestamp);
     }
 
     // 绑定数据到dom
@@ -389,7 +391,7 @@ _.extend(LxpUser.prototype, {
     var isSend = (self.getUserId() == msg.senderId);
 
     msg = self._msgTimeFommat(msg);
-    console.log(msg);
+    // console.log(msg);
 
     // 会话项增加最后一条msg的消息缩略
     var $chatInfo = $('#' + tid).children('.im-friend-info');
@@ -443,6 +445,11 @@ _.extend(LxpUser.prototype, {
       msg = self._richTextMsg(msg);
       insertMsgAbbr = '[图片]';
     }
+    if (msg.msgType === 3) {
+      templateName = 'LocationMsg';
+      msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[位置]' + msg.contents.address;
+    }
     if (msg.msgType === 10) {
       templateName = 'PlanMsg';
       msg = self._richTextMsg(msg);
@@ -477,13 +484,20 @@ _.extend(LxpUser.prototype, {
       msg.poiType = '购物';
       insertMsgAbbr = '[购物]' + msg.contents.name;
     }
+    if (msg.msgType === 18) {
+      templateName = 'HtmlMsg';
+      msg = self._richTextMsg(msg);
+      insertMsgAbbr = '[网页]' + msg.contents.title;
+    }
+
 
     if (insertMsgAbbr){
       // 群发且非自己发需要加上发送者"昵称"
-      if ( msg.chatType == 'single' || isSend || self.nicknames[tid]) {
-        if (self.nicknames[tid]) {
-          insertMsgNickname = '<span class="nickName">' + self.nicknames[tid] + '</span>';
-        }
+      var otherSendInGroupHasNickname = (msg.chatType == 'group' && !isSend && self.nicknames[msg.senderId]);
+      if (otherSendInGroupHasNickname) {
+        insertMsgNickname = '<span class="nickname">' + self.nicknames[msg.senderId] + ':</span>';
+      }
+      if (msg.chatType == 'single' || isSend || otherSendInGroupHasNickname){
         $chatInfo.children('.lastmsg-abbr').remove();
         $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgNickname + insertMsgAbbr + '</div>');
       }
@@ -491,10 +505,6 @@ _.extend(LxpUser.prototype, {
 
     // 假如是发送的消息
     templateName = ((isSend) ? 'send' : 'receive') + templateName;
-    // if (isSend)
-    //   templateName = 'send' + templateName;
-    // else
-    //   templateName = 'receive' + templateName;
 
     msg.isGroup = isGroup;
     if (self.avatars[msg.senderId]) {
@@ -502,6 +512,7 @@ _.extend(LxpUser.prototype, {
       msg.avatar = this.avatars[msg.senderId];
       if (isGroup)
         msg.nickName = this.nicknames[msg.senderId];
+
       Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
     } else {
       // 头像未缓存，从后端读取用户信息
@@ -511,19 +522,20 @@ _.extend(LxpUser.prototype, {
           if (userInfo.avatar){
             var avatar = userInfo.avatar;
             msg.avatar = avatar;
-            self.avatars[tid] = avatar;
-            self.nicknames[tid] = userInfo.nickName;
+            self.avatars[msg.senderId] = avatar;
+            self.nicknames[msg.senderId] = userInfo.nickName;
 
             if (isGroup) {
               // 群发且非自己发需要加上发送者"昵称"
               if (! isSend){
-                insertMsgNickname = '<span class="nickname">' + self.nicknames[tid] + ':</span>';
+                insertMsgNickname = '<span class="nickname">' + self.nicknames[msg.senderId] + ':</span>';
               }
               $chatInfo.children('.lastmsg-abbr').remove();
               $chatInfo.append('<div class="lastmsg-abbr" title="' + insertMsgAbbr + '">' + insertMsgNickname + insertMsgAbbr + '</div>');
               msg.nickName = userInfo.nickName;
             }
           }
+
           Blaze.renderWithData(Template[templateName], msg, $('#conversation-' + tid)[0]);
         }
       });
@@ -538,17 +550,6 @@ _.extend(LxpUser.prototype, {
       return true;
     }
     return false;
-  },
-
-  /**
-   * 创建未读会话信息
-   * targetId = senderId/groupId
-   */
-  'addConversation': function (targetId, isGroup) {
-    // 不在未读列表，添加进去
-    this.unReadChats[targetId] = true;
-    // 更新数据库时间
-    Meteor.call('addConversation', targetId, isGroup);
   },
 
   /**

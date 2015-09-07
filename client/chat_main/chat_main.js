@@ -18,7 +18,7 @@ Template.chatMain.onRendered(function () {
     msgSound.play();
     console.log('新的信息来了');
     newMsgs.forEach(function(msg) {
-      console.log(msg);
+      // console.log(msg);
       lxpUser.msgHandler(msg);
     });
   });
@@ -48,7 +48,7 @@ Template.chatMain.helpers({
     return Session.get('chatWith');
   },
   'chats': function () {
-    return UserConversation.find({}, {'sort': {'updateTs': -1}});
+    return UserConversation.find({}, {'sort': {'updateTs': -1}, 'limit': 100});
   },
   'friendRequests': function () {
     // return ContactRequest.find({}, {'sort': {'updateTs': -1}});

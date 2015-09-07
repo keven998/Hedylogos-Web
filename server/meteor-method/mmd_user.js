@@ -182,13 +182,15 @@ Meteor.methods({
   /**
    * 创建包含未读信息的会话
    */
-  'addConversation': function (targetId, isGroup) {
+  'addConversation': function (targetId, isGroup, ts) {
     check(targetId, Number);
     check(isGroup, Boolean);
+    check(ts, Number);
     var conversation = Meteor.call('findConversation', targetId);
     if (conversation) {
       // 存在，只需要更新时间，打上有新消息的标签
-      UserConversation.update({'_id': conversation._id}, {'$set': {'updateTs': Date.now(), 'hasMsg': true}});
+      // UserConversation.update({'_id': conversation._id}, {'$set': {'updateTs': Date.now(), 'hasMsg': true}});
+      UserConversation.update({'_id': conversation._id}, {'$set': {'updateTs': ts, 'hasMsg': true}});
     } else {
       // 不存在则需要新建会话记录
       Meteor.call('createConversationWithNewMsg', targetId, isGroup);
